@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #b698cb, #72588a, #9370db);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .background-image {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80') center/cover no-repeat;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .background-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(141, 122, 154, 0.7);
+        }
+        
+        .box {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .box-inner {
+            width: 120px;
+            height: 120px;
+            background: url('logonew.png') center/cover no-repeat;
+            border-radius: 10px;
+        }
+        
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            color: white;
+        }
+        
+        h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .contact-info {
+            margin-bottom: 30px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .info-item i {
+            width: 30px;
+            font-size: 18px;
+            color: #e6d5ff;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #e6d5ff;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 2px rgba(230, 213, 255, 0.5);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #d0b8ff;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+        
+        .submit-btn {
+            background: #804cb1;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: #6a0dad;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+        }
+        
+        .description {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #e6d5ff;
+            line-height: 1.5;
+        }
+                /* Navigation Bar */
+        .navbar {
+            background: linear-gradient(135deg, #6d5584, #72588a);
+            padding: 8px 0;
+            box-shadow: 0 4px 20px rgba(147, 112, 219, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logo:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover .nav-icon {
+            transform: scale(1.2);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .background-image {
+                min-height: 250px;
+            }
+            
+            .form-section {
+                padding: 30px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+     <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">UniLink</a>
+            <div class="nav-links">
+                <a href="main.html" class="nav-link">
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="contactus.html" class="nav-link active">
+                    <span class="nav-text">Contact</span>
+                </a>
+                <a href="faq.html" class="nav-link">
+                    <span class="nav-text">FAQ</span>
+                </a>
+                <a href="profile.html" class="nav-link">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Profile</span>
+                </a>
+                <a href="#" onclick="logout(); return false;" class="nav-link logout-btn">
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="background-image">
+            <div class="box">
+                <div class="box-inner"></div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>Contact Us</h2>
+            
+            <div class="contact-info">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>IIIT Allahabad,Prayagraj</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>unilink.iiita@gmail.com</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <span>+978983545455</span>
+                </div>
+            </div>
+            
+            <form action="https://formsubmit.co/unilink.iiita@gmail.com" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="first-name" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="last-name" placeholder="Last Name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="E-mail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Message" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">SUBMIT</button>
+                
+                <p class="description">
+                    If you need help regarding any feature of UniLink you can use the following information to contact us.<br><br>
+                    E-mail responses are answered within 24 hours.
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+     document.addEventListener('DOMContentLoaded', () => {
+        // 1. Setup Listeners
+        setupModuleClicks();
+        setupMobileMenu();
+        setupChatWidget();
+
+        // 2. Add Logout Listeners (for both desktop and mobile)
+        const logoutButton = document.getElementById('logout-button');
+        const mobileLogoutButton = document.getElementById('mobile-logout-button');
+        
+        if (logoutButton) {
+            logoutButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent link default behavior
+                logout();
+            });
+        }
+        if (mobileLogoutButton) {
+            mobileLogoutButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent link default behavior
+                logout();
+            });
+        }
+        
+        // 3. Update the UI based on auth state
+        updateAuthUI();
+    });
+
+    
+</script>
+</html>

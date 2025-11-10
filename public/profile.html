@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLink | Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/translations.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f9; 
+            min-height: 100vh;
+        }
+
+        .card {
+           background: #ffffff;
+           border-radius: 1rem;
+           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-button-gradient {
+            background: linear-gradient(90deg, #f59e0b 0%, #fcd34d 100%);
+            color: #1F2937;
+        }
+
+        .main-button-gradient:hover {
+            background: linear-gradient(90deg, #d97706 0%, #fbbf24 100%); 
+        }
+        
+        .college-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            line-height: 0.85;
+        }
+        
+        .profile-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)),
+                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 250px;
+            border-radius: 1rem 1rem 0 0;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            bottom: -60px;
+            left: 2rem;
+            background-color: #e2dee3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #6b7280;
+        }
+        
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+        
+        .friend-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .friend-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e2dee3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+        
+        .edit-form {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .history-item {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .history-type-blood {
+            border-left-color: #e53e3e;
+        }
+        
+        .history-type-ride {
+            border-left-color: #3182ce;
+        }
+        
+        .history-type-rental {
+            border-left-color: #38a169;
+        }
+        
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            background-color: #f59e0b;
+            color: white;
+        }
+        /* Add these new styles for the search results buttons */
+.btn-primary-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    background-color: #4f46e5;
+    color: white;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.btn-primary-sm:hover { background-color: #4338ca; }
+.btn-primary-sm:disabled { 
+    background-color: #a5b4fc;
+    cursor: not-allowed;
+}
+
+.btn-secondary-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    background-color: #e5e7eb;
+    color: #374151;
+    font-weight: 500;
+    cursor: default;
+}
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <h1 class="college-title text-3xl text-gray-900 leading-none">UniLink</h1>
+                <p class="text-sm text-gray-500">College Community Platform</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search..." class="bg-gray-100 rounded-full py-2 px-4 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <div class="flex items-center space-x-2 bg-gray-100 rounded-full py-1 px-3">
+                    <div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-white font-bold"><span id="header-initials"></span></div>
+                    <span id="header-name" class="font-medium"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm py-3 px-6">
+        <div class="container mx-auto flex space-x-6">
+            <a href="main.html" class="nav-item">Home</a>
+            <a href="#" class="nav-item active">Profile</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto my-8 px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Left Column - Profile Info -->
+            <div class="md:col-span-2">
+                <div class="card overflow-hidden">
+                    <div class="profile-header">
+                        <div class="text-white">
+                            <h2 id="profile-header-name" class="text-2xl font-bold"></h2>
+                            <p id="profile-header-title" class="text-gray-200"></p>
+                        </div>
+                        <div class="profile-pic"><span id="profile-pic-initials"></span></div>
+                    </div>
+                    <div class="p-6 pt-16">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold">Profile Information</h3>
+                            <button id="edit-profile-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg transition duration-150 flex items-center space-x-2">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit Profile</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Profile Info Display -->
+                        <div id="profile-info-display" class="profile-info">
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-5">
+                            <div class="col-span-2">
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_name">Full Name</span>
+                                <p class="text-gray-900" id="profile-name"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_email">Email</span>
+                                <p class="text-gray-900" id="profile-email"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_student_id">Student ID</span>
+                                <p class="text-gray-900" id="profile-studentId"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_role">Role</span>
+                                <p class="text-gray-900" id="profile-role"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_department">Department</span>
+                                <p class="text-gray-900" id="profile-department"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_year">Year</span>
+                                <p class="text-gray-900" id="profile-year"></p>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold text-gray-500" data-key="profile_blood_group">Blood Group</span>
+                                <p class="text-gray-900" id="profile-blood-group"></p>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <span class="text-sm font-semibold text-gray-500" data-key="profile_bio">Bio</span>
+                            <p class="text-gray-900" id="profile-bio"></p>
+                        </div>
+                    </div>
+                        
+                        <!-- Profile Edit Form (Hidden by default) -->
+                        <div id="profile-edit-form" class="edit-form hidden">
+                            <form id="update-profile-form">
+                                <div class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="edit-name" class="block text-sm font-medium text-gray-700 text-left">Full Name</label>
+                                            <input type="text" id="edit-name" name="edit-name" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-yellow-500 focus:border-yellow-500" value="John Doe">
+                                        </div>
+                                        <div>
+                                            <label for="edit-email" class="block text-sm font-medium text-gray-700 text-left">Email</label>
+                                            <input type="email" id="edit-email" name="edit-email" readonly class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-gray-100 text-gray-500 cursor-not-allowed" value="johndoe@iiita.ac.in">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="edit-student-id" class="block text-sm font-medium text-gray-700 text-left">Student ID</label>
+                                            <input type="text" id="edit-student-id" name="edit-student-id" readonly class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-gray-100 text-gray-500 cursor-not-allowed" value="IIT2024134">
+                                        </div>
+                                        <div>
+                                            <label for="edit-role" class="block text-sm font-medium text-gray-700 text-left">Role</label>
+                                            <select id="edit-role" name="edit-role" disabled class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 bg-gray-100 text-gray-500 cursor-not-allowed">
+                                                <option value="student">Student</option>
+                                                <option value="donor">Donor</option>
+                                                <option value="driver">Driver</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="edit-department" class="block text-sm font-medium text-gray-700 text-left">Department</label>
+                                            <input type="text" id="edit-department" name="edit-department" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-yellow-500 focus:border-yellow-500" value="Computer Science & Engineering">
+                                        </div>
+                                        <div>
+                                            <label for="edit-year" class="block text-sm font-medium text-gray-700 text-left">Year</label>
+                                            <select id="edit-year" name="edit-year" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-yellow-500 focus:border-yellow-500">
+                                                <option value="1st Year">1st Year</option>
+                                                <option value="2nd Year" selected>2nd Year</option>
+                                                <option value="3rd Year">3rd Year</option>
+                                                <option value="4th Year">4th Year</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="edit-blood-group" 
+                                               class="block text-sm font-medium text-gray-700 text-left"
+                                               data-key="edit_profile_blood_group">
+                                               Blood Group
+                                        </label>
+                                        <select id="edit-blood-group" name="bloodGroup"
+                                                class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-yellow-500 focus:border-yellow-500">
+                                            <option value="" data-key="select_blood_group">Select Blood Group</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label for="edit-bio" class="block text-sm font-medium text-gray-700 text-left">Bio</label>
+                                        <textarea id="edit-bio" name="edit-bio" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-3 focus:ring-yellow-500 focus:border-yellow-500">Passionate about technology and innovation. Currently working on a project to improve campus connectivity.</textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-3 mt-6">
+                                    <button type="button" id="cancel-edit-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg transition duration-150">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" class="main-button-gradient py-2 px-4 rounded-lg hover:opacity-90 transition duration-150 font-semibold shadow-md">
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Friends Section -->
+                <div class="card mt-8 p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold">Friends</h3>
+                        <button class="text-blue-600 hover:text-blue-800 font-medium">View All</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Friend Card 1 -->
+                        <div class="friend-card">
+                            <div class="flex items-center space-x-3">
+                                <div class="friend-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Sarah Johnson</h4>
+                                    <p class="text-sm text-gray-500">Computer Science</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-3">
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Message</button>
+                                <button class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Friend Card 2 -->
+                        <div class="friend-card">
+                            <div class="flex items-center space-x-3">
+                                <div class="friend-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Michael Chen</h4>
+                                    <p class="text-sm text-gray-500">Electrical Engineering</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-3">
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Message</button>
+                                <button class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Friend Card 3 -->
+                        <div class="friend-card">
+                            <div class="flex items-center space-x-3">
+                                <div class="friend-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold">Emily Rodriguez</h4>
+                                    <p class="text-sm text-gray-500">Mechanical Engineering</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-3">
+                                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Message</button>
+                                <button class="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 text-center">
+                        <button class="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-center space-x-2 mx-auto">
+                            <i class="fas fa-plus"></i>
+                            <span>Add More Friends</span>
+                        </button>
+                    </div>
+                    <div class="mt-8 border-t border-gray-200 pt-6">
+    
+                    </div>
+                </div>
+                <div class="card p-6 mb-6">
+    <div class="card p-6 mb-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">My Lost & Found Posts</h3>
+    <div id="lost-found-items-container" class="space-y-4">
+        </div>
+</div>
+
+<div class="card p-6 mb-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-4" data-translate="my_vehicles_title">My Vehicles for Rent</h3>
+    <div id="vehicle-items-container" class="space-y-4">
+        </div>
+</div>
+</div>
+
+
+
+            </div>
+            
+            <!-- Right Column - Settings & History Section -->
+            <div class="space-y-8">
+                <!-- Settings Card -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">Settings</h3>
+                    
+                    <div class="space-y-2">
+                        
+                        
+                        <div class="nav-item flex items-center space-x-3 active">
+                            <i class="fas fa-user text-gray-500 w-5"></i>
+                            <span>Account</span>
+                        </div>
+                        
+                        <div class="nav-item flex items-center space-x-3">
+                            <i class="fas fa-bell text-gray-500 w-5"></i>
+                            <span>Notifications</span>
+                        </div>
+                        
+                        
+                        
+                        <div class="nav-item flex items-center space-x-3">
+                            <i class="fas fa-key text-gray-500 w-5"></i>
+                            <span>Passwords</span>
+                        </div>
+                        
+                        <div class="nav-item flex items-center space-x-3">
+    <i class="fas fa-language text-gray-500 w-5"></i>
+    <select id="language-select" class="bg-transparent border-none p-0 focus:outline-none focus:ring-0 text-gray-700">
+        <option value="en" data-key="settings_language">Language</option>
+        <option value="hi">भाषा</option>
+    </select>
+</div>
+                    </div>
+                </div>
+                
+                <!-- History Section -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4">My History</h3>
+                    <p class="text-sm text-gray-500 mb-4">Track your activities across UniLink modules.</p>
+                    
+                    <!-- History Tabs -->
+                    <div class="flex mb-4 bg-gray-100 rounded-lg p-1">
+                        <button class="tab-button flex-1 active" data-tab="blood">Blood</button>
+                        <button class="tab-button flex-1" data-tab="rides">Rides</button>
+                        <button class="tab-button flex-1" data-tab="rentals">Rentals</button>
+                    </div>
+                    
+                    <!-- Blood Donation History -->
+                    <div id="blood-tab" class="history-tab">
+                        <div class="history-item history-type-blood">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Blood Donation</h4>
+                                    <p class="text-sm text-gray-500">Donated at Campus Blood Drive</p>
+                                </div>
+                                <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded">Donated</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Oct 15, 2023</span>
+                                <span><i class="fas fa-clock mr-1"></i> 10:30 AM</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item history-type-blood">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Blood Request</h4>
+                                    <p class="text-sm text-gray-500">Requested for emergency case</p>
+                                </div>
+                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded">Received</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Aug 22, 2023</span>
+                                <span><i class="fas fa-clock mr-1"></i> 3:45 PM</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item history-type-blood">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Blood Donation</h4>
+                                    <p class="text-sm text-gray-500">Donated at Red Cross Center</p>
+                                </div>
+                                <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded">Donated</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Jun 10, 2023</span>
+                                <span><i class="fas fa-clock mr-1"></i> 11:15 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ride Sharing History -->
+                    <div id="rides-tab" class="history-tab hidden">
+                        <div class="history-item history-type-ride">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Campus to City Center</h4>
+                                    <p class="text-sm text-gray-500">Shared ride with 2 others</p>
+                                </div>
+                                <span class="text-blue-600 font-bold">₹120</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Nov 5, 2023</span>
+                                <span><i class="fas fa-clock mr-1"></i> 5:30 PM</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item history-type-ride">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Airport to Campus</h4>
+                                    <p class="text-sm text-gray-500">Shared ride with Sarah Johnson</p>
+                                </div>
+                                <span class="text-blue-600 font-bold">₹350</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Oct 28, 2023</span>
+                                <span><i class="fas fa-clock mr-1"></i> 2:15 PM</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item history-type-ride">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Library to Hostel</h4>
+                                    <p class="text-sm text-gray-500">Shared ride with Michael Chen</p>
+                                </div>
+                                <span class="text-blue-600 font-bold">₹40</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Oct 15, 2023</span>
+                                <span><i class="fas fa-clock mr-1"></i> 9:20 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vehicle Rental History -->
+                    <div id="rentals-tab" class="history-tab hidden">
+                        <div class="history-item history-type-rental">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Scooter Rental</h4>
+                                    <p class="text-sm text-gray-500">Rented for weekend trip</p>
+                                </div>
+                                <span class="text-green-600 font-bold">₹600</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Nov 10-12, 2023</span>
+                                <span>3 days</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item history-type-rental">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Bike Rental</h4>
+                                    <p class="text-sm text-gray-500">Daily commute to classes</p>
+                                </div>
+                                <span class="text-green-600 font-bold">₹150</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Oct 5, 2023</span>
+                                <span>1 day</span>
+                            </div>
+                        </div>
+                        
+                        <div class="history-item history-type-rental">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold">Scooter Rental</h4>
+                                    <p class="text-sm text-gray-500">Rented for grocery shopping</p>
+                                </div>
+                                <span class="text-green-600 font-bold">₹200</span>
+                            </div>
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span><i class="fas fa-calendar-alt mr-1"></i> Sep 22, 2023</span>
+                                <span>4 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button class="text-blue-600 hover:text-blue-800 font-medium">
+                            View Full History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="password-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+        <h3 class="text-xl font-bold mb-4">Change Password</h3>
+        <form id="password-form">
+            <div id="password-message" class="mb-3 text-center"></div>
+            <div class="mb-4">
+                <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
+                <input type="password" id="currentPassword" required class="mt-1 p-2 w-full border border-gray-300 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="newPassword" class="block text-sm font-medium text-gray-700">New Password</label>
+                <input type="password" id="newPassword" required class="mt-1 p-2 w-full border border-gray-300 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="confirmNewPassword" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                <input type="password" id="confirmNewPassword" required class="mt-1 p-2 w-full border border-gray-300 rounded-md">
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button type="button" id="cancel-password-btn" class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Update Password</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="notification-panel" class="lg:col-span-2 space-y-8 hidden">
+    <div class="card p-6 shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold" data-key="settings_notifications">Notification</h3>
+            <button id="close-notification-panel" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+        </div>
+        
+        <form id="notification-form" class="space-y-4">
+            <p class="text-gray-600">Choose how you want to be notified.</p>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-100 rounded-md">
+                <label for="emailOnFriendRequest" class="font-medium text-gray-700">Email on new friend request</label>
+                <input type="checkbox" id="emailOnFriendRequest" class="h-5 w-5 text-blue-500 rounded focus:ring-blue-400">
+            </div>
+
+            <div class="flex items-center justify-between p-3 bg-gray-100 rounded-md">
+                <label for="emailOnNewMessage" class="font-medium text-gray-700">Email on new direct message</label>
+                <input type="checkbox" id="emailOnNewMessage" class="h-5 w-5 text-blue-500 rounded focus:ring-blue-400">
+            </div>
+            
+            <div class="flex justify-end">
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"></script>
+    <script>
+        
+        /**
+     * Generic API fetch helper (Robust Version)
+     */
+    const token = localStorage.getItem('token'); 
+    
+    if (token) {
+        // Set the default Authorization header for ALL Axios/Fetch requests
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+        // If no token, log out. This is your desired behavior on a true log-out.
+        // It's also the current fallback when any API call fails.
+        console.warn('Authentication token not found. Redirecting to login.');
+        window.location.href = '/auth.html?view=login'; 
+    }
+    // This is the CRITICAL client-side utility function (e.g., in /public/js/api.js or similar)
+
+const apiFetch = async (url, method = 'GET', body = null, token = null) => {
+    // 1. Build the request options
+    const options = {
+        method: method,
+        // 2. CRITICAL FIX IS HERE: Construct the Authorization header
+        headers: {
+            'Content-Type': 'application/json',
+            // If a token is provided, create the "Authorization: Bearer <token>" header
+            ...(token && { 'Authorization': `Bearer ${token}` }) 
+        },
+    };
+
+    // 3. Attach body for non-GET/HEAD methods
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    try {
+        const response = await fetch(url, options);
+
+        // 4. Handle non-OK responses
+        if (!response.ok) {
+            // If the server returns a 401, throw a specific error for the caller to handle
+            if (response.status === 401) {
+                // This will trigger the logout logic in your fetchProfileData catch block
+                throw new Error("Session expired or unauthorized access."); 
+            }
+            // Handle other errors (e.g., 500, 400)
+            const errorData = await response.json().catch(() => ({ message: 'Request failed' }));
+            throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        }
+
+        // 5. Return JSON data on success
+        // Handle 204 No Content responses which don't have a body
+        if (response.status === 204) return null; 
+        
+        return await response.json();
+
+    } catch (error) {
+        // Re-throw the error for the calling function (like fetchProfileData) to handle
+        throw error;
+    }
+};
+        const searchForm = document.getElementById('search-friends-form');
+const searchInput = document.getElementById('search-friends-input');
+const searchResultsContainer = document.getElementById('search-results-container');
+    // --- 1. CONFIG & HELPERS (Global to this script) ---
+    const API_BASE_URL = 'http://localhost:5000';
+    let currentUser = null; // Store user data globally for this page
+    
+    const translatePage = (lang) => {
+        // Find all elements that have a 'data-key'
+        document.querySelectorAll('[data-key]').forEach(element => {
+            const key = element.getAttribute('data-key');
+            if (translations[lang] && translations[lang][key]) {
+                element.textContent = translations[lang][key];
+            }
+        });
+
+        // Also update the dropdown itself
+        const langSelect = document.getElementById('language-select');
+        if (langSelect) langSelect.value = lang;
+    };
+    
+    /** Shows a temporary notification message */
+    const showMessage = (message, type = 'info') => {
+        const alertClass = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+        const messageElement = document.createElement('div');
+        messageElement.className = `fixed top-4 right-4 z-50 p-3 text-white rounded-lg shadow-xl transition-all duration-300 ${alertClass}`;
+        messageElement.textContent = message;
+        document.body.appendChild(messageElement);
+        setTimeout(() => {
+            messageElement.remove();
+        }, 3000);
+    };
+
+    /** Gets the first letters of a name for initials */
+    const getInitials = (name) => {
+        if (!name) return '...';
+        const names = name.split(' ');
+        if (names.length === 1) return names[0].charAt(0).toUpperCase();
+        return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+    };
+
+    /**
+     * Takes the user data object and fills all the HTML fields
+     */
+    const populateProfileData = (user) => {
+        currentUser = user; // Store the user
+        const initials = getInitials(user.name);
+        
+        // Headers
+        document.getElementById('header-name').textContent = user.name;
+        document.getElementById('header-initials').textContent = initials;
+        document.getElementById('profile-header-name').textContent = user.name;
+        document.getElementById('profile-header-title').textContent = `${user.department || 'Student'}`;
+        document.getElementById('profile-pic-initials').textContent = initials;
+        
+        // Profile Info Display
+        document.getElementById('profile-name').textContent = user.name;
+        document.getElementById('profile-email').textContent = user.email;
+        document.getElementById('profile-studentId').textContent = user.studentId;
+        document.getElementById('profile-role').textContent = user.role;
+        document.getElementById('profile-department').textContent = user.department;
+        document.getElementById('profile-year').textContent = user.year;
+        document.getElementById('profile-bio').textContent = user.bio || 'No bio set.';
+        document.getElementById('profile-blood-group').textContent = user.bloodGroup || 'Not Set';
+
+        // --- Populate Edit Form ---
+        document.getElementById('edit-name').value = user.name;
+        document.getElementById('edit-email').value = user.email;
+        document.getElementById('edit-student-id').value = user.studentId;
+        document.getElementById('edit-role').value = user.role;
+        document.getElementById('edit-department').value = user.department;
+        document.getElementById('edit-year').value = user.year;
+        document.getElementById('edit-bio').value = user.bio || '';
+        document.getElementById('edit-blood-group').value = user.bloodGroup || '';
+        
+        // --- FIX: Populate Notification Form ---
+        if (user.notificationSettings) {
+            document.getElementById('emailOnFriendRequest').checked = !!user.notificationSettings.emailOnFriendRequest;
+            document.getElementById('emailOnNewMessage').checked = !!user.notificationSettings.emailOnNewMessage;
+        }
+    };
+
+    /**
+     * Fetches profile data from the backend
+     */
+    const fetchProfileData = async (token) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (response.status === 401 || response.status === 403) throw new Error('Unauthorized');
+            if (!response.ok) throw new Error('Failed to fetch profile data');
+            const user = await response.json();
+            populateProfileData(user);
+        } catch (err) {
+            console.error(err);
+            if (err && err.message === 'Unauthorized') {
+                localStorage.removeItem('token');
+                alert('Your session has expired. Please log in again.');
+                window.location.href = 'auth.html?view=login';
+            } else {
+                showMessage('Could not load profile. Please try again.', 'error');
+            }
+        }
+    };
+
+    /**
+     * Handles the "Save Changes" form submission
+     */
+    const handleProfileUpdate = async (e, token) => {
+        e.preventDefault();
+        
+        // Only send the fields that are allowed to be updated
+        const body = {
+            name: document.getElementById('edit-name').value,
+            department: document.getElementById('edit-department').value,
+            year: document.getElementById('edit-year').value,
+            bio: document.getElementById('edit-bio').value,
+            bloodGroup: document.getElementById('edit-blood-group').value
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+                method: 'PATCH', 
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify(body)
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to update profile');
+            }
+            
+            showMessage('Profile updated successfully!', 'success');
+            
+            // FIX: No more 'globalUser'. We update from 'data.user'
+            populateProfileData(data.user); // Repopulate with new user data
+            
+            // Close the modal
+            document.getElementById('profile-info-display').classList.remove('hidden');
+            document.getElementById('profile-edit-form').classList.add('hidden');
+
+        } catch (err) {
+            console.error('Fetch Error:', err);
+            if (err.name === 'SyntaxError') {
+                showMessage('An unexpected server error occurred. (Not JSON)', 'error');
+            } else {
+                showMessage(err.message, 'error');
+            }
+        }
+    };
+    
+    /**
+     * --- NEW FUNCTION ---
+     * Handles the "Save Changes" for notification settings
+     */
+    const handleNotificationUpdate = async (e, token) => {
+        e.preventDefault();
+        
+        const body = {
+            notificationSettings: {
+                emailOnFriendRequest: document.getElementById('emailOnFriendRequest').checked,
+                emailOnNewMessage: document.getElementById('emailOnNewMessage').checked
+            }
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+                method: 'PATCH', 
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify(body)
+            });
+            
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Failed to update settings');
+            
+            showMessage('Notification settings saved!', 'success');
+            populateProfileData(data.user); // Repopulate with new data
+
+        } catch (err) {
+            console.error('Fetch Error:', err);
+            showMessage(err.message, 'error');
+        }
+    };
+
+
+    // --- FRIENDS FUNCTIONS ---
+    function handleMessageFriend(friendId) { showMessage('Messaging feature coming soon!', 'info'); }
+    async function handleRemoveFriend(friendId, token) {
+        if (!confirm('Are you sure you want to remove this friend?')) return;
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/users/me/friends/${friendId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to remove friend');
+            showMessage('Friend removed', 'success');
+            await loadFriends(token);
+        } catch (e) { showMessage(e.message, 'error'); }
+    }
+    function renderFriends(friends) {
+        const container = document.querySelector('.card.mt-8 .grid');
+        if (!container) return;
+        container.innerHTML = '';
+        if (!friends || friends.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 col-span-3">You haven\'t added any friends yet.</p>';
+            return;
+        }
+        friends.forEach(f => {
+            const initials = getInitials(f.name);
+            const div = document.createElement('div');
+            div.className = 'friend-card';
+            div.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <div class="friend-avatar"><span class="font-bold">${initials}</span></div>
+                <div>
+                <h4 class="font-bold">${f.name}</h4>
+                <p class="text-sm text-gray-500">${f.department || 'Student'}</p>
+                </div>
+            </div>
+            <div class="flex justify-between mt-3">
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" data-action="message" data-id="${f._id}">Message</button>
+                <button class="text-red-600 hover:text-red-800 text-sm font-medium" data-action="remove" data-id="${f._id}">Remove</button>
+            </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+    async function loadFriends(token) {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/users/me/friends`, { headers: { Authorization: `Bearer ${token}` } });
+            const friends = res.ok ? await res.json() : [];
+            renderFriends(friends);
+        } catch (err) {
+            console.error('Error loading friends:', err);
+            const container = document.querySelector('.card.mt-8 .grid');
+            if (container) container.innerHTML = '<p class="text-red-500 col-span-3">Could not load friends.</p>';
+        }
+    }
+
+    // --- HISTORY FUNCTIONS ---
+    function renderHistory(items) {
+        const groups = { blood: [], rides: [], rentals: [] };
+        if (items && items.length > 0) {
+            items.forEach(it => (groups[it.type] || []).push(it));
+        }
+        const fmtDate = (d) => new Date(d).toLocaleDateString();
+        const blood = document.getElementById('blood-tab');
+        const rides = document.getElementById('rides-tab');
+        const rentals = document.getElementById('rentals-tab');
+        if (blood) {
+            blood.innerHTML = groups.blood.map(it => `
+            <div class="history-item history-type-blood">
+                <div class="flex justify-between items-start">
+                <div><h4 class="font-bold">${it.title}</h4><p class="text-sm text-gray-500">${it.note || ''}</p></div>
+                <span class="bg-${it.status === 'Donated' ? 'red' : 'green'}-100 text-${it.status === 'Donated' ? 'red' : 'green'}-800 text-xs font-medium px-2 py-1 rounded">${it.status || ''}</span>
+                </div><div class="mt-2 flex justify-between text-sm"><span><i class="fas fa-calendar-alt mr-1"></i> ${fmtDate(it.at)}</span></div>
+            </div>`).join('') || '<p class="text-sm text-gray-500">No blood history yet.</p>';
+        }
+        if (rides) {
+            rides.innerHTML = groups.rides.map(it => `
+            <div class="history-item history-type-ride">
+                <div class="flex justify-between items-start">
+                <div><h4 class="font-bold">${it.title}</h4><p class="text-sm text-gray-500">${it.note || ''}</p></div>
+                <span class="text-blue-600 font-bold">₹${it.amount || 0}</span>
+                </div><div class="mt-2 flex justify-between text-sm"><span><i class="fas fa-calendar-alt mr-1"></i> ${fmtDate(it.at)}</span></div>
+            </div>`).join('') || '<p class="text-sm text-gray-500">No ride history yet.</p>';
+        }
+        if (rentals) {
+            rentals.innerHTML = groups.rentals.map(it => `
+            <div class="history-item history-type-rental">
+                <div class="flex justify-between items-start">
+                <div><h4 class="font-bold">${it.title}</h4><p class="text-sm text-gray-500">${it.note || ''}</p></div>
+                <span class="text-green-600 font-bold">₹${it.amount || 0}</span>
+                </div><div class="mt-2 flex justify-between text-sm"><span><i class="fas fa-calendar-alt mr-1"></i> ${fmtDate(it.at)}</span></div>
+            </div>`).join('') || '<p class="text-sm text-gray-500">No rental history yet.</p>';
+        }
+    }
+    async function loadHistory(token) {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/users/me/history`, { headers: { Authorization: `Bearer ${token}` } });
+            const history = res.ok ? await res.json() : [];
+            renderHistory(history);
+        } catch (err) {
+            console.error('Error loading history:', err);
+            const blood = document.getElementById('blood-tab');
+            if (blood) blood.innerHTML = '<p class="text-red-500">Could not load history.</p>';
+        }
+    }
+    const renderSearchResults = (users) => {
+    searchResultsContainer.innerHTML = ''; // Clear "Searching..."
+    
+    users.forEach(user => {
+        const userHTML = `
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg shadow-sm">
+                <div>
+                    <p class="font-semibold text-gray-900">${user.name}</p>
+                    <p class="text-sm text-gray-500">${user.studentId} (${user.department} - ${user.year})</p>
+                </div>
+                <button class="btn-primary-sm add-friend-btn" data-id="${user._id}">
+                    <i class="fas fa-plus mr-1"></i> Add
+                </button>
+            </div>
+        `;
+        searchResultsContainer.insertAdjacentHTML('beforeend', userHTML);
+    });
+
+    // IMPORTANT: Add event listeners to all the new "Add" buttons
+    document.querySelectorAll('.add-friend-btn').forEach(button => {
+        button.addEventListener('click', (e) => handleAddFriend(e, token)); // Pass token
+    });
+};
+
+
+// --- 3. ADD THIS NEW FUNCTION ---
+// This function handles the "Add" button click
+const handleAddFriend = async (e, token) => {
+    const button = e.currentTarget;
+    const userId = button.dataset.id;
+    
+    button.disabled = true;
+    button.innerHTML = 'Adding...';
+
+    try {
+        // We use the 'addFriend' endpoint that already exists in your backend
+        const data = await apiFetch(`/api/users/me/friends/${userId}`, 'POST', null, token);
+        
+        if (data.success) {
+            // Success! Make the button look "Added"
+            button.innerHTML = '<i class="fas fa-check"></i> Added';
+            button.classList.remove('btn-primary-sm');
+            button.classList.add('btn-secondary-sm');
+            
+            // Now, refresh the main "My Friends" list.
+            // The easiest way is to re-load the whole profile.
+            // This will also update the 'currentUser' object.
+            loadMyProfile(token); 
+            
+        } else {
+            throw new Error(data.message || 'Failed to add friend');
+        }
+    } catch (err) {
+        console.error('Add friend error:', err);
+        button.innerHTML = '<i class="fas fa-plus mr-1"></i> Add'; // Reset button
+        button.disabled = false;
+        showMessage(err.message, 'error');
+    }
+};
+
+    // --- 2. MAIN EXECUTION (Runs after HTML is loaded) ---
+    
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- A. AUTHENTICATION CHECK ---
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You must be logged in to view this page.');
+            window.location.href = 'auth.html?view=login';
+            return;
+        }
+
+        // --- B. INITIAL DATA FETCH ---
+        // Check for saved language
+        const savedLang = localStorage.getItem('userLanguage') || 'en';
+        translatePage(savedLang);
+        
+        fetchProfileData(token);
+        loadFriends(token);
+        loadHistory(token);
+        loadMyItems(token)
+        fetchMyVehicles();
+
+        // --- C. GRAB ALL ELEMENTS ---
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const profileInfoDisplay = document.getElementById('profile-info-display');
+        const profileEditForm = document.getElementById('profile-edit-form');
+        const updateProfileForm = document.getElementById('update-profile-form');
+        
+        // Settings Panel
+        const accountBtn = document.querySelector('.fa-user')?.closest('.nav-item');
+        const notificationBtn = document.querySelector('.fa-bell')?.closest('.nav-item');
+        const passwordBtn = document.querySelector('.fa-key')?.closest('.nav-item');
+        
+        // Panels
+        const mainContentColumn = document.querySelector('.lg\\:col-span-2'); // The main profile/friends column
+        const notificationPanel = document.getElementById('notification-panel');
+        const notificationForm = document.getElementById('notification-form');
+        const closeNotificationBtn = document.getElementById('close-notification-panel');
+
+        // Password Modal
+        const passwordModal = document.getElementById('password-modal');
+        const cancelPasswordBtn = document.getElementById('cancel-password-btn');
+        const passwordForm = document.getElementById('password-form');
+        const passwordMessage = document.getElementById('password-message');
+        
+        // Language
+        const languageSelect = document.getElementById('language-select');
+
+        // --- D. EVENT LISTENERS ---
+        
+        // 1. Wire up Edit/Cancel buttons
+        if(editProfileBtn) {
+            editProfileBtn.addEventListener('click', () => {
+                profileInfoDisplay.classList.add('hidden');
+                profileEditForm.classList.remove('hidden');
+            });
+        }
+        if(cancelEditBtn) {
+            cancelEditBtn.addEventListener('click', () => {
+                profileInfoDisplay.classList.remove('hidden');
+                profileEditForm.classList.add('hidden');
+            });
+        }
+
+        // 2. Wire up the "Save Changes" form submit
+        if(updateProfileForm) {
+            updateProfileForm.addEventListener('submit', (e) => handleProfileUpdate(e, token));
+        }
+        
+        // 3. Wire up History Tabs
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const historyTabs = document.querySelectorAll('.history-tab');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                historyTabs.forEach(tab => tab.classList.add('hidden'));
+                
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab') + '-tab';
+                document.getElementById(tabId).classList.remove('hidden');
+            });
+        });
+        document.getElementById('vehicle-items-container').addEventListener('click', (e) => {
+    if (e.target.classList.contains('toggle-status-btn')) {
+        handleVehicleStatusToggle(e.target);
+    }
+});
+
+        // 4. Wire up Friends List Clicks (Event Delegation)
+        const friendsGrid = document.querySelector('.card.mt-8 .grid');
+        if(friendsGrid) {
+            friendsGrid.addEventListener('click', (e) => {
+                const btn = e.target.closest('button[data-action]');
+                if (!btn) return;
+                const id = btn.getAttribute('data-id');
+                const action = btn.getAttribute('data-action');
+                if (action === 'message') handleMessageFriend(id);
+                if (action === 'remove') handleRemoveFriend(id, token);
+            });
+        }
+
+        // --- 5. PASSWORD MODAL LOGIC ---
+        if (passwordBtn) {
+            passwordBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                passwordMessage.textContent = '';
+                passwordForm.reset();
+                passwordModal.classList.remove('hidden');
+            });
+        }
+        if (cancelPasswordBtn) {
+            cancelPasswordBtn.addEventListener('click', () => {
+                passwordModal.classList.add('hidden');
+            });
+        }
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+                if (newPassword !== confirmNewPassword) {
+                    passwordMessage.textContent = 'New passwords do not match.';
+                    passwordMessage.className = 'mb-3 text-center text-red-500';
+                    return;
+                }
+                
+                try {
+                    const res = await fetch(`${API_BASE_URL}/api/auth/changepassword`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ currentPassword, newPassword })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message || 'Failed to update password');
+                    
+                    passwordMessage.textContent = 'Password updated successfully!';
+                    passwordMessage.className = 'mb-3 text-center text-green-500';
+                    setTimeout(() => { passwordModal.classList.add('hidden'); }, 2000);
+                } catch (err) {
+                    passwordMessage.textContent = err.message;
+                    passwordMessage.className = 'mb-3 text-center text-red-500';
+                }
+            });
+        }
+
+        // --- 6. LANGUAGE BUTTON LOGIC (FIXED) ---
+        if (languageSelect) {
+            languageSelect.value = savedLang; // Set dropdown to saved language
+
+            languageSelect.addEventListener('change', async (e) => {
+                const newLang = e.target.value;
+                
+                // 1. Translate the page immediately
+                translatePage(newLang);
+                
+                // 2. Save preference for next time
+                localStorage.setItem('userLanguage', newLang);
+
+                // 3. (Optional but good) Save preference to DB
+                try {
+                    // FIX: Changed from 'PUT' to 'PATCH'
+                    await fetch(`${API_BASE_URL}/api/users/me`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ preferredLanguage: newLang })
+                    });
+                } catch (err) {
+                    console.error('Failed to save language preference:', err);
+                }
+            });
+        }
+        
+        // --- 7. SETTINGS PANEL LOGIC (FIXED) ---
+        
+        // Function to show the main content and hide notification panel
+        const showMainContent = (e) => {
+            if(e) e.preventDefault();
+            if(mainContentColumn) mainContentColumn.classList.remove('hidden');
+            if(notificationPanel) notificationPanel.classList.add('hidden');
+            if(accountBtn) accountBtn.classList.add('active');
+            if(notificationBtn) notificationBtn.classList.remove('active');
+        };
+
+        // Function to show the notification panel
+        const showNotificationPanel = (e) => {
+            e.preventDefault();
+            if(mainContentColumn) mainContentColumn.classList.add('hidden');
+            if(notificationPanel) notificationPanel.classList.remove('hidden');
+            if(accountBtn) accountBtn.classList.remove('active');
+            if(notificationBtn) notificationBtn.classList.add('active');
+            
+            // Populate form just in case
+            if (currentUser && currentUser.notificationSettings) {
+                document.getElementById('emailOnFriendRequest').checked = !!currentUser.notificationSettings.emailOnFriendRequest;
+                document.getElementById('emailOnNewMessage').checked = !!currentUser.notificationSettings.emailOnNewMessage;
+            }
+        };
+
+        // "Account" button shows main content
+        if(accountBtn) {
+            accountBtn.addEventListener('click', showMainContent);
+        }
+
+        // "Notification" button shows notification panel
+        if(notificationBtn) {
+            notificationBtn.addEventListener('click', showNotificationPanel);
+        }
+        
+        // "Close" button on notification panel shows main content
+        if(closeNotificationBtn) {
+            closeNotificationBtn.addEventListener('click', showMainContent);
+        }
+        
+        // Notification form submission
+        if(notificationForm) {
+            notificationForm.addEventListener('submit', (e) => handleNotificationUpdate(e, token));
+        }
+        if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const query = searchInput.value;
+        if (query.trim()) {
+            handleSearchUsers(query, token); // Pass the token
+        }
+    });
+    
+}
+        
+    }); 
+    
+    /**
+     * ===============================================
+     * LOST & FOUND: Load and manage user's own items
+     * ===============================================
+     */
+
+    /**
+     * 1. Fetches items from the new /api/lnf/myitems endpoint
+     */
+    async function loadMyItems(token) {
+        const container = document.getElementById('lost-found-items-container');
+        
+        try {
+            const data = await apiFetch('/api/lnf/myitems', 'GET', null, token);
+            
+            if (data.success && data.items.length > 0) {
+                renderMyItems(data.items);
+            } else {
+                container.innerHTML = '<p class="text-gray-500">You have not reported any lost or found items yet.</p>';
+            }
+        } catch (err) {
+            container.innerHTML = `<p class="text-red-500">Error loading your items: ${err.message}</p>`;
+        }
+    }
+
+    /**
+     * 2. Renders the user's items to the container
+     */
+    function renderMyItems(items) {
+        const container = document.getElementById('lost-found-items-container');
+        container.innerHTML = ''; // Clear loading message
+        
+        // Use Tailwind's 'divide-y' for spacing
+        const list = document.createElement('div');
+        list.className = 'divide-y divide-gray-200';
+
+        items.forEach(item => {
+            const itemCard = createMyItemCard(item);
+            list.appendChild(itemCard);
+        });
+        container.appendChild(list);
+    }
+
+    /**
+     * 3. Creates a single item card for the profile page
+     */
+    function createMyItemCard(item) {
+        const card = document.createElement('div');
+        // We use Tailwind classes from your page for consistency
+        card.className = 'py-4 flex flex-col sm:flex-row justify-between sm:items-center';
+
+        const isClaimed = item.status === 'claimed';
+        const itemDate = new Date(item.date).toLocaleDateString();
+
+        card.innerHTML = `
+            <div class="mb-2 sm:mb-0">
+                <p class="font-semibold text-gray-800">${item.itemName}</p>
+                <p class="text-sm text-gray-500">
+                    Type: <span class="font-medium ${item.itemType === 'lost' ? 'text-red-600' : 'text-green-600'}">${item.itemType.toUpperCase()}</span> 
+                    | Status: <strong id="status-${item._id}" class="font-medium">${item.status}</strong>
+                    | On: ${itemDate}
+                </p>
+            </div>
+            <div>
+                <button 
+                    class="withdraw-btn w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-md ${isClaimed ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-purple-600 text-white hover:bg-purple-700'}"
+                    data-id="${item._id}"
+                    ${isClaimed ? 'disabled' : ''}
+                >
+                    ${isClaimed ? 'Claimed' : (item.itemType === 'lost' ? 'Mark as Found' : 'Mark as Claimed')}
+                </button>
+            </div>
+        `;
+
+        // Add the click listener ONLY if the item is not already claimed
+        if (!isClaimed) {
+            const withdrawButton = card.querySelector('.withdraw-btn');
+            withdrawButton.addEventListener('click', handleWithdrawItem);
+        }
+        
+        return card;
+    }
+
+    /**
+     * 4. Handles the "Mark as Found/Claimed" button click
+     */
+    async function handleWithdrawItem(e) {
+        const button = e.target;
+        const itemId = button.dataset.id;
+        const token = localStorage.getItem('token');
+        
+        if (!confirm('Are you sure you want to mark this item as claimed? This action cannot be undone.')) {
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = 'Updating...';
+        // Add Tailwind classes to show it's loading
+        button.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+        button.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+
+        try {
+            const data = await apiFetch(
+                `/api/lnf/${itemId}/status`, 
+                'PUT', 
+                { status: 'claimed' }, // This is the req.body
+                token
+            );
+
+            if (data.success) {
+                // Update the UI
+                button.textContent = 'Claimed';
+                const statusText = document.getElementById(`status-${itemId}`);
+                if (statusText) {
+                    statusText.textContent = 'claimed';
+                }
+            }
+        } catch (err) {
+            alert(`Error updating item: ${err.message}`);
+            // Re-enable button on error
+            button.disabled = false;
+            button.textContent = 'Mark as Found'; // Or "Mark as Claimed" - reset to original
+            button.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            button.classList.add('bg-purple-600', 'hover:bg-purple-700');
+        }
+    }
+    // --- Renders a single vehicle card in the profile ---
+function renderProfileVehicleCard(vehicle) {
+    const { _id, title, status, image } = vehicle;
+
+    // Determine button text and new status
+    const isAvailable = status === 'available';
+    const btnText = isAvailable ? 'Mark as Rented' : 'Mark as Available';
+    const btnClass = isAvailable ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600';
+    const newStatus = isAvailable ? 'rented' : 'available';
+
+    return `
+        <div class="border rounded-lg p-4 flex items-center justify-between" id="vehicle-${_id}">
+            <div class="flex items-center space-x-4">
+                <img src="${image || '/images/vehicle_placeholder.png'}" alt="${title}" class="w-16 h-16 rounded-lg object-cover">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">${title}</h3>
+                    <p class="text-sm text-gray-600">
+                        Status: <span id="status-${_id}" class="font-bold" style="text-transform: capitalize;">${status}</span>
+                    </p>
+                </div>
+            </div>
+            <button 
+                class="toggle-status-btn text-white font-bold py-2 px-4 rounded transition duration-200 ${btnClass}"
+                data-id="${_id}"
+                data-new-status="${newStatus}"
+                data-btn-text-original="${btnText}">
+                ${btnText}
+            </button>
+        </div>
+    `;
+}
+
+// --- Fetches and displays the user's vehicles ---
+async function fetchMyVehicles() {
+    const container = document.getElementById('vehicle-items-container');
+    if (!container) return;
+    
+    container.innerHTML = '<p data-translate="loading_vehicles">Loading vehicles...</p>';
+    const token = localStorage.getItem('token');
+
+    try {
+        const data = await apiFetch('/api/vehicles/myvehicles', 'GET', null, token);
+        
+        if (data.length === 0) {
+            container.innerHTML = '<p data-translate="no_vehicles_found">You have not listed any vehicles for rent.</p>';
+            return;
+        }
+        
+        container.innerHTML = data.map(renderProfileVehicleCard).join('');
+        
+    } catch (err) {
+        container.innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
+    }
+}
+
+// --- Handles the click on the "Mark as Rented/Available" button ---
+async function handleVehicleStatusToggle(button) {
+    const { id, newStatus } = button.dataset;
+    const originalText = button.dataset.btnTextOriginal;
+    const token = localStorage.getItem('token');
+
+    button.disabled = true;
+    button.textContent = 'Updating...';
+    button.classList.add('bg-gray-400');
+
+    try {
+        const updatedVehicle = await apiFetch(
+            `/api/vehicles/${id}/status`, 
+            'PATCH', 
+            { status: newStatus }, // This is the req.body
+            token
+        );
+        
+        // Update the UI
+        const statusText = document.getElementById(`status-${id}`);
+        statusText.textContent = updatedVehicle.status;
+
+        // Flip the button's properties for the *next* click
+        const isNowAvailable = updatedVehicle.status === 'available';
+        const nextBtnText = isNowAvailable ? 'Mark as Rented' : 'Mark as Available';
+        const nextBtnClass = isNowAvailable ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600';
+        const nextNewStatus = isNowAvailable ? 'rented' : 'available';
+
+        button.textContent = nextBtnText;
+        button.dataset.btnTextOriginal = nextBtnText;
+        button.dataset.newStatus = nextNewStatus;
+        
+        // Remove old classes and add new ones
+        button.classList.remove('bg-gray-400', 'bg-red-500', 'bg-green-500');
+        button.classList.add(nextBtnClass);
+
+    } catch (err) {
+        alert(`Error updating vehicle status: ${err.message}`);
+        button.textContent = originalText; // Revert on error
+        button.classList.remove('bg-gray-400');
+    } finally {
+        button.disabled = false;
+    }
+}
+</script>

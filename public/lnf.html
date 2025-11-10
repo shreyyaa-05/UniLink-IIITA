@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLink - Lost & Found</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #6a0dad;
+            --light-purple: #9b59b6;
+            --dark-purple: #4b0082;
+            --accent-purple: #8a2be2;
+            --text-light: #f8f8ff;
+            --bg-light: #f5f5f5;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
+            color: var(--text-light);
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+        
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Logout Button Styles */
+        .logout-btn {
+            background-color: transparent;
+            border: 2px solid var(--text-light);
+            color: var(--text-light);
+            padding: 8px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(106, 13, 173, 0.8), rgba(75, 0, 130, 0.8)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--text-light);
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-purple);
+            color: var(--text-light);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .cta-button:hover {
+            background-color: var(--light-purple);
+            transform: translateY(-3px);
+        }
+        
+        /* Search Section */
+        .search-section {
+            padding: 40px 0;
+            background-color: white;
+            box-shadow: var(--shadow);
+            margin-top: -30px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .search-container h3 {
+            color: var(--primary-purple);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--light-purple);
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            padding-right: 60px;
+        }
+        
+        .search-box button {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        
+        .search-box button:hover {
+            background-color: var(--dark-purple);
+        }
+        
+        
+        
+        .search-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .search-option {
+            background-color: var(--light-purple);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-option:hover {
+            background-color: var(--primary-purple);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--primary-purple);
+            font-size: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 12px 25px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab.active {
+            color: var(--primary-purple);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-purple);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-purple);
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: var(--light-purple);
+            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2);
+            outline: none;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--light-purple);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            background-color: rgba(155, 89, 182, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(155, 89, 182, 0.1);
+        }
+        
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--light-purple);
+            margin-bottom: 15px;
+        }
+        
+        .upload-area p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .upload-area span {
+            color: var(--primary-purple);
+            font-weight: 600;
+        }
+        
+        .upload-area input {
+            display: none;
+        }
+        
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-item .remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ff4757;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--dark-purple);
+            transform: translateY(-3px);
+        }
+        
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .item-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .item-image {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.5s ease;
+        }
+        
+        .item-card:hover .item-image img {
+            transform: scale(1.05);
+        }
+        
+        .item-info {
+            padding: 20px;
+        }
+        
+        .item-info h4 {
+            color: var(--primary-purple);
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .item-info p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        .item-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-lost {
+            background-color: #ffeaa7;
+            color: #e17055;
+        }
+        
+        .status-found {
+            background-color: #a29bfe;
+            color: white;
+        }
+        
+        .status-resolved {
+            background-color: #55efc4;
+            color: #00b894;
+        }
+        
+        /* Filters */
+        .filters {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-purple);
+        }
+        
+        .filter-group select, 
+        .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-apply {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+        
+        .filter-reset {
+            background-color: #ddd;
+            color: #666;
+        }
+        
+        .filter-btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Visual Search Modal */
+       
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            color: var(--primary-purple);
+            margin: 0;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary-purple);
+        }
+        
+      
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--dark-purple), #2d1b69);
+            color: var(--text-light);
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent-purple);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--accent-purple);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-box input {
+                border-radius: 30px;
+                margin-bottom: 10px;
+                padding-right: 15px;
+            }
+            
+            .search-box button {
+                position: relative;
+                border-radius: 30px;
+                padding: 12px;
+                width: 100%;
+            }
+            
+            
+            
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+        }
+        
+        /* Hidden class for items that are found */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="logonew.png" alt="UniLink Logo">
+                    <h1>UniLink</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="main.html" class="active">Home</a></li>
+                        <li><a href="contactus.html">Contact</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                        <li>
+                            <a href="#" class="logout-btn">Logout</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Find What You've Lost, Return What You've Found</h2>
+            <p>UniLink connects people who have lost items with those who have found them. Together, we can reunite lost belongings with their owners.</p>
+            <a href="#report" class="cta-button">Report an Item</a>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <h3>Search for Lost or Found Items</h3>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Describe what you're looking for...">
+                    
+                    <button id="search-button"><i class="fas fa-search"></i> Search</button>
+                    
+                </div>
+                <div class="search-options">
+                    <div class="search-option">Electronics</div>
+                    <div class="search-option">Jewelry</div>
+                    <div class="search-option">Documents</div>
+                    <div class="search-option">Clothing</div>
+                    <div class="search-option">Other</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Search Modal -->
+    
+
+
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <h2 class="section-title" id="report">Report Lost or Found Item</h2>
+            
+            <div class="tabs">
+                <button class="tab active" data-tab="lost">I Lost Something</button>
+                <button class="tab" data-tab="found">I Found Something</button>
+            </div>
+            
+            <!-- Lost Item Form -->
+            <div class="tab-content active" id="lost-tab">
+                <div class="form-container">
+                    <form id="lost-form">
+                        <div class="form-group">
+                            <label for="item-name">Item Name</label>
+                            <input type="text" id="item-name" placeholder="e.g., iPhone 12, Black Wallet, Keys...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category">
+                                <option value="">Select a category</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="jewelry">Jewelry & Accessories</option>
+                                <option value="documents">Documents</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="bags">Bags & Wallets</option>
+                                <option value="keys">Keys</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lost-location">Where did you lose it?</label>
+                            <input type="text" id="lost-location" placeholder="e.g., Main Library, Student Union, Parking Lot B...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lost-date">When did you lose it?</label>
+                            <input type="date" id="lost-date">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" placeholder="Provide details about the item: color, brand, distinctive features, contents..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+    <label for="itemImage">Image URL (Optional):</label>
+    <input type="text" id="itemImage" name="itemImage" placeholder="https.imgur.com/your-image.png">
+</div>
+                        
+                        <div class="form-group">
+                            <label for="contact">Contact Information</label>
+                            <input type="text" id="contact" placeholder="Email or phone number where you can be reached">
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Report Lost Item</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Found Item Form -->
+            <div class="tab-content" id="found-tab">
+                <div class="form-container">
+                    <form id="found-form">
+                        <div class="form-group">
+                            <label for="found-item-name">Item Name</label>
+                            <input type="text" id="found-item-name" placeholder="e.g., iPhone 12, Black Wallet, Keys...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="found-category">Category</label>
+                            <select id="found-category">
+                                <option value="">Select a category</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="jewelry">Jewelry & Accessories</option>
+                                <option value="documents">Documents</option>
+                                <option value="clothing">Clothing</option>
+                                <option value="bags">Bags & Wallets</option>
+                                <option value="keys">Keys</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="found-location">Where did you find it?</label>
+                            <input type="text" id="found-location" placeholder="e.g., Main Library, Student Union, Parking Lot B...">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="found-date">When did you find it?</label>
+                            <input type="date" id="found-date">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="found-description">Description</label>
+                            <textarea id="found-description" placeholder="Provide details about the item: color, brand, distinctive features, contents..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+        <label for="foundItemImage">Image URL (Optional):</label>
+        <input type="text" id="foundItemImage" name="foundItemImage" placeholder="https.imgur.com/your-image.png">
+    </div>
+    
+    <div class="form-group">
+        <label>Upload Images</label>
+        <div class="upload-area" id="upload-found" style="display: none;">
+            </div>
+    </div>
+                        
+                        <div class="form-group">
+                            <label for="found-contact">Contact Information</label>
+                            <input type="text" id="found-contact" placeholder="Email or phone number where you can be reached">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="storage-location">Current Location of Item</label>
+                            <input type="text" id="storage-location" placeholder="Where is the item currently stored?">
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Report Found Item</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Lost Items Section -->
+            <h2 class="section-title" id="lost-items">Lost Items</h2>
+            
+            <!-- Filters
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="category-filter">Category</label>
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="jewelry">Jewelry & Accessories</option>
+                            <option value="documents">Documents</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="bags">Bags & Wallets</option>
+                            <option value="keys">Keys</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-filter">Date Lost</label>
+                        <input type="date" id="date-filter">
+                    </div>
+                    <div class="filter-group">
+                        <label for="location-filter">Location</label>
+                        <input type="text" id="location-filter" placeholder="Filter by location...">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="filter-btn filter-apply" id="apply-filters">Apply Filters</button>
+                    <button class="filter-btn filter-reset" id="reset-filters">Reset Filters</button>
+                </div>
+            </div> -->
+            
+            <div class="items-grid" id="lost-items-grid">
+                <!-- Lost items will be populated here -->
+            </div>
+            
+            <!-- Found Items Section -->
+            <h2 class="section-title" id="found-items" style="margin-top: 80px;">Found Items</h2>
+            <div class="items-grid" id="found-items-grid">
+                <!-- Found items will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>UniLink</h4>
+                    <p>Connecting lost items with their owners through our community platform. Together we can make a difference.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="main.html">Home</a></li>
+                        <li><a href="lnf.html">Lost Items</a></li>
+                        <li><a href="lnf.html">Found Items</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="contactus.html">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> IIIT Allahabad,Prayagraj</li>
+                        <li><i class="fas fa-phone"></i>7976295779</li>
+                        <li><i class="fas fa-envelope"></i> unilink@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 UniLink. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+===============================
+    <script>
+// =======================================
+// API HELPER & AUTH
+// =======================================
+const API_BASE_URL = 'http://localhost:5000';
+
+const apiFetch = async (endpoint, method, body, token) => {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const options = {
+        method: method.toUpperCase(),
+        headers: headers,
+    };
+
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    try {
+        const response = await fetch(endpoint, options);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || data.msg || 'An API error occurred');
+        }
+        return data;
+    } catch (err) {
+        console.error('API Fetch Error:', err);
+        throw err;
+    }
+};
+
+function logout() {
+    localStorage.removeItem('token');
+    window.location.href = 'auth.html?view=login'; 
+}
+
+// =======================================
+// MAIN APP LOGIC
+// =======================================
+
+let allItems = []; 
+let currentToken = '';
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for login token
+    currentToken = localStorage.getItem('token');
+    if (!currentToken) {
+        alert('You must be logged in to view this page.');
+        window.location.href = 'auth.html?view=login';
+        return;
+    }
+
+    // Initialize form references
+    const lostForm = document.getElementById('lost-form');
+    const foundForm = document.getElementById('found-form');
+    const logoutButton = document.querySelector('.logout-btn');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+
+    // Initial Load
+    loadItems();
+
+    // Bind Event Listeners
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            logout();
+        });
+    }
+
+    // Report Lost Item Form
+    if (lostForm) {
+        lostForm.addEventListener('submit', handleLostFormSubmit);
+    }
+
+    // Report Found Item Form
+    if (foundForm) {
+        foundForm.addEventListener('submit', handleFoundFormSubmit);
+    }
+
+    // Search functionality
+    const handleSearch = async () => {
+        const query = searchInput.value.trim();
+        
+        if (!query) {
+            loadItems();
+            return;
+        }
+
+        try {
+            const data = await apiFetch(`/api/lnf/search?q=${query}`, 'GET', null, currentToken);
+            
+            if (data.success) {
+                renderAllItems(data.items);
+                document.getElementById('lost-items').scrollIntoView({ behavior: 'smooth' });
+            }
+        } catch (err) {
+            alert(`Error searching: ${err.message}`);
+        }
+    };
+
+    searchButton.addEventListener('click', handleSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    });
+
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${targetTab}-tab`).classList.add('active');
+        });
+    });
+});
+
+/**
+ * Fetches all items from the API and renders them
+ */
+async function loadItems() {
+    const lostGrid = document.getElementById('lost-items-grid');
+    lostGrid.innerHTML = '<p>Loading items...</p>';
+    
+    try {
+        const data = await apiFetch('/api/lnf', 'GET', null, currentToken);
+        if (data.success && data.items) {
+            allItems = data.items;
+            renderAllItems(allItems);
+        } else {
+            lostGrid.innerHTML = '<p>No items found.</p>';
+        }
+    } catch (err) {
+        lostGrid.innerHTML = `<p style="color: red;">Error loading items: ${err.message}</p>`;
+    }
+}
+
+/**
+ * CORRECTED: Handles the "Report Lost Item" form submission
+ */
+async function handleLostFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Reporting...';
+
+    try {
+        // Get data from the correct input IDs - FIXED SYNTAX
+        const formData = {
+            itemType: 'lost',
+            itemName: document.getElementById('item-name').value,
+            category: document.getElementById('category').value,
+            image: document.getElementById('itemImage').value,
+            description: document.getElementById('description').value,
+            location: document.getElementById('lost-location').value,
+            date: document.getElementById('lost-date').value,
+            contact: document.getElementById('contact').value
+        };
+
+        console.log('Submitting lost item:', formData);
+
+        // Basic validation
+        if (!formData.itemName || !formData.description || !formData.location) {
+            throw new Error('Please fill out Item Name, Description, and Location.');
+        }
+
+        // Call the POST API to your backend
+        const data = await apiFetch('/api/lnf', 'POST', formData, currentToken);
+
+        if (data.success) {
+            alert('Item reported successfully!');
+            form.reset();
+            loadItems();
+        }
+    } catch (err) {
+        alert(`Error reporting item: ${err.message}`);
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Report Lost Item';
+    }
+}
+
+/**
+ * CORRECTED: Handles the "Report Found Item" form submission
+ */
+async function handleFoundFormSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Reporting...';
+
+    try {
+        // Get data from the 'found' form input IDs - FIXED SYNTAX
+        const formData = {
+            itemType: 'found',
+            itemName: document.getElementById('found-item-name').value,
+            category: document.getElementById('found-category').value,
+            image: document.getElementById('foundItemImage').value,
+            description: document.getElementById('found-description').value,
+            location: document.getElementById('found-location').value,
+            date: document.getElementById('found-date').value,
+            contact: document.getElementById('found-contact').value,
+            storageLocation: document.getElementById('storage-location').value
+        };
+
+        console.log('Submitting found item:', formData);
+
+        // Validation
+        if (!formData.itemName) {
+            throw new Error('Please fill out "Item Name".');
+        }
+        if (!formData.description) {
+            throw new Error('Please fill out "Description".');
+        }
+        if (!formData.location) {
+            throw new Error('Please fill out "Where did you find it?".');
+        }
+
+        const data = await apiFetch('/api/lnf', 'POST', formData, currentToken);
+
+        if (data.success) {
+            alert('Item reported successfully!');
+            form.reset();
+            loadItems();
+        }
+    } catch (err) {
+        alert(`Error reporting item: ${err.message}`);
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Report Found Item';
+    }
+}
+
+/**
+ * Renders items to the DOM
+ */
+function renderAllItems(items) {
+    const lostItemsGrid = document.getElementById('lost-items-grid');
+    const foundItemsGrid = document.getElementById('found-items-grid');
+
+    lostItemsGrid.innerHTML = '';
+    foundItemsGrid.innerHTML = '';
+
+    let lostCount = 0;
+    let foundCount = 0;
+
+    items.forEach(item => {
+        const card = createItemCard(item);
+        if (item.itemType === 'lost') {
+            lostItemsGrid.appendChild(card);
+            lostCount++;
+        } else {
+            foundItemsGrid.appendChild(card);
+            foundCount++;
+        }
+    });
+
+    if (lostCount === 0) {
+        lostItemsGrid.innerHTML = '<p>No lost items found.</p>';
+    }
+    if (foundCount === 0) {
+        foundItemsGrid.innerHTML = '<p>No found items reported.</p>';
+    }
+}
+
+/**
+ * Creates a single item card HTML element
+ */
+function createItemCard(item) {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    const imageUrl = (item.image && item.image.startsWith('http')) 
+        ? item.image 
+        : 'https://via.placeholder.com/300x200.png?text=No+Image';
+    
+    const itemTypeClass = item.itemType === 'lost' ? 'status-lost' : 'status-found';
+    const itemTypeText = item.itemType.toUpperCase();
+
+    const itemDate = new Date(item.date).toLocaleDateString();
+    const userName = item.user ? `${item.user.name} (${item.user.studentId})` : 'Unknown User';
+
+    card.innerHTML = `
+        <div class="item-image">
+            <img src="${imageUrl}" alt="${item.itemName}">
+        </div>
+        <div class="item-info">
+            <span class="item-status ${itemTypeClass}">${itemTypeText}</span>
+            <h4>${item.itemName}</h4>
+            <p>${item.description}</p>
+            <div class="item-meta">
+                <span><i class="fas fa-map-marker-alt"></i> ${item.location}</span>
+                <span><i class="fas fa-calendar-alt"></i> ${itemDate}</span>
+            </div>
+            <div class="item-meta" style="margin-top: 10px;">
+                <span><i class="fas fa-user"></i> ${userName}</span>
+            </div>
+        </div>
+    `;
+    return card;
+}
+</script>
+    // lnf.html <script>
+// ... (after createItemCard)
+
+/**
+ * Reusable function to perform a search and render results.
+ * This will be used by the search bar AND the category buttons.
+ */
+async function performSearch(query) {
+    // Find the grids to show the results
+    const lostItemsGrid = document.getElementById('lost-items-grid');
+    const foundItemsGrid = document.getElementById('found-items-grid');
+
+    // Show a loading message
+    lostItemsGrid.innerHTML = '<p>Searching...</p>';
+    foundItemsGrid.innerHTML = ''; // Clear the other grid
+
+    try {
+        // Use the existing search API endpoint
+        const data = await apiFetch(`/api/lnf/search?q=${encodeURIComponent(query)}`, 'GET', null, currentToken);
+        
+        if (data.success && data.items.length > 0) {
+            // We can reuse our main render function
+            renderAllItems(data.items); 
+        } else {
+            lostItemsGrid.innerHTML = '<p>No items found matching your search.</p>';
+        }
+    } catch (err) {
+        console.error('Search failed:', err);
+        lostItemsGrid.innerHTML = `<p style="color: red;">Search error: ${err.message}</p>`;
+    }
+}
+
+    
+    
+    /**
+     * Shows a preview of the selected image in the modal
+     */
+    function showPreview(file) {
+        const previewContainer = document.getElementById('search-preview');
+        previewContainer.innerHTML = ''; // Clear old preview
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item';
+            // Add a clickable remove button
+            previewItem.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+                <div class="remove" onclick="clearVisualSearch()">&times;</div>
+            `;
+            previewContainer.appendChild(previewItem);
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    /**
+     * Handles the visual search API call
+     */
+    
+</script>
+</body>
+</html>

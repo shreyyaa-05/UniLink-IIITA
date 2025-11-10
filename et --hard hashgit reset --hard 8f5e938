@@ -1,0 +1,12 @@
+[33m8f5e938[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: commit (merge): car rental html added
+[33mcad760a[m HEAD@{1}: commit: car rental html added
+[33m249ea89[m HEAD@{2}: commit: blood donation module done
+[33md4eb16d[m HEAD@{3}: commit: profile page made
+[33m41f6358[m HEAD@{4}: commit: changes made
+[33me8c5e13[m HEAD@{5}: commit: Add .gitignore and remove .env from tracking
+[33m3fd21a1[m HEAD@{6}: commit: forgot password functionality added
+[33m7b259df[m HEAD@{7}: rebase (finish): returning to refs/heads/main
+[33m7b259df[m HEAD@{8}: rebase (continue): Initial commit
+[33m3e347fd[m HEAD@{9}: pull origin main --rebase (start): checkout 3e347fd0186302d864e055953b3a2424fd5a2b4c
+[33m0b09bc4[m HEAD@{10}: Branch: renamed refs/heads/master to refs/heads/main
+[33m0b09bc4[m HEAD@{12}: commit (initial): Initial commit

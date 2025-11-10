@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLink | IIIT Ride Sharing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #8b6bc9;
+            --light-purple: #c5b4e3;
+            --dark-purple: #826fa7;
+            --accent-purple: #9d84d6;
+            --background: #f8f4ff;
+            --card-bg: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border: #e0d0f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+           background: linear-gradient(rgba(150, 150, 194, 0.5), rgba(167, 167, 180, 0.5)), url('bg2.png');
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Updated Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-purple);
+            text-decoration: none;
+        }
+        
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            position: relative;
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--primary-purple);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-purple);
+            border-radius: 3px;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-purple);
+            color: var(--primary-purple);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-purple);
+            color: white;
+        }
+        
+        .btn-primary {
+            background: var(--primary-purple);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--dark-purple);
+        }
+        
+        .logout-button {
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-button:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 30px;
+            padding: 10px;
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box input {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 30px;
+            outline: none;
+        }
+        
+        .search-box button {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        /* Filters Sidebar */
+        .filters {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+        
+        .filters h2 {
+            margin-bottom: 20px;
+            color: var(--primary-purple);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-option {
+            padding: 8px 15px;
+            background: var(--background);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-option:hover, .filter-option.active {
+            background: var(--primary-purple);
+            color: white;
+        }
+        
+        /* Time Range Slider Styles */
+        .time-range-container {
+            margin-top: 15px;
+        }
+        
+        .slider-container {
+            position: relative;
+            height: 40px;
+            margin: 20px 0;
+        }
+        
+        .slider-track {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            transform: translateY(-50%);
+        }
+        
+        .slider-range {
+            position: absolute;
+            top: 50%;
+            height: 6px;
+            background: var(--primary-purple);
+            border-radius: 3px;
+            transform: translateY(-50%);
+        }
+        
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-purple);
+            border-radius: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-thumb:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .time-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .time-display {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            color: var(--primary-purple);
+            background: var(--background);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* Ride Listings */
+        .ride-listings {
+            flex: 2;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            color: var(--primary-purple);
+        }
+        
+        .sort-options select {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: white;
+            outline: none;
+        }
+        
+        .ride-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--primary-purple);
+        }
+        
+        .ride-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ride-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .rider-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--light-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .rider-details h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .rider-details p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .ride-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+        }
+        
+        .route {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--background);
+            border-radius: 10px;
+        }
+        
+        .route-point {
+            flex: 1;
+        }
+        
+        .route-point h4 {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .route-point p {
+            font-weight: 500;
+        }
+        
+        .route-divider {
+            width: 30px;
+            height: 2px;
+            background: var(--light-purple);
+            margin: 0 10px;
+        }
+        
+        .ride-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+        
+        .ride-cost {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-purple);
+        }
+        
+        .seats {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .seat-icon {
+            color: var(--text-light);
+            font-size: 18px;
+        }
+        
+        .seat-icon.filled {
+            color: var(--primary-purple);
+        }
+        
+        .owner-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        /* Request Ride Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary-purple);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary-purple);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* Post Request Section */
+        .post-request-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent-purple);
+        }
+        
+        .post-request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .post-request-header h2 {
+            color: var(--primary-purple);
+        }
+        
+        .post-request-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .request-card {
+            background: var(--background);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .request-info h3 {
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+        
+        .request-info p {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .request-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .request-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-purple);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #e0d0f5;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--accent-purple);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e0d0f5;
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .ride-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .owner-controls {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .request-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .request-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="main.html" class="logo">
+                    <!-- ADD YOUR LOGO HERE - Replace 'logonew.png' with your actual logo file -->
+                    <img src="logonew.png" alt="UniLink Logo" class="logo-img">
+                    <span>UniLink</span>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="main.html" class="active">Home</a></li>
+                        <li><a href="contactus.html">Contact</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                         <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <!-- Only show logout button since user must be logged in to access this page -->
+                    <button class="logout-button" id="logoutBtn">LOGOUT</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>IIIT Allahabad</h1>
+            <p>Where Excellence Meets Innovation. Join our community of students helping students.</p>
+            <div class="search-box">
+                <input type="text" placeholder="Where do you want to go?">
+                <button><i class="fas fa-search"></i> Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Filters Sidebar -->
+            <div class="filters">
+                <h2>Filters</h2>
+                
+                <div class="filter-group">
+                    <h3>Vehicle Type</h3>
+                    <div class="filter-options">
+                        <div class="filter-option active" data-filter="vehicle" data-value="all">Any</div>
+                        <div class="filter-option" data-filter="vehicle" data-value="car">Car</div>
+                        <div class="filter-option" data-filter="vehicle" data-value="bike">Bike</div>
+                        <div class="filter-option" data-filter="vehicle" data-value="auto">Auto</div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Date</h3>
+                    <div class="filter-options">
+                        <div class="filter-option active" data-filter="date" data-value="all">Any</div>
+                        <div class="filter-option" data-filter="date" data-value="today">Today</div>
+                        <div class="filter-option" data-filter="date" data-value="tomorrow">Tomorrow</div>
+                        <div class="filter-option" data-filter="date" data-value="week">This Week</div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Time Range</h3>
+                    <div class="time-range-container">
+                        <div class="slider-container">
+                            <div class="slider-track"></div>
+                            <div class="slider-range" id="sliderRange"></div>
+                            <div class="slider-thumb" id="thumbStart"></div>
+                            <div class="slider-thumb" id="thumbEnd"></div>
+                        </div>
+                        <div class="time-labels">
+                            <span>12 AM</span>
+                            <span>6 AM</span>
+                            <span>12 PM</span>
+                            <span>6 PM</span>
+                            <span>12 AM</span>
+                        </div>
+                        <div class="time-display" id="timeDisplay">
+                            Selected Time Range: 4:00 PM - 6:00 PM
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Budget</h3>
+                    <div class="filter-options">
+                        <div class="filter-option active" data-filter="budget" data-value="all">Any</div>
+                        <div class="filter-option" data-filter="budget" data-value="100">Under ₹100</div>
+                        <div class="filter-option" data-filter="budget" data-value="200">₹100-₹200</div>
+                        <div class="filter-option" data-filter="budget" data-value="201">₹200+</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" id="applyFilters" style="width: 100%; margin-top: 20px;">Apply Filters</button>
+                <button class="btn btn-outline" id="resetFilters" style="width: 100%; margin-top: 10px;">Reset Filters</button>
+            </div>
+            
+            <!-- Ride Listings -->
+            <div class="ride-listings">
+                <!-- Post Request Section -->
+                <div class="post-request-section">
+                    <div class="post-request-header">
+                        <h2>Looking for a Ride?</h2>
+                        <button class="btn btn-primary" id="postRequestBtn">Post Ride Request</button>
+                    </div>
+                    <div class="post-request-content" id="requestsContainer">
+                        <!-- Ride requests will be dynamically inserted here -->
+                    </div>
+                </div>
+                
+                <div class="section-header">
+                    <h2>Available Rides</h2>
+                    <button class="btn btn-primary" id="openOfferModalBtn">Offer a Ride</button>
+                    <div class="sort-options">
+                        <select id="sortRides">
+                            <option value="none">Sort by: None</option>
+                            <option value="latest">Sort by: Latest</option>
+                            <option value="cheapest">Sort by: Cheapest</option>
+                            <option value="nearest">Sort by: Nearest</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="ridesContainer">
+                    <!-- Ride cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Ride Modal -->
+    <div class="modal" id="requestRideModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Offer a Ride</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="rideRequestForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="from">From</label>
+                        <input type="text" id="from" placeholder="Starting location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="to">To</label>
+                        <input type="text" id="to" placeholder="Destination" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input type="time" id="time" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vehicle">Vehicle Type</label>
+                        <select id="vehicle" required>
+                            <option value="">Select vehicle</option>
+                            <option value="car">Car</option>
+                            <option value="bike">Bike</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="seats">Seats Available</label>
+                        <input type="number" id="seats" min="1" max="10" placeholder="Number of seats" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cost">Cost per Person (₹)</label>
+                    <input type="number" id="cost" placeholder="Estimated cost per person" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="details">Additional Details</label>
+                    <textarea id="details" rows="3" placeholder="Any specific requirements or details about the ride"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">Contact Email</label>
+                    <input type="email" id="contact" placeholder="Your email for communication" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Ride Offer</button>
+            </form>
+            <<div class="ride-list-container" style="max-width: 800px; margin: 40px auto; padding: 20px;">
+    <h2 style="color: var(--text-dark); margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 10px; font-size: 1.75rem;">
+        Available Rides
+    </h2>
+
+    <div id="ride-list">
+        <p>Loading available rides...</p>
+    </div>
+</div>
+</div>
+        </div>
+    </div>
+
+    <!-- Post Request Modal -->
+    <div class="modal" id="postRequestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post Ride Request</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="postRequestForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reqFrom">From</label>
+                        <input type="text" id="reqFrom" placeholder="Starting location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reqTo">To</label>
+                        <input type="text" id="reqTo" placeholder="Destination" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reqDate">Date</label>
+                        <input type="date" id="reqDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reqTime">Preferred Time</label>
+                        <input type="time" id="reqTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="prefVehicle">Preferred Vehicle Type</label>
+                        <select id="prefVehicle">
+                            <option value="any">Any</option>
+                            <option value="car">Car</option>
+                            <option value="bike">Bike</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="approxFare">Approximate Fare (₹)</label>
+                        <input type="number" id="approxFare" placeholder="Willing to pay up to" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="passengers">Number of Passengers</label>
+                    <input type="number" id="passengers" min="1" max="10" placeholder="Number of people" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="preferences">Preferences</label>
+                    <textarea id="preferences" rows="3" placeholder="Any specific preferences (e.g., female driver, AC car, etc.)"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reqContact">Contact Email</label>
+                    <input type="email" id="reqContact" placeholder="Your email for communication" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Post Ride Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>UniLink</h3>
+                    <p>Connecting IIIT students for shared transportation and cost savings.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Modules</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> contact@unilink.iiit.ac.in</li>
+                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+                        <li><i class="fas fa-map-marker-alt"></i> IIIT Allahabad, India</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 UniLink - IIIT Ride Sharing Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // Modal functionality for Post Request
+    // ===============================================
+    // 5. "POST A REQUEST" FORM LOGIC
+    // ===============================================
+    
+    const postRequestForm = document.getElementById('postRequestForm');
+    const postRequestModal = document.getElementById('postRequestModal');
+
+    if (postRequestForm) {
+        postRequestForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Stop the form from reloading the page
+
+            // Get data from the "Request" form
+            const requestData = {
+                startLocation: document.getElementById('reqFrom').value,
+                endLocation: document.getElementById('reqTo').value,
+                preferredDepartureTime: document.getElementById('reqDate').value + 'T' + document.getElementById('reqTime').value,
+                vehicleType: document.getElementById('prefVehicle').value,
+                approximateFare: document.getElementById('approxFare').value,
+                passengers: document.getElementById('passengers').value,
+                preferences: document.getElementById('preferences').value,
+                contact: document.getElementById('reqContact').value
+            };
+
+            // Basic validation
+            if (!requestData.startLocation || !requestData.endLocation || !requestData.preferredDepartureTime || !requestData.contact) {
+                alert('Please fill in all required fields for your request.');
+                return;
+            }
+
+            try {
+                // Post to the NEW requests endpoint
+                // ** You will need to create this in your backend **
+                const response = await axios.post('/api/ride-requests', requestData, authConfig);
+
+                if (response.data && response.data.success) {
+                    alert('Ride request posted successfully!');
+                    postRequestModal.style.display = 'none'; // Close modal
+                    postRequestForm.reset(); // Clear the form
+
+                    // Re-fetch and re-render the REQUESTS list
+                    const allRequests = await fetchAllRequests();
+                    renderRequests(allRequests);
+                } else {
+                    alert('Failed to post request: ' + (response.data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                const errorMsg = error.response ? error.response.data.message : error.message;
+                alert('Error posting request: ' + errorMsg);
+            }
+        });
+    }
+        // Filter functionality
+    const applyFiltersBtn = document.getElementById('applyFilters');
+if (applyFiltersBtn) {
+    applyFiltersBtn.addEventListener('click', function() {
+        applyFilters(); // This calls your correct, existing function from line 1257
+    });
+}
+    const resetFiltersBtn = document.getElementById('resetFilters');
+    const filterOptions = document.querySelectorAll('.filter-option');
+    
+    // Current filter state
+    let currentFilters = {
+        vehicle: 'all',
+        date: 'all',
+        budget: 'all',
+        timeRange: { start: 16, end: 18 } // Default: 4 PM - 6 PM
+    };
+    
+    // Apply filters when button is clicked
+    
+    
+    // Reset filters when button is clicked
+    if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', function() {
+            resetFilters();
+        });
+    }
+        // Handle filter option clicks
+    filterOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const filterType = this.getAttribute('data-filter');
+            const filterValue = this.getAttribute('data-value');
+            
+            // Remove active class from siblings in the same filter group
+            const parent = this.closest('.filter-options');
+            const siblings = parent.querySelectorAll('.filter-option');
+            siblings.forEach(sib => sib.classList.remove('active'));
+            
+            // Add active class to clicked option
+            this.classList.add('active');
+            
+            // Update current filters
+            currentFilters[filterType] = filterValue;
+        });
+    });
+     // ADD applyFilters FUNCTION RIGHT HERE:
+    function applyFilters() {
+        // Get all ride cards
+        const rideCards = document.querySelectorAll('.ride-card');
+        let visibleCount = 0;
+        const rideListContainer = document.getElementById('ridesContainer');
+    const oldMessage = rideListContainer.querySelector('.no-results');
+    if (oldMessage) {
+        oldMessage.remove();
+    }
+        
+        rideCards.forEach(card => {
+            let shouldShow = true;
+            
+            // Get ride data from card attributes
+            const vehicleType = card.getAttribute('data-vehicle') || '';
+            const rideDate = card.getAttribute('data-date') || '';
+            const rideDay = card.getAttribute('data-day') || '';
+            const rideCost = parseInt(card.getAttribute('data-cost') || '0');
+            const rideTime = parseInt(card.getAttribute('data-time') || '0');
+            
+            // Vehicle filter
+            if (currentFilters.vehicle !== 'all' && vehicleType !== currentFilters.vehicle) {
+                shouldShow = false;
+            }
+            
+            // Date filter
+            if (currentFilters.date !== 'all' && currentFilters.date !== rideDay) {
+                shouldShow = false;
+            }
+            
+            // Budget filter
+            if (currentFilters.budget !== 'all') {
+                const budget = parseInt(currentFilters.budget);
+                if (budget === 100 && rideCost > 100) {
+                    shouldShow = false;
+                } else if (budget === 200 && (rideCost <= 100 || rideCost > 200)) {
+                    shouldShow = false;
+                } else if (budget === 201 && rideCost <= 200) {
+                    shouldShow = false;
+                }
+            }
+            
+            // Time range filter (using the default 4 PM - 6 PM)
+            // if (rideTime < currentFilters.timeRange.start || rideTime > currentFilters.timeRange.end) {
+            //     shouldShow = false;
+            // }
+            
+            // Show or hide the card
+            card.style.display = shouldShow ? 'block' : 'none';
+            if (shouldShow) visibleCount++;
+        });
+        
+        // Show message if no rides match filters
+        // REPLACE it with this:
+        // Show message if no rides match filters
+        if (visibleCount === 0) {
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results'; // <-- This class is important
+            noResults.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">No rides match the selected filters. Try adjusting your criteria.</p>';
+            rideListContainer.appendChild(noResults);
+        }
+    }
+
+    // AND THEN ADD resetFilters FUNCTION RIGHT AFTER:
+    function resetFilters() {
+        // Reset current filters
+        currentFilters = {
+            vehicle: 'all',
+            date: 'all',
+            budget: 'all',
+            timeRange: { start: 16, end: 18 }
+        };
+        
+        // Reset active classes
+        filterOptions.forEach(option => {
+            if (option.getAttribute('data-value') === 'all') {
+                option.classList.add('active');
+            } else {
+                option.classList.remove('active');
+            }
+        });
+        
+        // Reset time display
+        document.getElementById('timeDisplay').textContent = 'Selected Time Range: 4:00 PM - 6:00 PM';
+        
+        // Show all rides
+        const rideCards = document.querySelectorAll('.ride-card');
+        rideCards.forEach(card => {
+            card.style.display = 'block';
+        });
+    }
+    
+    // ... rest of filter code ...
+    // ===============================================
+    // 1. AUTH GUARD
+    // ===============================================
+    const token = localStorage.getItem('token'); // 'token' is the default name
+    if (!token) {
+        alert('You must be logged in to view this page.');
+        window.location.href = 'auth.html?view=login';
+        return; // Stop the rest of the script from running
+    }
+
+    // ===============================================
+    // 2. GLOBAL CONFIG FOR AXIOS
+    // ===============================================
+    // This config will be used for ALL requests
+    const authConfig = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    };
+
+    // ===============================================
+    // 3. FETCH AND RENDER RIDES ON PAGE LOAD
+    // ===============================================
+
+    const rideListContainer = document.getElementById('ridesContainer');
+
+
+    /**
+     * Fetches all rides from the API
+     */
+    /**
+     * Fetches all rides from the API (NOW WITH FILTERING)
+     */
+    const fetchAllRides = async (filters = {}) => {
+        try {
+            // Create query parameters from the filters object
+            const params = new URLSearchParams();
+            
+            // Only add parameters if they have a value
+            if (filters.startLocation) {
+                params.append('startLocation', filters.startLocation);
+            }
+            if (filters.endLocation) {
+                params.append('endLocation', filters.endLocation);
+            }
+            if (filters.date) {
+                params.append('date', filters.date);
+            }
+            if (filters.vehicleType) {
+                params.append('vehicleType', filters.vehicleType);
+            }
+
+            // Append query string to the URL
+            const response = await axios.get(`/api/rides?${params.toString()}`, authConfig);
+
+            if (response.data && response.data.success) {
+                return response.data.data; // Return the array of rides
+            } else {
+                return [];
+            }
+        } catch (error) {
+            const errorMsg = error.response ? error.response.data.message : error.message;
+            console.error('Error fetching rides:', errorMsg);
+            rideListContainer.innerHTML = `<p style="color: red;">Error fetching rides: ${errorMsg}</p>`;
+            return [];
+        }
+    };
+    /**
+     * Fetches all ride REQEUSTS from the API
+     */
+    const fetchAllRequests = async () => {
+        try {
+            // Note the different endpoint: /api/ride-requests
+            const response = await axios.get('/api/rides/requests', authConfig); 
+            if (response.data && response.data.success) {
+                return response.data.data; // Return the array of requests
+            } else {
+                return [];
+            }
+        } catch (error) {
+            const errorMsg = error.response ? error.response.data.message : error.message;
+            console.error('Error fetching ride requests:', errorMsg);
+            const requestListContainer = document.getElementById('request-list');
+            if (requestListContainer) {
+                requestListContainer.innerHTML = `<p style="color: red;">Error fetching ride requests: ${errorMsg}</p>`;
+            }
+            return [];
+        }
+    };
+
+
+    /**
+     * Renders the list of rides into the HTML
+    /**
+         * Renders the list of rides into the HTML
+         * This is the NEW, FIXED version
+         */
+        const renderRides = (rides) => {
+    const rideListContainer = document.getElementById('ridesContainer');
+    if (!rideListContainer) {
+        console.error("CRITICAL ERROR: HTML element with id 'ride-list' not found.");
+        return; 
+    }
+
+    rideListContainer.innerHTML = ''; // Clear the "Loading..." text
+
+    if (!rides || rides.length === 0) {
+        rideListContainer.innerHTML = '<p>No ride offers found at this time. Post one!</p>';
+        return;
+    }
+
+    // Loop over the rides from the database
+    rides.forEach(ride => {
+        const rideCard = document.createElement('div');
+        rideCard.className = 'ride-card';
+        rideCard.style.cssText = `
+            background: white; 
+            padding: 20px; 
+            margin-bottom: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        `;
+
+        const posterInfo = `${ride.user.name}`;
+        const departureTime = new Date(ride.departureTime);
+        const departureHour = departureTime.getHours();
+        const rideDate = departureTime.toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+        // Add data attributes for filtering
+        rideCard.setAttribute('data-vehicle', ride.vehicleType.toLowerCase());
+        rideCard.setAttribute('data-cost', ride.costPerPerson);
+        rideCard.setAttribute('data-date', rideDate);
+        rideCard.setAttribute('data-time', departureHour);
+        rideCard.setAttribute('data-day', rideDate === today ? 'today' : (rideDate === tomorrow ? 'tomorrow' : 'other'));
+
+        // Create the HTML for the card
+        rideCard.innerHTML = `
+            <h3 style="color: var(--primary-purple); margin-bottom: 10px; font-size: 1.25rem;">
+                ${ride.startLocation} to ${ride.endLocation}
+            </h3>
+            <p><strong>Posted by:</strong> ${posterInfo}</p>
+            <p><strong>Vehicle:</strong> ${ride.vehicleType}</p>
+            <p><strong>Seats Available:</strong> ${ride.seatsAvailable}</p>
+            <p><strong>Cost:</strong> ₹${ride.costPerPerson} per person</p>
+            <p><strong>Departure:</strong> ${departureTime.toLocaleString()}</p>
+            <p style="margin-top: 10px;"><em>${ride.details || 'No additional details.'}</em></p>
+        `;
+        
+        // Add the new card to the page
+        rideListContainer.appendChild(rideCard);
+    });
+};
+
+    // --- Initial Load ---
+    // ---
+            // This is the code that runs when the page loads
+            // ---
+            
+            // 1. Load ALL rides and requests on initial page load
+            const initialRides = await fetchAllRides();
+            renderRides(initialRides);
+            
+            // const initialRequests = await fetchAllRequests(); // This will now work
+            // renderRequests(initialRequests);
+
+            // 2. Add listener to the "Apply Filters" button
+            
+
+    // ===============================================
+    // 4. "POST A RIDE" FORM LOGIC
+    // ===============================================
+
+    /**
+     * Helper function to get ride data from the form
+     */
+    const getRideData = () => {
+        const startLocation = document.getElementById('startLocation').value;
+        const endLocation = document.getElementById('endLocation').value;
+        const vehicleType = document.getElementById('vehicleType').value;
+        const costPerPerson = document.getElementById('costPerPerson').value;
+        const seatsAvailable = document.getElementById('seatsAvailable').value;
+        const departureTime = document.getElementById('departureTime').value;
+        const details = document.getElementById('details').value;
+
+        if (!startLocation || !endLocation || !vehicleType || !costPerPerson || !seatsAvailable || !departureTime) {
+            return null; // Invalid data
+        }
+
+        return { startLocation, endLocation, vehicleType, costPerPerson, seatsAvailable, departureTime, details };
+    };
+
+    /**
+     * Helper function to post the ride request
+     */
+    const postRideRequest = async (rideData) => {
+        try {
+            // This now ALSO sends the authConfig with the token
+            const response = await axios.post('/api/rides', rideData, authConfig);
+            return response.data;
+        } catch (error) {
+            const errorMsg = error.response ? error.response.data.message : error.message;
+            console.error('API Error during ride request post:', errorMsg);
+            throw new Error(errorMsg); // Throw a cleaner error
+        }
+    };
+
+    // --- Attach the click listener to the button ---
+    // ===============================================
+    // 5. "OFFER A RIDE" FORM LOGIC (The one you were missing)
+    // ===============================================
+
+    const offerRideForm = document.getElementById('rideRequestForm');
+    const offerRideModal = document.getElementById('requestRideModal');
+
+    if (offerRideForm) {
+        offerRideForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Stop form from reloading page
+
+            // Get data from the "Offer a Ride" form
+            const rideData = {
+                startLocation: document.getElementById('from').value,
+                endLocation: document.getElementById('to').value,
+                departureTime: document.getElementById('date').value + 'T' + document.getElementById('time').value,
+                vehicleType: document.getElementById('vehicle').value,
+                seatsAvailable: document.getElementById('seats').value,
+                costPerPerson: document.getElementById('cost').value,
+                details: document.getElementById('details').value,
+                contact: document.getElementById('contact').value // You have this field but no backend schema for it
+            };
+
+            // Basic validation
+            if (!rideData.startLocation || !rideData.endLocation || !rideData.departureTime || !rideData.costPerPerson) {
+                alert('Please fill in all required fields for your ride offer.');
+                return;
+            }
+
+            try {
+                // Post to the EXISTING ride offer endpoint
+                const response = await axios.post('/api/rides', rideData, authConfig);
+
+                if (response.data && response.data.message) {
+                    alert('Ride offer posted successfully!');
+                    offerRideModal.style.display = 'none'; // Close modal
+                    offerRideForm.reset(); // Clear the form
+
+                    // Re-fetch and re-render the RIDES list
+                    const allRides = await fetchAllRides();
+                    renderRides(allRides);
+                } else {
+                    alert('Failed to post ride offer: ' + (response.data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                const errorMsg = error.response ? error.response.data.message : error.message;
+                alert('Error posting ride offer: ' + errorMsg);
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation - UniLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            min-height: 100vh;
+        }
+        
+        .nav-glass {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .main-button-gradient {
+            background: linear-gradient(90deg, #f59e0b 0%, #fcd34d 100%);
+        }
+
+        .main-button-gradient:hover {
+            background: linear-gradient(90deg, #d97706 0%, #fbbf24 100%); 
+        }
+        
+        .login-button-outline {
+            border: 2px solid #fcd34d;
+            color: #fcd34d;
+            background-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .login-button-outline:hover {
+            background-color: rgba(252, 211, 77, 0.1);
+            color: #f59e0b;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tab-active {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border-bottom: 2px solid #f87171;
+        }
+        
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .donor-card, .request-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .donor-card:hover, .request-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+        
+        .blood-type {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+        
+        /* Specific for request card */
+        .request-card .blood-group-lg {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #f87171;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <nav class="nav-glass fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="main.html" class="text-white text-2xl font-bold tracking-tight">UniLink</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="main.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="contactus.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                        <a href="faq.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
+                        <a href="profile.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                       <a href="#" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium" onclick="logout(); return false;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-16 min-h-screen">
+        <div class="relative bg-gradient-to-r from-red-900 to-red-700 py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Blood Donation</h1>
+                    <p class="text-xl text-red-100 max-w-2xl mx-auto">Find donors or post a request. Save a life in our community.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex border-b border-gray-700 mb-8">
+                <button id="find-donors-tab" class="tab-active py-3 px-6 font-medium text-white rounded-t-lg">
+                    Find Donors
+                </button>
+                <button id="active-requests-tab" class="py-3 px-6 font-medium text-gray-400 hover:text-white transition-colors">
+                    Active Requests
+                </button>
+                <button id="post-request-tab" class="py-3 px-6 font-medium text-gray-400 hover:text-white transition-colors">
+                    Post Request
+                </button>
+                <button id="my-profile-tab" class="py-3 px-6 font-medium text-gray-400 hover:text-white transition-colors">
+                    My Profile
+                </button>
+            </div>
+
+            <div id="tab-panels-container">
+
+                <div id="find-donors-panel">
+                    <div class="mb-8">
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <input id="search-input" type="text" placeholder="Search by name or Student ID" class="w-full py-3 px-4 pr-10 rounded-lg search-box text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    <div class="absolute right-3 top-3 text-gray-400">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex gap-4">
+                                <select id="blood-filter-select" class="py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    <option value="" class="bg-gray-800">Filter by Blood Type</option>
+                                    <option value="A+" class="bg-gray-800">A+</option>
+                                    <option value="A-" class="bg-gray-800">A-</option>
+                                    <option value="B+" class="bg-gray-800">B+</option>
+                                    <option value="B-" class="bg-gray-800">B-</option>
+                                    <option value="AB+" class="bg-gray-800">AB+</option>
+                                    <option value="AB-" class="bg-gray-800">AB-</option>
+                                    <option value="O+" class="bg-gray-800">O+</option>
+                                    <option value="O-" class="bg-gray-800">O-</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="donors-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        </div>
+                    <div class="flex justify-center mt-12">
+                        <button id="load-more-donors-btn" class="main-button-gradient text-gray-900 px-8 py-3 rounded-lg font-semibold transition duration-150 shadow-lg flex items-center">
+                            <i class="fas fa-redo mr-2"></i>
+                            Load More
+                        </button>
+                    </div>
+                </div>
+
+                <div id="active-requests-panel" class="hidden">
+                    <h2 class="text-2xl font-bold text-white mb-6">Urgent Blood Requests</h2>
+                    <div id="requests-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        </div>
+                </div>
+
+                <div id="post-request-panel" class="hidden">
+                    <div class="max-w-xl mx-auto glass-card p-8">
+                        <h2 class="text-2xl font-bold text-white mb-4">Post an Emergency Request</h2>
+                        <p class="text-gray-300 mb-6">This request will be visible to all registered donors. Please post only in case of genuine emergencies.</p>
+                        
+                        <form id="post-request-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="patientName" class="block text-sm font-medium text-gray-300 mb-2">Patient's Name</label>
+                                    <input type="text" id="patientName" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <div>
+                                    <label for="request-blood-group" class="block text-sm font-medium text-gray-300 mb-2">Required Blood Group</label>
+                                    <select id="request-blood-group" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <option value="" class="bg-gray-800">Select Group</option>
+                                        <option value="A+" class="bg-gray-800">A+</option>
+                                        <option value="A-" class="bg-gray-800">A-</option>
+                                        <option value="B+" class="bg-gray-800">B+</option>
+                                        <option value="B-" class="bg-gray-800">B-</option>
+                                        <option value="AB+" class="bg-gray-800">AB+</option>
+                                        <option value="AB-" class="bg-gray-800">AB-</option>
+                                        <option value="O+" class="bg-gray-800">O+</option>
+                                        <option value="O-" class="bg-gray-800">O-</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label for="contactPhone" class="block text-sm font-medium text-gray-300 mb-2">Contact Phone</label>
+                                <input type="tel" id="contactPhone" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                            </div>
+                            <div class="mt-4">
+    <label for="location" class="block text-sm font-medium text-gray-300 mb-2">Location (e.g., Hospital)</label>
+    <input type="text" id="location" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="e.g., SRN Hospital, Prayagraj">
+</div>
+                            <div class="mt-4">
+                                <label for="note" class="block text-sm font-medium text-gray-300 mb-2">Note (Optional)</label>
+                                <textarea id="note" rows="3" class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="e.g., Urgent requirement by 5 PM"></textarea>
+                            </div>
+                            <button type="submit" class="w-full main-button-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold transition duration-150 shadow-lg flex items-center justify-center mt-6">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Submit Request
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="my-profile-panel" class="hidden">
+                    <div class="max-w-xl mx-auto glass-card p-8">
+                        <h2 class="text-2xl font-bold text-white mb-4">Update Your Donor Profile</h2>
+                        <p class="text-gray-300 mb-6">Let the community know your blood type. This information will be visible to other students to contact you in an emergency.</p>
+                        
+                        <form id="update-blood-form">
+                            <label for="my-blood-group" class="block text-sm font-medium text-gray-300 mb-2">My Blood Group</label>
+                            <select id="my-blood-group" name="bloodGroup" class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                                <option value="" class="bg-gray-800">Select Blood Group</option>
+                                <option value="A+" class="bg-gray-800">A+</option>
+                                <option value="A-" class="bg-gray-800">A-</option>
+                                <option value="B+" class="bg-gray-800">B+</option>
+                                <option value="B-" class="bg-gray-800">B-</option>
+                                <option value="AB+" class="bg-gray-800">AB+</option>
+                                <option value="AB-" class="bg-gray-800">AB-</option>
+                                <option value="O+" class="bg-gray-800">O+</option>
+                                <option value="O-" class="bg-gray-800">O-</option>
+                            </select>
+                            <button type="submit" class="w-full main-button-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold transition duration-150 shadow-lg flex items-center justify-center mt-6">
+                                <i class="fas fa-save mr-2"></i>
+                                Save My Blood Group
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle logout
+    function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    // Redirect to login page
+    window.location.href = 'auth.html';
+    }
+    // --- 1. CONFIG & GLOBAL STATE ---
+    const API_BASE_URL = 'http://localhost:5000';
+    let allDonors = []; // Stores the master list of donors
+    let allRequests = []; // Stores the master list of requests
+    let currentUser = null; // Stores the logged-in user's data
+    let token = null; // Stores the auth token
+
+    // --- 2. HELPER FUNCTIONS ---
+
+    const showMessage = (message, type = 'info') => {
+        const alertClass = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+        const messageElement = document.createElement('div');
+        messageElement.className = `fixed top-20 right-4 z-50 p-3 text-white rounded-lg shadow-xl transition-all duration-300 ${alertClass}`;
+        messageElement.textContent = message;
+        document.body.appendChild(messageElement);
+        setTimeout(() => {
+            messageElement.remove();
+        }, 3000);
+    };
+
+    /**
+     * Renders the list of donor cards into the grid
+     */
+    const renderDonors = (donors) => {
+        const container = document.getElementById('donors-grid-container');
+        if (!container) return;
+        container.innerHTML = ''; 
+
+        if (donors.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 col-span-3 text-center">No donors found matching your criteria.</p>';
+            return;
+        }
+
+        donors.forEach(donor => {
+            const card = document.createElement('div');
+            card.className = 'donor-card rounded-xl p-6';
+            const initials = donor.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white font-bold mr-3">
+                            ${initials}
+                        </div>
+                        <div>
+                            <h3 class="text-white font-bold">${donor.name}</h3>
+                            <p class="text-gray-400 text-sm">${donor.department}, ${donor.year}</p>
+                        </div>
+                    </div>
+                    <span class="blood-type px-3 py-1 rounded-full text-sm font-semibold">${donor.bloodGroup}</span>
+                </div>
+                <div class="mb-4">
+                    <p class="text-gray-300 text-sm">Student ID: ${donor.studentId}</p>
+                </div>
+                <div class="flex justify-between">
+                    <button class="contact-btn text-red-400 hover:text-red-300 text-sm font-medium" data-name="${donor.name}">
+                        <i class="fas fa-comment-alt mr-2"></i> Contact
+                    </button>
+                    
+                </div>
+            `;
+            
+            card.querySelector('.contact-btn').addEventListener('click', (e) => {
+                alert(`Contact feature for ${e.target.dataset.name} is coming soon.`);
+            });
+            
+
+            container.appendChild(card);
+        });
+    };
+
+    /**
+     * Renders the list of active blood request cards
+     */
+    const renderActiveRequests = (requests) => {
+        const container = document.getElementById('requests-grid-container');
+        if (!container) return;
+        container.innerHTML = ''; 
+
+        if (requests.length === 0) {
+            container.innerHTML = '<p class="text-gray-400 col-span-3 text-center">No active blood requests. Great news!</p>';
+            return;
+        }
+
+        requests.forEach(req => {
+            if (!req.user) {
+            console.warn("Skipping orphaned request (user deleted):",req._id);
+            return; // This skips to the next request in the loop
+        }
+            const card = document.createElement('div');
+            card.className = 'request-card rounded-xl p-6 flex flex-col';
+            const postedAt = new Date(req.createdAt).toLocaleString('en-US', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs text-gray-400">Posted by ${req.user.name}</span>
+                    <span class="text-xs text-gray-400">${postedAt}</span>
+                </div>
+                <div class="text-center my-4">
+                    <div class="blood-group-lg">${req.bloodGroup}</div>
+                    <div class="text-white font-bold text-xl mt-1">${req.patientName}</div>
+                </div>
+                <div class="space-y-2 text-sm mb-5 flex-grow">
+                    
+                    <p class="text-gray-300"><i class="fas fa-phone-alt fa-fw text-red-400 mr-2"></i>${req.contactPhone}</p>
+                    ${req.note ? `<p class="text-gray-300"><i class="fas fa-info-circle fa-fw text-red-400 mr-2"></i>${req.note}</p>` : ''}
+                </div>
+                <div class="flex justify-between items-center">
+                    <button class="main-button-gradient text-gray-900 px-4 py-2 rounded-lg font-semibold text-sm">
+                        <i class="fas fa-phone-alt mr-1"></i> Call
+                    </button>
+                    ${currentUser._id === req.user._id ? `
+                    <button class="close-request-btn text-gray-400 hover:text-white text-sm font-medium" data-id="${req._id}">
+                        Mark as Closed <i class="fas fa-check-circle ml-1"></i>
+                    </button>` : ''}
+                </div>
+            `;
+            
+            // Add listener for the close button if it exists
+            const closeBtn = card.querySelector('.close-request-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => handleCloseRequest(req._id));
+            }
+            
+            container.appendChild(card);
+        });
+    };
+
+    /**
+     * Filters and re-renders the donor list
+     */
+    const filterAndRenderDonors = () => {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const bloodType = document.getElementById('blood-filter-select').value;
+        let filteredDonors = [...allDonors];
+
+        if (searchTerm) {
+            filteredDonors = filteredDonors.filter(d => 
+                d.name.toLowerCase().includes(searchTerm) ||
+                d.studentId.toLowerCase().includes(searchTerm)
+            );
+        }
+        if (bloodType) {
+            filteredDonors = filteredDonors.filter(d => d.bloodGroup === bloodType);
+        }
+        renderDonors(filteredDonors);
+    };
+
+    // --- 3. API FETCH FUNCTIONS ---
+
+    // THIS IS THE CORRECTED CODE
+const fetchDonors = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        
+        // The broken block is removed. We just fetch donors.
+        const res = await fetch(`${API_BASE_URL}/api/users/donors`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+        if (!res.ok) {
+            throw new Error('Failed to fetch donors');
+        }
+        
+        allDonors = await res.json(); // Save donors to the global array
+        renderDonors(allDonors); // Render them on the page
+    } catch (err) {
+        console.error(err);
+        showMessage('Could not load donors.', 'error');
+    }
+};
+
+    const fetchMe = async () => {
+        try {
+            // The global 'token' variable is already set by DOMContentLoaded
+            if (!token) {
+                console.warn('No token found. Redirecting to login.');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            const res = await fetch(`${API_BASE_URL}/api/users/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!res.ok) {
+                throw new Error('Invalid session. Please log in again.');
+            }
+            
+            const data = await res.json();
+            
+           currentUser = data; // <-- THIS IS THE CRITICAL FIX
+
+            // Pre-fill the "My Profile" tab with the user's blood group
+            if (currentUser && currentUser.bloodGroup) {
+                document.getElementById('my-blood-group').value = currentUser.bloodGroup;
+            }
+
+        } catch (err) {
+            console.error(err);
+            showMessage('Could not load profile. Redirecting to login.', 'error');
+            localStorage.removeItem('token');
+            window.location.href = 'auth.html'; // Redirect on any error
+        }
+    };
+
+    const fetchActiveRequests = async () => {
+        
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/blood-requests/active`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to fetch requests');
+            allRequests = await res.json();
+            renderActiveRequests(allRequests);
+        } catch (err) {
+            console.error(err);
+            showMessage('Could not load active requests.', 'error');
+        }
+    };
+
+    // --- 4. API ACTION FUNCTIONS ---
+
+    const handleUpdateMyBloodGroup = async (e) => {
+        e.preventDefault();
+        const newBloodGroup = document.getElementById('my-blood-group').value;
+        if (!newBloodGroup) {
+            showMessage('Please select a blood group.', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/users/me`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ bloodGroup: newBloodGroup })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Failed to update');
+
+            showMessage('Blood group updated successfully!', 'success');
+            currentUser = data.user; 
+            await fetchDonors(); // Refresh donor list in case user just added themselves
+        } catch (err) {
+            showMessage(err.message, 'error');
+        }
+    };
+
+    const handlePostRequest = async (e) => {
+        e.preventDefault();
+        const body = {
+            patientName: document.getElementById('patientName').value,
+            bloodGroup: document.getElementById('request-blood-group').value,
+            
+            contactPhone: document.getElementById('contactPhone').value,
+            note: document.getElementById('note').value,
+            location: document.getElementById('location').value
+        };
+
+        if (!body.patientName || !body.bloodGroup  || !body.contactPhone|| !body.location) {
+            showMessage('Please fill in all required fields.', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/blood-requests`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Failed to post request');
+
+            showMessage('Request posted successfully!', 'success');
+            document.getElementById('post-request-form').reset();
+            
+            // Switch to the active requests tab to show the new post
+            document.getElementById('active-requests-tab').click();
+
+        } catch (err) {
+            showMessage(err.message, 'error');
+        }
+    };
+
+    const handleCloseRequest = async (requestId) => {
+        if (!confirm('Are you sure you want to close this request?')) return;
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/blood-requests/${requestId}/close`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'Failed to close request');
+
+            showMessage('Request closed.', 'success');
+            await fetchActiveRequests(); // Refresh the list
+        } catch (err) {
+            showMessage(err.message, 'error');
+        }
+    };
+
+
+    // --- 5. PAGE INITIALIZATION ---
+    document.addEventListener('DOMContentLoaded', async () => {
+        
+        const currentToken = localStorage.getItem('token');
+        if (!currentToken) {
+            // If no token, user cannot be here.
+            alert('Please log in to access this page.');
+            // Redirect to the login page
+            window.location.href = 'auth.html'; 
+            return; // Stop running any more code on this page
+        }
+        token = currentToken;
+        // --- B. Initial Data Fetching ---
+        await fetchMe(); // Get logged-in user's data (needed for button logic)
+        fetchDonors(); // Get the list of all donors
+
+        // --- C. Get Elements ---
+        const tabButtons = document.querySelectorAll('button[id$="-tab"]');
+        const panels = document.querySelectorAll('#tab-panels-container > div');
+        
+        const searchInput = document.getElementById('search-input');
+        const bloodFilterSelect = document.getElementById('blood-filter-select');
+        const updateBloodForm = document.getElementById('update-blood-form');
+        const postRequestForm = document.getElementById('post-request-form');
+
+        // --- D. Add Event Listeners ---
+
+        // 1. Tab Switching Logic
+        tabButtons.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Deactivate all
+                tabButtons.forEach(t => t.classList.remove('tab-active', 'text-white') & t.classList.add('text-gray-400'));
+                panels.forEach(p => p.classList.add('hidden'));
+
+                // Activate clicked
+                tab.classList.add('tab-active', 'text-white');
+                tab.classList.remove('text-gray-400');
+                
+                const panelId = tab.id.replace('-tab', '-panel');
+                document.getElementById(panelId).classList.remove('hidden');
+
+                // Load data just-in-time for requests tab
+                if (tab.id === 'active-requests-tab') {
+                    fetchActiveRequests();
+                }
+            });
+        });
+
+        // 2. Search and Filter Listeners
+        searchInput.addEventListener('input', filterAndRenderDonors);
+        bloodFilterSelect.addEventListener('change', filterAndRenderDonors);
+
+        // 3. Form Submissions
+        updateBloodForm.addEventListener('submit', handleUpdateMyBloodGroup);
+        postRequestForm.addEventListener('submit', handlePostRequest);
+    });
+
+    const logoutButton = document.getElementById('logout-button');
+        const mobileLogoutButton = document.getElementById('mobile-logout-button');
+        
+        if (logoutButton) {
+            logoutButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent link default behavior
+                logout();
+            });
+        }
+        if (mobileLogoutButton) {
+            mobileLogoutButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent link default behavior
+                logout();
+            });
+        }
+        
+    </script>
+</body>
+</html>

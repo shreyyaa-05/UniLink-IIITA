@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - UniLink</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: url('faq1.png') ;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #9370db;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(147, 112, 219, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: #6a0dad;
+        }
+
+        .header p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: #663399;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .faq-column {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-column:hover {
+            transform: translateY(-5px);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #6a0dad;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e6e6fa;
+        }
+
+        .faq-answer {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Messages Section */
+        .messages-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.1);
+        }
+
+        .messages-section h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+        }
+
+        .message-item {
+            padding: 15px;
+            border-left: 4px solid #9370db;
+            background-color: #f9f7ff;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .message-text {
+            font-style: italic;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .message-author {
+            margin-top: 10px;
+            font-weight: 500;
+            color: #6a0dad;
+            text-align: right;
+        }
+
+        
+        .logout-button {
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-button:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e6e6fa;
+            color: #9370db;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .faq-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="home.html" class="logo">UniLink</a>
+            <div class="nav-links">
+                <a href="main.html">Home</a>
+                <a href="contactus.html">Contact</a>
+                <a href="faq.html" class="active">FAQ</a>
+                <a href="profile.html">Profile</a>
+                <a href="#" onclick="logout(); return false;">Logout</a>
+                
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="container">
+        <div class="header">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common questions about UniLink's features including Blood Donation, Car Rental, Commute Pooling, and Lost & Found services.</p>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <div class="faq-column">
+                <div class="faq-question">What is UniLink and how does it work?</div>
+                <p class="faq-answer">UniLink is a comprehensive campus platform that connects students through various services. After creating an account, you can access modules for blood donation requests, car rentals, commute pooling, and lost & found items.</p>
+                
+                <div class="faq-question">How do I request blood donation through UniLink?</div>
+                <p class="faq-answer">Navigate to the Blood Donation module, fill out the request form with required details like blood type, urgency, and location. The system will notify potential donors in your area who can respond to your request.</p>
+                
+                <div class="faq-question">Can I rent a car through UniLink as a student?</div>
+                <p class="faq-answer">Yes! The Car Rental module allows students to rent vehicles from other students or authorized campus partners. You can browse available cars, check rental terms, and book directly through the platform.</p>
+                
+                <div class="faq-question">How does the commute pooling feature work?</div>
+                <p class="faq-answer">Commute Pooling helps you find travel companions for your daily commute. You can either offer a ride or request one by specifying your route, timing, and number of available seats.</p>
+            </div>
+            
+            <div class="faq-column">
+                <div class="faq-question">What should I do if I lose something on campus?</div>
+                <p class="faq-answer">Use the Lost & Found module to report lost items or browse found items. Provide a detailed description and photos if possible. The system will notify you if a matching item is reported as found.</p>
+                
+                <div class="faq-question">Is there a verification process for users?</div>
+                <p class="faq-answer">Yes, all users are verified through their university email addresses. Additional verification may be required for certain features like car rental to ensure safety and reliability.</p>
+                
+                <div class="faq-question">Are there any fees for using UniLink services?</div>
+                <p class="faq-answer">Basic features like blood donation requests and lost & found are free. Car rentals and premium commute pooling options may involve fees, which are clearly displayed before confirmation.</p>
+                
+                <div class="faq-question">How do I update my profile information?</div>
+                <p class="faq-answer">Visit your Profile page where you can edit personal details, preferences, and notification settings. Keeping your profile updated ensures you get the most relevant matches for services.</p>
+            </div>
+        </div>
+
+    <script>  
+    // Function to check login status
+    function isLoggedIn() {
+        // Check for the presence of a token or relevant user data
+        return localStorage.getItem('token') !== null && localStorage.getItem('userData') !== null;
+    }
+
+    // Function to enforce login status on the page
+    function enforceLogin() {
+        if (!isLoggedIn()) {
+            // Alert the user (optional, good for debugging/UX)
+            alert('You must be logged in to view the FAQ page.');
+            
+            // Redirect the user to the login page or the main entry point
+            window.location.href = 'main.html'; // Assuming 'main.html' is the home or login page
+        }
+    }
+    
+    // IMPORTANT: Run the check immediately when the script executes (page loads)
+    enforceLogin(); 
+
+    // --- Existing functions remain below ---
+
+    // Handle logout - CLEARS LOCAL STORAGE AND ALERTS USER
+    function logout() {
+        // Clear authentication tokens and user data
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+        
+        // This is a placeholder function to update the navigation bar/buttons
+        updateAuthUI(); 
+        
+        // Alert the user and redirect them to the home/login page
+        alert('You have been logged out.');
+        window.location.href = 'main.html'; // Redirect to home/login after logout
+    }
+
+    // This is a minimal definition for updateAuthUI, as the original script was incomplete for its use case.
+    function updateAuthUI() {
+        // In a real application, this function would hide 'Profile', show 'Login/Signup', etc.
+        console.log("UI update logic executed.");
+    }
+    // Handle logout
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+        updateAuthUI();
+        alert('You have been logged out.');
+    }
+    // Handle logout
+    function logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+        updateAuthUI();
+        alert('You have been logged out.');
+    }
+    // Update UI based on login status
+    function updateAuthUI() {
+        const isLoggedInUser = isLoggedIn();
+        const authButtonsHero = document.getElementById('auth-buttons-hero');
+        const navLoggedOut = document.getElementById('nav-logged-out');
+        const navLoggedIn = document.getElementById('nav-logged-in');
+        const mobileNavLoggedOut = document.getElementById('mobile-nav-logged-out');
+        const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
+        const profileLink = document.getElementById('profile-link');
+        const logoutButton = document.getElementById('logout-button');
+
+        if (isLoggedInUser) {
+            // User is logged in - show logout button, hide signup/login
+                    // User is not logged in - show signup/login buttons
+            authButtonsHero.innerHTML = `
+                <a href="auth.html?view=register" class="main-button-gradient text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
+                    <div class="w-2 h-2 rounded-full border-2 border-white mr-2"></div>
+                    SIGN UP NOW
+                </a>
+
+                <a href="auth.html?view=login" class="login-button-outline px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
+                    <svg class="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                    </svg>
+                    LOGIN
+                </a>
+            `;
+            navLoggedOut.classList.add('hidden');
+            navLoggedIn.classList.remove('hidden');
+            mobileNavLoggedOut.classList.add('hidden');
+            mobileNavLoggedIn.classList.remove('hidden');
+
+        } else {
+            // User is not logged in - show signup/login buttons
+            authButtonsHero.innerHTML = `
+                <a href="auth.html?view=register" class="main-button-gradient text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
+                    <div class="w-2 h-2 rounded-full border-2 border-white mr-2"></div>
+                    SIGN UP NOW
+                </a>
+
+                <a href="auth.html?view=login" class="login-button-outline px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
+                    <svg class="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                    </svg>
+                    LOGIN
+                </a>
+            `;
+
+            navLoggedOut.classList.remove('hidden');
+            navLoggedIn.classList.add('hidden');
+            mobileNavLoggedOut.classList.remove('hidden');
+            mobileNavLoggedIn.classList.add('hidden');
+        }
+    }
+
+    </script>  
+
+        <!-- Messages Section -->
+        <div class="messages-section">
+            <h3>What Our Users Say</h3>
+            <div class="message-item">
+                <p class="message-text">"UniLink helped me find a blood donor for my friend within hours. The platform is intuitive and the community is incredibly supportive."</p>
+                <div class="message-author">- Ritesh</div>
+            </div>
+            <div class="message-item">
+                <p class="message-text">"The commute pooling feature saved me so much on transportation costs. I've met amazing people while sharing rides to campus."</p>
+                <div class="message-author">- Sarah </div>
+            </div>
+            <div class="message-item">
+                <p class="message-text">"I recovered my lost laptop thanks to UniLink's Lost & Found module."</p>
+                <div class="message-author">- Mohan</div>
+            </div>
+        </div>
+        
+
+        <!-- Footer -->
+        <footer>
+            <p>Copyright © UniLink Campus Services</p>
+        </footer>
+    </div>
+</body>
+</html>
