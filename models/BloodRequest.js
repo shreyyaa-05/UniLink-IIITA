@@ -30,9 +30,47 @@ const bloodRequestSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['active', 'closed'],
+        enum: ['active', 'matched', 'accepted', 'completed', 'closed'],
         default: 'active'
     },
+    urgency: {
+        type: String,
+        enum: ['normal', 'urgent', 'critical'],
+        default: 'normal'
+    },
+    assignedDonor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
+    donorAcceptanceStatus: {
+        type: String,
+        enum: ['none', 'pending', 'accepted', 'declined'],
+        default: 'none'
+    },
+    escalated: {
+        type: Boolean,
+        default: false
+    },
+    escalatedAt: {
+        type: Date,
+        default: null
+    },
+    auditLogs: [{
+        action: {
+            type: String,
+            required: true
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        timestamp: {
+            type: Date,
+            default: Date.now
+        },
+        details: String
+    }],
     createdAt: {
         type: Date,
         default: Date.now,

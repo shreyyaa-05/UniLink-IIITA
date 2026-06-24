@@ -10,16 +10,12 @@ const sendEmail = async (options) => {
     },
   });
 
-  // 2. Define the email options
-  // utils/sendEmail.js
-const mailOptions = {
-    from: `UniLink Admin <${process.env.EMAIL_USER}>`, // <-- This is correct
+  const mailOptions = {
+    from: `"UniLink Support" <unilink.app.iiita@gmail.com>`,
     to: options.email,
-    // ...                          // Recipient's email (passed in)
-    subject: options.subject,                       // Email subject (passed in)
-    text: options.message,                          // Plain text body (passed in)
-    // You can also add an HTML version:
-    // html: '<strong>Hello world?</strong>' 
+    subject: options.subject,
+    text: options.message,
+    html: options.html,
   };
 
   // 3. Send the email

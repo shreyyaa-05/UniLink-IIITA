@@ -1,793 +1,1524 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniLink - IIIT Allahabad Community Platform</title>
+    <title>UniLink | Your Campus Survival Kit</title>
+    <!-- Tailwind CSS v3 CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700;800;900&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212; 
-            min-height: 100vh;
-           
-        }
-        #chat-widget-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-  }
-
-  /* 1. The Chat Toggle Button (Icon) */
-  #chat-toggle-button {
-    background: #007bff; /* Main theme color */
-    color: white;
-    border: none;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Makes it round */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-  }
-  
-  #chat-toggle-button:hover {
-    background: #0056b3; /* Darker on hover */
-    transform: scale(1.1);
-  }
-
-  /* 2. The Chat Window (Expanded) */
-  #chat-window {
-    width: 350px;
-    height: 450px; /* More proportionate */
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, sans-serif;
+    <!-- Google Fonts: Bricolage Grotesque (Playful & Bold Display) and Plus Jakarta Sans (Sleek UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Caveat:wght@400..700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
     
-    /* Hidden by default */
-    display: none;
-  }
+    <!-- GSAP for Smooth Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
-  /* This class is added by JS to show the window */
-  #chat-widget-container.expanded #chat-window {
-    display: flex;
-  }
-  
-  /* This class is added by JS to hide the button */
-  #chat-widget-container.expanded #chat-toggle-button {
-    display: none;
-  }
-
-  /* 3. Chat Window Internals */
-  #chat-header {
-    background: #007bff;
-    color: white;
-    padding: 10px 15px;
-    font-weight: bold;
-    border-radius: 10px 10px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  #chat-close-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  #chat-messages {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #f9f9f9;
-  }
-
-  .chat-bubble {
-    padding: 10px 15px;
-    border-radius: 15px;
-    max-width: 75%;
-  }
-
-  .chat-bubble.bot {
-    background-color: #f1f1f1;
-    align-self: flex-start;
-  }
-
-  .chat-bubble.user {
-    background-color: #dcf8c6;
-    align-self: flex-end;
-  }
-
-  #chat-form {
-    display: flex;
-    padding: 10px;
-    border-top: 1px solid #eee;
-  }
-
-  #chat-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    margin-right: 10px;
-  }
-
-  #chat-send-button {
-    padding: 10px 15px;
-    border: none;
-    background: #007bff;
-    color: white;
-    border-radius: 20px;
-    cursor: pointer;
-  }
-  
-  #chat-send-button:disabled {
-    background: #aaa;
-  }
-        /* Main Background Image and Overlay */
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), 
-                        url('college-logo.jpg');
-            background-size: cover;
-            background-position: center;
-            min-height: 100vh;
-            position: relative;
-            display: flex;
-            align-items: center;
+    <!-- Inline theme checker to prevent layout flashing -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
+    </script>
 
-        .college-title {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 900;
-            line-height: 0.85;
-        }
-        
-        /* Module Card Styling with Background Images - SMALLER SIZE */
-        .module-card {
-            position: relative;
-            flex-shrink: 0;
-            height: 220px;
-            width: 100%;
-            max-width: 220px;
-            min-width: 150px;
-            background-color: rgba(255, 255, 255, 0.9);
-            margin-right: 0.75rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden;
-            cursor: pointer;
-            border-radius: 1rem;
-        }
-        
-        @media (min-width: 640px) {
-            .module-card {
-                max-width: 240px;
+    <!-- Tailwind Config for Design Tokens -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#09090E',
+                        darkCard: '#13131F',
+                        violetAccent: '#8B5CF6',
+                        pinkAccent: '#EC4899',
+                        greenAccent: '#10B981',
+                        blueAccent: '#06B6D4',
+                        redAccent: '#EF4444',
+                        yellowAccent: '#F59E0B'
+                    },
+                    boxShadow: {
+                        neonViolet: '0 0 20px rgba(139, 92, 246, 0.15)',
+                        neonPink: '0 0 20px rgba(236, 72, 153, 0.15)',
+                        neonGreen: '0 0 20px rgba(16, 185, 129, 0.15)',
+                        neonBlue: '0 0 20px rgba(6, 182, 212, 0.15)',
+                        neonRed: '0 0 20px rgba(239, 68, 68, 0.15)',
+                    }
+                }
             }
         }
+    </script>
 
-        .module-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .module-card-content {
-            position: relative;
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            height: 100%;
-            color: #1F2937;
-            text-align: left;
-            padding: 1.25rem 0.75rem;
-        }
-        
-        .nav-glass {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* Updated Gradient Button Style for Purple Palette */
-        .main-button-gradient {
-            background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%);
+        /* Heading elements style */
+        .font-display {
+            font-family: 'Bricolage Grotesque', sans-serif;
         }
 
-        .main-button-gradient:hover {
-            background: linear-gradient(90deg, #7C3AED 0%, #8B5CF6 100%); 
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        
-        /* Custom style for the new ghost/outline login button */
-        .login-button-outline {
-            border: 2px solid #8B5CF6;
-            color: #8B5CF6;
-            background-color: transparent;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .login-button-outline:hover {
-            background-color: rgba(139, 92, 246, 0.1);
-            color: #A78BFA;
-        }
-        
-        /* Modules container - positioned with equal spacing on both sides */
-        .modules-container {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 1.25rem;
-            justify-content: center;
-            padding-bottom: 1rem;
-            margin-top: 5rem;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        /* Adjust icon size */
-        .module-card .w-8 {
-            width: 1.75rem;
-            height: 1.75rem;
-        }
-        
-        .module-card svg {
-            width: 1rem;
-            height: 1rem;
-        }
-        
-        /* Adjust text sizes for smaller cards */
-        .module-card h3 {
-            font-size: 1rem;
-            line-height: 1.2;
-        }
-        
-        .module-card p {
-            font-size: 0.7rem;
-            line-height: 1.3;
-        }
-        
-        .module-card a {
-            font-size: 0.75rem;
-        }
-        
-        /* Logo styling */
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo-img {
-            height: 60px;
-            width: auto;
-            margin-right: 10px;
-        }
-        
-        .hero-logo-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        /* Module icon styling */
-        .module-icon {
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-        }
-        
-        /* Right side spacing for modules */
-        .modules-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        
-        /* Content wrapper to ensure proper spacing */
-        .content-wrapper {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-        
-        /* College logo styling */
-        .college-logo {
-            height: 40px;
-            width: auto;
-            margin-right: 15px;
-        }
-        
-        /* Auth buttons container */
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .logout-button {
+        ::-webkit-scrollbar-track {
             background: transparent;
-            border: 2px solid #ef4444;
-            color: #ef4444;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
+        }
+        html.dark ::-webkit-scrollbar-track {
+            background: #09090E;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 4px;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #1F1F2E;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B5CF6;
+        }
+
+        /* Glassmorphism navigation panel */
+        .nav-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        html.dark .nav-glass {
+            background: rgba(9, 9, 14, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Grid pattern background overlay */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        html.dark .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+
+        /* Floating Drift Items Keyframe */
+        @keyframes drift {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        .drift-ambient {
+            animation: drift 6s ease-in-out infinite;
+        }
+
+        /* Flip Cards (Chaos of Campus) */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        .flip-card:hover .flip-card-inner,
+        .flip-card.active .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Pulsing Map Pin Animation */
+        @keyframes mapPulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(139, 92, 246, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+        }
+        .pulse-pin {
+            animation: mapPulse 2s infinite;
+        }
+
+        /* Chat Widget Container */
+        #chat-widget-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+        #chat-toggle-button {
+            background: #8B5CF6;
+            color: white;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #chat-toggle-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5);
+        }
+        #chat-window {
+            width: 360px;
+            height: 480px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        html.dark #chat-window {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(19, 19, 31, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        #chat-widget-container.expanded #chat-window {
+            display: flex;
+        }
+        #chat-widget-container.expanded #chat-toggle-button {
+            display: none;
+        }
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 16px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .chat-bubble.bot {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #1E293B;
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+        html.dark .chat-bubble.bot {
+            background-color: rgba(255, 255, 255, 0.06);
+            color: #E2E8F0;
+        }
+        .chat-bubble.user {
+            background-color: #8B5CF6;
+            color: white;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        /* Handwriting font classes */
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
+        }
+        .font-kalam {
+            font-family: 'Kalam', cursive;
+        }
+
+        /* Handwritten scribble underlines & cross-outs */
+        .scribble-underline {
+            position: relative;
+        }
+        .scribble-underline::after {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M0,5 Q25,2 50,5 T100,5' stroke='%238B5CF6' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+            z-index: -1;
+        }
+        .scribble-crossout {
+            position: relative;
+            color: #94a3b8;
+            text-decoration: none;
+        }
+        .scribble-crossout::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #ef4444;
+            transform: translateY(-50%) rotate(-2deg);
+            border-radius: 2px;
+            opacity: 0.7;
+        }
+
+        /* Pinned and Tilted elements */
+        .tilted-left-lg {
+            transform: rotate(-3deg);
+        }
+        .tilted-right-lg {
+            transform: rotate(3deg);
+        }
+        .tilted-left-sm {
+            transform: rotate(-1.5deg);
+        }
+        .tilted-right-sm {
+            transform: rotate(1.5deg);
+        }
+
+        /* Polaroid Card */
+        .polaroid-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.08);
+            padding: 1rem 1rem 2rem 1rem;
+            position: relative;
             transition: all 0.3s ease;
         }
-        
-        .logout-button:hover {
-            background-color: rgba(239, 68, 68, 0.1);
+        html.dark .polaroid-card {
+            background: #13131f;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
         }
-        
-        /* Responsive adjustments */
-        @media (max-width: 1200px) {
-            .module-card {
-                width: 170px;
-                height: 210px;
-            }
-        }
-        
-        @media (max-width: 1024px) {
-            .module-card {
-                width: 160px;
-                height: 200px;
-            }
-            
-            .modules-container {
-                gap: 1rem;
-            }
-        }
-        
-        @media (max-width: 900px) {
-            .module-card {
-                width: 150px;
-                height: 190px;
-            }
-            
-            .modules-container {
-                margin-top: 4rem;
-                width: 94%;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .modules-container {
-                flex-wrap: wrap;
-                justify-content: center;
-                margin-top: 3rem;
-                width: 100%;
-            }
-            
-            .module-card {
-                width: 160px;
-                margin-bottom: 1rem;
-            }
+        .polaroid-card:hover {
+            transform: scale(1.02) rotate(0deg) !important;
+            z-index: 20;
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.12);
         }
 
-        @media (min-width: 1024px) {
-            .modules-container {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-            }
-            .modules-container::-webkit-scrollbar { 
-                display: none; 
-            }
+        /* Sticky Notes */
+        .sticky-note {
+            padding: 1.25rem;
+            box-shadow: 3px 6px 12px rgba(0,0,0,0.06);
+            border-bottom-right-radius: 40px 10px;
+            position: relative;
+            transition: all 0.3s ease;
         }
+        .sticky-note:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 30;
+            box-shadow: 6px 12px 20px rgba(0,0,0,0.12);
+        }
+        /* Sticky note tape header */
+        .sticky-note::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            width: 50px;
+            height: 16px;
+            background: rgba(241, 245, 249, 0.65); /* semi-transparent tape */
+            backdrop-filter: blur(2px);
+            transform: translateX(-50%) rotate(-1deg);
+            border-left: 2px dashed rgba(0, 0, 0, 0.05);
+            border-right: 2px dashed rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        html.dark .sticky-note::before {
+            background: rgba(30, 41, 59, 0.5);
+        }
+        .note-yellow {
+            background: #fef08a !important; /* Tailwind yellow-200 */
+            color: #1e293b !important;
+            border: 1px solid #fde047;
+        }
+        .note-cyan {
+            background: #bae6fd !important; /* Tailwind sky-200 */
+            color: #1e293b !important;
+            border: 1px solid #7dd3fc;
+        }
+        .note-pink {
+            background: #fbcfe8 !important; /* Tailwind pink-200 */
+            color: #1e293b !important;
+            border: 1px solid #f9a8d4;
+        }
+
+        /* Spiral Notebook Style (Left Hero panel) */
+        .notebook-page {
+            background: #fcfcf9;
+            background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 100% 1.75rem;
+            line-height: 1.75rem;
+            padding: 2rem 2rem 2rem 3.5rem;
+            position: relative;
+            border: 1px solid #e5e7eb;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        html.dark .notebook-page {
+            background: #11111a;
+            background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .notebook-page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 2px;
+            height: 100%;
+            background: #fca5a5; /* red margin line */
+            opacity: 0.5;
+        }
+        .notebook-ring-left {
+            position: absolute;
+            left: -12px;
+            top: 10%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            z-index: 10;
+        }
+        .notebook-ring {
+            width: 20px;
+            height: 14px;
+            border: 2.5px solid #94a3b8;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-90deg);
+            background: #cbd5e1;
+        }
+        html.dark .notebook-ring {
+            border-color: #475569;
+            background: #334155;
+        }
+
+        /* Moment Cards (Recent Campus Moments) */
+        .moment-card {
+            background: #ffffff;
+            border: 1px solid #ECEFF3;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 
+                0 4px 20px rgba(15,23,42,0.03),
+                0 10px 30px rgba(15,23,42,0.04);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .moment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 8px 30px rgba(15,23,42,0.05),
+                0 16px 40px rgba(15,23,42,0.06);
+        }
+        html.dark .moment-card {
+            background: #13131F;
+            border-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.15),
+                0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        html.dark .moment-card:hover {
+            box-shadow: 
+                0 8px 30px rgba(0, 0, 0, 0.25),
+                0 16px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Top Accent Line */
+        .accent-line {
+            width: 40px;
+            height: 3px;
+            border-radius: 999px;
+            transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .moment-card:hover .accent-line {
+            width: 60px;
+        }
+
+        /* Top Accent Line Colors */
+        .bg-line-coral { background-color: #FF6B6B; }
+        .bg-line-crimson { background-color: #7F1D1D; }
+        html.dark .bg-line-crimson { background-color: #FB7185; }
+        .bg-line-amber { background-color: #D97706; }
+        html.dark .bg-line-amber { background-color: #F59E0B; }
+        .bg-line-lavender { background-color: #8B5CF6; }
+        html.dark .bg-line-lavender { background-color: #A78BFA; }
+
+        /* Accent text colors */
+        .text-accent-coral { color: #FF6B6B; }
+        .text-accent-crimson { color: #7F1D1D; }
+        html.dark .text-accent-crimson { color: #FB7185; }
+        .text-accent-amber { color: #D97706; }
+        html.dark .text-accent-amber { color: #F59E0B; }
+        .text-accent-lavender { color: #8B5CF6; }
+        html.dark .text-accent-lavender { color: #A78BFA; }
+
+        /* Pill Styles */
+        .pill-badge {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 999px;
+            display: inline-flex;
+            line-height: 1;
+        }
+
+        .pill-coral { background-color: rgba(255, 107, 107, 0.1); color: #FF6B6B; }
+        .pill-crimson { background-color: rgba(127, 29, 29, 0.08); color: #7F1D1D; }
+        html.dark .pill-crimson { background-color: rgba(251, 113, 133, 0.15); color: #FB7185; }
+        .pill-amber { background-color: rgba(217, 119, 6, 0.1); color: #D97706; }
+        html.dark .pill-amber { background-color: rgba(245, 158, 11, 0.15); color: #F59E0B; }
+        .pill-lavender { background-color: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
+        html.dark .pill-lavender { background-color: rgba(167, 139, 250, 0.15); color: #A78BFA; }
     </style>
 </head>
-<body class="min-h-screen">
-    <nav class="nav-glass fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <!-- ADD YOUR LOGO HERE - Replace 'logonew.png' with your actual logo file -->
-                    <div class="logo-container">
-                        <img src="logonew.png" alt="UniLink Logo" class="logo-img">
-                        <div class="text-white text-2xl font-bold tracking-tight">UniLink</div>
-                    </div>
+<body class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-100 transition-colors duration-300 selection:bg-violetAccent selection:text-white">
+
+    <!-- Grid lines background -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+
+    <!-- Navigation Header -->
+    <nav class="nav-glass fixed w-full z-50 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-14 md:h-16">
+                <div class="flex items-center gap-3">
+                    <a href="main.html" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violetAccent to-pinkAccent flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-link text-white text-lg"></i>
+                        </div>
+                        <span class="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-violetAccent transition-colors duration-300">UniLink</span>
+                    </a>
                 </div>
                 
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="main.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="contactus.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
-                        <a href="faq.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
-                         <a href="profile.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="main.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Home</a>
+                    <a href="contactus.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Contact</a>
+                    <a href="faq.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">FAQ</a>
+                    <a href="profile.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Profile</a>
+                    
+                    <!-- Settings Gear & Dropdown -->
+                    <div class="relative">
+                        <button id="settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-all focus:outline-none" title="Settings">
+                            <i class="fa-solid fa-gear text-lg"></i>
+                        </button>
                         
-                        <!-- Navigation based on login status -->
-                        <div id="nav-logged-out" class="flex items-baseline space-x-4">
-                            <a href="auth.html?view=login" class="login-button-outline px-4 py-2 rounded-md text-sm font-medium transition duration-150">
-                                Login
-                            </a>
-                            <a href="auth.html?view=register" class="main-button-gradient text-white px-4 py-2 rounded-md text-sm font-medium transition duration-150">
-                                Get Started
-                            </a>
-                        </div>
-
-                        <div id="nav-logged-in" class="hidden flex items-baseline space-x-4">
-                            <a href="#" id="logout-button" class="login-button-outline px-4 py-2 rounded-md text-sm font-medium transition duration-150">
-                                Logout
-                            </a>
+                        <div id="settings-dropdown" class="hidden absolute right-0 top-14 md:top-16 w-56 p-4 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 shadow-xl z-50 backdrop-blur-xl transition-all duration-200">
+                            <h4 class="font-display font-bold text-slate-800 dark:text-white text-sm mb-3">Settings</h4>
+                            <div class="flex items-center justify-between border-t border-slate-100 dark:border-white/5 pt-3">
+                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Dark Theme</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="dark-theme-toggle" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-violetAccent"></div>
+                                </label>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Dynamic Auth buttons -->
+                    <div id="nav-logged-out" class="flex items-center gap-4 border-l border-slate-200 dark:border-white/10 pl-6">
+                        <a href="auth.html?view=login" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors py-2 px-3">
+                            Login
+                        </a>
+                        <a href="auth.html?view=register" class="text-sm font-semibold text-white bg-violetAccent hover:bg-violetAccent/90 transition-all py-2.5 px-5 rounded-full shadow-lg hover:shadow-violetAccent/30">
+                            Get Started
+                        </a>
+                    </div>
+
+                    <div id="nav-logged-in" class="hidden flex items-center gap-4 border-l border-slate-200 dark:border-white/10 pl-6">
+                        <a href="#" id="logout-button" class="text-sm font-semibold text-redAccent hover:bg-redAccent/10 border border-redAccent/20 py-2.5 px-5 rounded-full transition-colors">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu & Settings Button -->
+                <div class="md:hidden flex items-center gap-2">
+                    <button id="mobile-settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-lg" title="Settings">
+                        <i class="fa-solid fa-gear text-lg"></i>
+                    </button>
+                    
+                    <button id="mobile-menu-button" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white focus:outline-none p-2 rounded-lg" aria-expanded="false">
+                        <svg class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Settings & Menu Dropdowns -->
+        <div id="mobile-settings-panel" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-white/95 dark:bg-darkBg/95 backdrop-blur-xl p-4 flex justify-between items-center">
+            <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">Dark Theme</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="mobile-dark-theme-toggle" class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-violetAccent"></div>
+            </label>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-white/95 dark:bg-darkBg/95 backdrop-blur-xl">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="main.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Home</a>
+                <a href="contactus.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Contact</a>
+                <a href="faq.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all">FAQ</a>
+                <a href="profile.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Profile</a>
+                
+                <div id="mobile-nav-logged-out" class="pt-4 border-t border-slate-200/50 dark:border-white/5 mt-4 space-y-2">
+                    <a href="auth.html?view=login" class="block text-center w-full px-4 py-3 rounded-xl text-base font-semibold text-slate-600 hover:text-slate-900 border border-slate-200 dark:border-white/10 dark:text-slate-300">
+                        Login
+                    </a>
+                    <a href="auth.html?view=register" class="block text-center w-full px-4 py-3 rounded-xl text-base font-semibold text-white bg-violetAccent shadow-lg shadow-violetAccent/20">
+                        Get Started
+                    </a>
+                </div>
+                <div id="mobile-nav-logged-in" class="hidden pt-4 border-t border-slate-200/50 dark:border-white/5 mt-4">
+                    <a href="#" id="mobile-logout-button" class="block text-center w-full px-4 py-3 rounded-xl text-base font-semibold text-redAccent border border-redAccent/20 hover:bg-redAccent/10">
+                        Logout
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <section class="hero-section h-screen relative">
-        <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col h-full pt-16">
-            <!-- Top section with logo and UNILINK text -->
-            <div class="w-full flex flex-col justify-center text-white pt-8 lg:pt-16">
-                <!-- College logo and IIIT Allahabad text -->
-                <div class="flex items-center mb-2">
-                    <p class="text-xl opacity-90">IIIT Allahabad</p>
-                </div>
-                
-                <!-- UNILINK text without logo on left side -->
-                <div class="hero-logo-container">
-                    <h1 class="college-title text-7xl xl:text-[8rem] font-extrabold mb-4 tracking-tighter uppercase">
-                        UNILINK
-                    </h1>
-                </div>
-                
-                <p class="text-base md:text-lg opacity-80 font-light max-w-sm mb-8">
-                    Where Excellence Meets Innovation. Join our community of students helping students.
+    <!-- SECTION 1: HERO SECTION -->
+    <section class="relative overflow-hidden flex flex-col justify-center items-center pt-28 md:pt-36 pb-20 md:pb-28 z-10 min-h-[85vh]">
+        <!-- Floating Interactive Campus Objects (Opacity reduced for clean layout) -->
+        <div class="absolute inset-0 pointer-events-none z-0">
+            <!-- Wallet -->
+            <div class="floating-asset absolute select-none opacity-20 hover:opacity-100 transition-opacity duration-300" style="top: 22%; left: 10%;" data-depth="0.15">
+                <i class="fa-solid fa-wallet text-5xl text-yellowAccent"></i>
+            </div>
+            <!-- Student ID Card -->
+            <div class="floating-asset absolute select-none opacity-25 hover:opacity-100 transition-opacity duration-300" style="top: 15%; right: 12%;" data-depth="0.2">
+                <i class="fa-solid fa-id-card text-6xl text-blueAccent"></i>
+            </div>
+            <!-- Key -->
+            <div class="floating-asset absolute select-none opacity-15 hover:opacity-100 transition-opacity duration-300" style="top: 52%; left: 22%;" data-depth="0.25">
+                <i class="fa-solid fa-key text-4xl text-slate-400"></i>
+            </div>
+            <!-- Backpack -->
+            <div class="floating-asset absolute select-none opacity-20 hover:opacity-100 transition-opacity duration-300" style="top: 45%; right: 15%;" data-depth="0.15">
+                <i class="fa-solid fa-bag-shopping text-5xl text-pinkAccent"></i>
+            </div>
+            <!-- Scooter -->
+            <div class="floating-asset absolute select-none opacity-20 hover:opacity-100 transition-opacity duration-300" style="top: 65%; left: 8%;" data-depth="0.2">
+                <i class="fa-solid fa-motorcycle text-5xl text-violetAccent"></i>
+            </div>
+            <!-- Bicycle -->
+            <div class="floating-asset absolute select-none opacity-20 hover:opacity-100 transition-opacity duration-300" style="top: 65%; right: 25%;" data-depth="0.25">
+                <i class="fa-solid fa-bicycle text-5xl text-blueAccent"></i>
+            </div>
+            <!-- First Aid -->
+            <div class="floating-asset absolute select-none opacity-20 hover:opacity-100 transition-opacity duration-300" style="top: 70%; left: 30%;" data-depth="0.3">
+                <i class="fa-solid fa-kit-medical text-4xl text-redAccent"></i>
+            </div>
+            <!-- Notebook (middle center) -->
+            <div class="floating-asset absolute select-none opacity-20 hover:opacity-100 transition-opacity duration-300" style="top: 32%; left: 48%;" data-depth="0.1">
+                <i class="fa-solid fa-file-invoice text-4xl text-greenAccent"></i>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto w-full px-6 relative z-10 text-center flex flex-col items-center justify-center">
+            <!-- Headline -->
+            <h1 class="font-display font-black text-5xl sm:text-7xl md:text-8xl text-slate-900 dark:text-white tracking-tight leading-[1.1] mb-6">
+                College is <span class="relative inline-block text-redAccent border-b-[6px] border-redAccent pb-1">chaotic</span>.<br>
+                <span class="bg-gradient-to-r from-violetAccent to-pinkAccent bg-clip-text text-transparent">UniLink</span> <span class="text-blueAccent">helps</span>.
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-medium max-w-2xl leading-relaxed mb-10">
+                From lost wallets and emergency blood requests to rides, rentals and student connections.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div id="auth-buttons-hero" class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                <!-- Populated dynamically by JS -->
+                <a href="auth.html?view=register" class="w-full sm:w-auto text-center px-8 py-4 bg-gradient-to-r from-violetAccent to-pinkAccent hover:scale-105 text-white font-bold rounded-2xl shadow-xl shadow-violetAccent/20 transition-all text-lg duration-300">
+                    Join the Survival Squad
+                </a>
+            </div>
+            
+            <!-- Mouse scroll prompt -->
+            <div class="flex flex-col items-center gap-2 animate-bounce opacity-60">
+                <span class="text-xs uppercase tracking-widest text-slate-400 font-bold">Scroll to see the chaos</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-sm animate-bounce"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: CAMPUS DISPATCHES -->
+    <section id="dispatches" class="py-28 md:py-36 relative overflow-hidden z-10 border-t border-slate-200/50 dark:border-white/5 bg-slate-100/30 dark:bg-darkBg/30">
+        <div class="max-w-5xl mx-auto px-6">
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="font-display text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                    Campus Dispatches
+                </h2>
+                <p class="mt-4 text-base md:text-lg text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                    The little emergencies of college life, quietly solved through UniLink.
                 </p>
-                
-                <!-- Auth buttons in hero section -->
-                <div id="auth-buttons-hero" class="flex space-x-4">
-                    <!-- These will be populated by JavaScript -->
-                </div>
             </div>
 
-            <!-- Bottom section with modules - positioned with equal spacing on both sides -->
-            <div class="w-full flex-grow flex items-end pb-16">
-                <div class="modules-wrapper">
-                    <div class="modules-container">
-                        <div class="module-card rounded-2xl">
-                            <div class="module-card-content">
-                                <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2 2m2-2l2 2m7-2.94c.39-.49.39-1.22 0-1.71l-1.74-2.18c-.39-.49-1.02-.79-1.68-.79H7.42c-.66 0-1.29.3-1.68.79L3.99 9.35c-.39.49-.39 1.22 0 1.71l5.42 6.77c.39.49 1.02.77 1.68.77s1.29-.28 1.68-.77l5.42-6.77z"></path></svg>
-                                </div>
-                                <h3 class="text-lg font-bold">Blood Donation</h3>
-                                <p class="text-xs mt-1">Find or become a blood donor. Save a life in our community.</p>
-                                <a href="bd.html" class="text-red-500 text-sm mt-3 flex items-center hover:underline">Explore &rarr;</a>
-                            </div>
+            <!-- Moments Grid Container (Balanced 2x2 Grid) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+                
+                <!-- CARD 1: LOST & FOUND -->
+                <div class="moment-card flex flex-col justify-between">
+                    <div>
+                        <!-- Top Accent Line -->
+                        <div class="accent-line bg-line-coral mb-6"></div>
+                        <!-- Status Pill -->
+                        <div class="mb-4">
+                            <span class="pill-badge pill-coral">REUNITED</span>
                         </div>
-                        
-                        
+                        <!-- Headline -->
+                        <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+                            Forgot your wallet in the canteen?
+                        </h3>
+                        <!-- Description -->
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            Found items reported by students across campus help you get back what matters before panic takes over.
+                        </p>
+                    </div>
+                    <!-- Action Link -->
+                    <div>
+                        <a href="lnf.html" class="group inline-flex items-center gap-1.5 text-sm font-bold text-accent-coral hover:opacity-80 transition-opacity">
+                            Open Lost & Found <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                        </a>
+                    </div>
+                </div>
 
-                        <div class="module-card rounded-2xl">
-                            <div class="module-card-content">
-                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                                </div>
-                                <h3 class="text-lg font-bold">Lost & Found</h3>
-                                <p class="text-xs mt-1">Report lost items or help return found belongings to their owners.</p>
-                                <a href="lnf.html" class="text-green-500 text-sm mt-3 flex items-center hover:underline">Explore &rarr;</a>
-                            </div>
+                <!-- CARD 2: BLOOD DONATION -->
+                <div class="moment-card flex flex-col justify-between">
+                    <div>
+                        <!-- Top Accent Line -->
+                        <div class="accent-line bg-line-crimson mb-6"></div>
+                        <!-- Status Pill -->
+                        <div class="mb-4">
+                            <span class="pill-badge pill-crimson">MATCHED</span>
                         </div>
+                        <!-- Headline -->
+                        <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+                            Need an urgent donor?
+                        </h3>
+                        <!-- Description -->
+                        <p class="text-slate-650 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            Search verified student donors by blood group and availability when every minute matters.
+                        </p>
+                    </div>
+                    <!-- Action Link -->
+                    <div>
+                        <a href="bd.html" class="group inline-flex items-center gap-1.5 text-sm font-bold text-accent-crimson hover:opacity-80 transition-opacity">
+                            Find Donors <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                        </a>
+                    </div>
+                </div>
 
-                        <div class="module-card rounded-2xl">
-                            <div class="module-card-content">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                                </div>
-                                <h3 class="text-lg font-bold">Vehicle Rental</h3>
-                                <p class="text-xs mt-1">Rent bikes and scooters from seniors or list your own vehicles for profit.</p>
-                                <a href="carrental.html" class="text-purple-500 text-sm mt-3 flex items-center hover:underline">Explore &rarr;</a>
-                            </div>
+                <!-- CARD 3: RIDE SHARING -->
+                <div class="moment-card flex flex-col justify-between">
+                    <div>
+                        <!-- Top Accent Line -->
+                        <div class="accent-line bg-line-amber mb-6"></div>
+                        <!-- Status Pill -->
+                        <div class="mb-4">
+                            <span class="pill-badge pill-amber">SHARED</span>
                         </div>
-                        <div class="module-card rounded-2xl">
-                            <div class="module-card-content">
-                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-3">
-                                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                                </div>
-                                <h3 class="text-lg font-bold">Commute Pooling</h3>
-                                <p class="text-xs mt-1">Share rides, save costs, and reduce carbon footprint with fellow students.</p>
-                                <a href="cp.html" class="text-blue-500 text-sm mt-3 flex items-center hover:underline">Explore &rarr;</a>
-                            </div>
+                        <!-- Headline -->
+                        <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+                            Heading to Civil Lines?
+                        </h3>
+                        <!-- Description -->
+                        <p class="text-slate-650 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            Find classmates already taking the same route and split the fare instead of negotiating with autos alone.
+                        </p>
+                    </div>
+                    <!-- Action Link -->
+                    <div>
+                        <a href="cp.html" class="group inline-flex items-center gap-1.5 text-sm font-bold text-accent-amber hover:opacity-80 transition-opacity">
+                            Find a Ride <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- CARD 4: VEHICLE RENTAL -->
+                <div class="moment-card flex flex-col justify-between">
+                    <div>
+                        <!-- Top Accent Line -->
+                        <div class="accent-line bg-line-lavender mb-6"></div>
+                        <!-- Status Pill -->
+                        <div class="mb-4">
+                            <span class="pill-badge pill-lavender">BORROWED</span>
                         </div>
+                        <!-- Headline -->
+                        <h3 class="font-display text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+                            Weekend trip with friends?
+                        </h3>
+                        <!-- Description -->
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                            Borrow a bike or scooter from verified students for station runs, city plans, Sangam sunsets, or spontaneous weekend adventures.
+                        </p>
+                    </div>
+                    <!-- Action Link -->
+                    <div>
+                        <a href="carrental.html" class="group inline-flex items-center gap-1.5 text-sm font-bold text-accent-lavender hover:opacity-80 transition-opacity">
+                            Borrow Wheels <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE CAMPUS MAP -->
+    <section class="py-24 relative overflow-hidden z-10 border-t border-slate-200/50 dark:border-white/5 bg-white dark:bg-darkBg/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="font-sans text-xs uppercase tracking-widest text-violetAccent font-bold block mb-3">Campus Navigation</span>
+                <h2 class="font-display text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
+                    Where is your <span class="text-violetAccent">incident</span> located?
+                </h2>
+                <p class="mt-4 text-slate-500 dark:text-slate-400 font-medium">Explore the IIIT Allahabad landmarks below. Click any pin to view live updates and access the relevant module.</p>
+            </div>
+
+            <!-- Stylized Illustrated SVG Map & Pins -->
+            <div class="relative w-full aspect-[16/9] max-w-4xl mx-auto rounded-3xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-[#0c0c14] shadow-2xl">
+                <!-- SVG Vector Campus Map representation -->
+                <svg class="absolute inset-0 w-full h-full opacity-100" viewBox="0 0 1000 562" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Defs for Gradients & Icons -->
+                    <defs>
+                        <linearGradient id="poolGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="100%" stop-color="#0284c7" />
+                        </linearGradient>
+                        <g id="tree">
+                            <line x1="0" y1="0" x2="0" y2="-5" stroke="#78350f" stroke-width="1.2" />
+                            <circle cx="0" cy="-5" r="3.5" fill="#22c55e" class="dark:fill-emerald-700" />
+                            <circle cx="-1.5" cy="-6.5" r="2.5" fill="#15803d" class="dark:fill-emerald-800" />
+                        </g>
+                    </defs>
+
+                    <!-- Campus Grounds Base -->
+                    <rect x="0" y="0" width="1000" height="562" class="fill-slate-50 dark:fill-darkBg" />
+
+                    <!-- Green Parks / Gardens -->
+                    <!-- Rock Garden (wrapped around bottom-left of Administration loop) -->
+                    <circle cx="270" cy="350" r="40" class="fill-emerald-100/40 dark:fill-emerald-950/20 stroke-emerald-200/50 dark:stroke-emerald-900/20" stroke-width="1.5" />
+                    <!-- G-Block central roundabout lawn -->
+                    <circle cx="780" cy="430" r="30" class="fill-emerald-100/40 dark:fill-emerald-950/25 stroke-emerald-200/50 dark:stroke-emerald-900/20" stroke-width="1.5" />
+
+                    <!-- Reusable Trees Placement -->
+                    <use href="#tree" x="250" y="340" />
+                    <use href="#tree" x="290" y="380" />
+                    <use href="#tree" x="780" y="430" />
+                    <use href="#tree" x="770" y="415" />
+                    <use href="#tree" x="795" y="440" />
+                    <use href="#tree" x="380" y="280" />
+                    <use href="#tree" x="140" y="170" />
+                    <use href="#tree" x="480" y="170" />
+
+                    <!-- Roads & Pathways -->
+                    <!-- Jhalwa Road / IIITA Road (Horizontal, South sector) -->
+                    <path d="M 0,480 L 1000,480" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="16" stroke-linecap="round" />
+                    <path d="M 0,480 L 1000,480" class="stroke-slate-300 dark:stroke-slate-700" stroke-width="1.5" stroke-dasharray="6 4" />
+                    
+                    <!-- West Border Road (IIIT Rd) -->
+                    <path d="M 120,480 L 120,40" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" stroke-linecap="round" />
+
+                    <!-- Entrance Road -->
+                    <path d="M 180,480 L 180,380" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+
+                    <!-- Administration Building Loop Road -->
+                    <circle cx="320" cy="300" r="65" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+
+                    <!-- Internal Campus Pathways -->
+                    <path d="M 180,250 L 255,250" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+                    <path d="M 385,300 L 460,300" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+                    <path d="M 460,300 L 780,430" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+                    <path d="M 500,230 L 580,230" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+                    <path d="M 780,430 L 780,180" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+                    <path d="M 660,180 L 660,40" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="8" fill="none" />
+
+                    <!-- Gates / Entrances -->
+                    <text x="180" y="474" class="fill-slate-500 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Main Gate 1</text>
+                    <text x="780" y="474" class="fill-slate-500 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Gate 2</text>
+
+                    <!-- Academic Area Landmarks (North of IIITA Rd) -->
+                    <!-- CC-1 (Computer Center 1) -->
+                    <g transform="translate(160, 230)">
+                        <rect x="-35" y="-20" width="70" height="40" rx="3" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                        <circle cx="0" cy="0" r="10" class="fill-slate-100 dark:fill-slate-800 stroke-slate-200 dark:stroke-slate-700" stroke-width="1" />
+                        <text x="0" y="3" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">CC-1</text>
+                    </g>
+
+                    <!-- CC-3 (Computer Center 3 / C.V. Raman Bhavan) -->
+                    <g transform="translate(160, 100)">
+                        <rect x="-50" y="-25" width="100" height="50" rx="4" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-greenAccent/5 transition-colors" stroke-width="1.5" />
+                        <line x1="-40" y1="0" x2="40" y2="0" class="stroke-slate-200 dark:stroke-slate-800" stroke-width="1" />
+                        <text x="0" y="-3" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[9px]" text-anchor="middle">CC-3</text>
+                        <text x="0" y="10" class="fill-slate-500 dark:fill-slate-500 font-sans text-[7px]" text-anchor="middle">(C.V. Raman)</text>
+                    </g>
+
+                    <!-- Administration Building (Nested inside Loop) -->
+                    <g transform="translate(320, 300)">
+                        <path d="M 0,-25 L 30,-5 L 18,25 L -18,25 L -30,-5 Z" class="fill-white dark:fill-darkCard stroke-slate-200 stroke-width=1.5 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" />
+                        <circle cx="0" cy="0" r="12" class="fill-slate-100 dark:fill-slate-800 stroke-slate-200 dark:stroke-slate-700" stroke-width="1" />
+                        <text x="0" y="3" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Admin Block</text>
+                    </g>
+
+                    <!-- Lecture Theatre (LT) -->
+                    <g transform="translate(320, 170)">
+                        <circle cx="0" cy="0" r="25" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" />
+                        <circle cx="0" cy="0" r="15" class="fill-slate-100 dark:fill-slate-800 stroke-slate-200 dark:stroke-slate-700" stroke-width="1" />
+                        <text x="0" y="3" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">LT</text>
+                    </g>
+
+                    <!-- CC-2 (Computer Center 2) -->
+                    <g transform="translate(460, 230)">
+                        <rect x="-35" y="-20" width="70" height="40" rx="3" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-pinkAccent/5 transition-colors" stroke-width="1.5" />
+                        <circle cx="0" cy="0" r="10" class="fill-slate-100 dark:fill-slate-800 stroke-slate-200 dark:stroke-slate-700" stroke-width="1" />
+                        <text x="0" y="3" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">CC-2</text>
+                    </g>
+
+                    <!-- Director's Residence -->
+                    <g transform="translate(75, 430)">
+                        <rect x="-25" y="-18" width="50" height="36" rx="3" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                        <path d="M -25,-18 L 0,-34 L 25,-18 Z" class="fill-slate-100 dark:fill-slate-800 stroke-slate-200 dark:stroke-slate-700" stroke-width="1" />
+                        <text x="0" y="6" class="fill-slate-500 dark:fill-slate-400 font-sans font-bold text-[7px]" text-anchor="middle">Director's Res</text>
+                    </g>
+
+                    <!-- Temple Area -->
+                    <g transform="translate(380, 80)">
+                        <circle cx="0" cy="0" r="12" class="fill-amber-50 dark:fill-amber-950/20 stroke-amber-500" stroke-width="1.5" />
+                        <path d="M 0,-12 L 4,-5 L -4,-5 Z" fill="#EF4444" />
+                        <text x="0" y="18" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Temple</text>
+                    </g>
+
+                    <!-- Muktangan -->
+                    <g transform="translate(410, 350)">
+                        <path d="M -20,10 C -20,-10 20,-10 20,10 Z" class="fill-purple-500/10 stroke-purple-500/30" stroke-width="1.5" />
+                        <rect x="-3" y="-8" width="6" height="18" fill="#a855f7" />
+                        <circle cx="0" cy="-6" r="2" fill="white" />
+                        <text x="0" y="20" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Muktangan</text>
+                    </g>
+
+                    <!-- Swimming Pool -->
+                    <g transform="translate(440, 427)">
+                        <rect x="-30" y="-17" width="60" height="34" rx="3" fill="url(#poolGrad)" stroke="#0284c7" stroke-width="1.5" />
+                        <line x1="-18" y1="-17" x2="-18" y2="17" stroke="white" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.6" />
+                        <line x1="-6" y1="-17" x2="-6" y2="17" stroke="white" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.6" />
+                        <line x1="6" y1="-17" x2="6" y2="17" stroke="white" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.6" />
+                        <line x1="18" y1="-17" x2="18" y2="17" stroke="white" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.6" />
+                        <text x="0" y="27" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Swimming Pool</text>
+                    </g>
+
+                    <!-- Student Activity Centre (SAC) -->
+                    <g transform="translate(580, 430)">
+                        <ellipse cx="0" cy="0" rx="30" ry="20" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                        <rect x="-12" y="-8" width="24" height="16" class="fill-emerald-100/10 stroke-slate-300 dark:stroke-slate-700" stroke-width="0.8" />
+                        <text x="0" y="28" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">SAC</text>
+                    </g>
+
+                    <!-- Shopping Complex -->
+                    <g transform="translate(680, 430)">
+                        <rect x="-30" y="-15" width="60" height="30" rx="3" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                        <text x="0" y="-1" class="fill-slate-500 dark:fill-slate-400 font-sans font-bold text-[7px]" text-anchor="middle">Shopping</text>
+                        <text x="0" y="7" class="fill-slate-500 dark:fill-slate-400 font-sans font-bold text-[7px]" text-anchor="middle">Complex</text>
+                    </g>
+
+                    <!-- Athletic Field / Running Track -->
+                    <g transform="translate(650, 270)">
+                        <rect x="-90" y="-50" width="180" height="100" rx="50" class="fill-emerald-500/10 stroke-orange-500/40 dark:stroke-orange-500/20" stroke-width="12" />
+                        <rect x="-84" y="-44" width="168" height="88" rx="44" fill="none" stroke="white" stroke-width="0.8" stroke-dasharray="4 3" opacity="0.8" />
+                        <rect x="-78" y="-38" width="156" height="76" rx="38" class="fill-emerald-500/10 stroke-none" />
+                        <text x="0" y="4" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">Athletic Ground</text>
+                    </g>
+
+                    <!-- G-Block -->
+                    <g transform="translate(780, 340)">
+                        <rect x="-30" y="-19" width="60" height="38" rx="3" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                        <text x="0" y="3" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">G-Block</text>
+                    </g>
+
+                    <!-- Girls Hostels (GH-1, GH-2, GH-3) -->
+                    <!-- GH-1 -->
+                    <path d="M 570,80 L 610,80 L 610,110 L 570,110 Z M 580,90 L 580,100 L 600,100 L 600,90 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="590" y="120" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">GH-1</text>
+                    
+                    <!-- GH-2 -->
+                    <path d="M 650,90 L 690,90 L 690,120 L 650,120 Z M 660,100 L 660,110 L 680,110 L 680,100 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="670" y="130" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">GH-2</text>
+                    
+                    <!-- GH-3 -->
+                    <path d="M 610,140 L 650,140 L 650,170 L 610,170 Z M 620,150 L 620,160 L 640,160 L 640,150 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="630" y="180" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">GH-3</text>
+
+                    <!-- Visitor Hostels (VH-1, VH-2, VH-3) -->
+                    <rect x="800" y="70" width="40" height="20" rx="2" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                    <text x="820" y="82" class="fill-slate-500 dark:fill-slate-400 font-sans text-[7px]" text-anchor="middle">VH-1</text>
+                    <rect x="800" y="105" width="40" height="20" rx="2" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                    <text x="820" y="117" class="fill-slate-500 dark:fill-slate-400 font-sans text-[7px]" text-anchor="middle">VH-2</text>
+                    <rect x="855" y="87" width="40" height="20" rx="2" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1.5" />
+                    <text x="875" y="99" class="fill-slate-500 dark:fill-slate-400 font-sans text-[7px]" text-anchor="middle">VH-3</text>
+
+                    <!-- Faculty Housing Clustered -->
+                    <rect x="850" y="210" width="30" height="18" rx="1" class="fill-slate-100/50 dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1" />
+                    <rect x="890" y="210" width="30" height="18" rx="1" class="fill-slate-100/50 dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1" />
+                    <rect x="850" y="235" width="30" height="18" rx="1" class="fill-slate-100/50 dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1" />
+                    <rect x="890" y="235" width="30" height="18" rx="1" class="fill-slate-100/50 dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1" />
+                    <rect x="850" y="260" width="30" height="18" rx="1" class="fill-slate-100/50 dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1" />
+                    <rect x="890" y="260" width="30" height="18" rx="1" class="fill-slate-100/50 dark:fill-darkCard stroke-slate-200 dark:stroke-white/5" stroke-width="1" />
+                    <text x="885" y="295" class="fill-slate-500 dark:fill-slate-500 font-sans text-[7px]" text-anchor="middle">Faculty Housing</text>
+
+                    <!-- Boys Hostels (South of IIITA Road) -->
+                    <!-- BH-1 (Complex shape as seen in the satellite view) -->
+                    <path d="M 60,500 L 90,500 L 90,520 L 120,520 L 120,500 L 150,500 L 150,550 L 120,550 L 120,535 L 90,535 L 90,550 L 60,550 Z M 72,508 L 72,542 L 80,542 L 80,508 Z M 130,508 L 130,542 L 138,542 L 138,508 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="105" y="561" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">BH-1</text>
+                    
+                    <!-- BH-2 (Vertical courtyard structure) -->
+                    <path d="M 280,500 L 340,500 L 340,548 L 280,548 Z M 295,510 L 295,538 L 325,538 L 325,510 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="310" y="560" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">BH-2</text>
+                    
+                    <!-- BH-3 (Vertical courtyard structure) -->
+                    <path d="M 460,500 L 520,500 L 520,548 L 460,548 Z M 475,510 L 475,538 L 505,538 L 505,510 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="490" y="560" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">BH-3</text>
+                    
+                    <!-- BH-4 (Vertical courtyard structure) -->
+                    <path d="M 680,500 L 740,500 L 740,548 L 680,548 Z M 695,510 L 695,538 L 725,538 L 725,510 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="710" y="560" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">BH-4</text>
+                    
+                    <!-- BH-5 (Vertical courtyard structure) -->
+                    <path d="M 820,500 L 880,500 L 880,548 L 820,548 Z M 835,510 L 835,538 L 865,538 L 865,510 Z" class="fill-white dark:fill-darkCard stroke-slate-200 dark:stroke-white/5 hover:fill-violetAccent/5 transition-colors" stroke-width="1.5" fill-rule="evenodd" />
+                    <text x="850" y="560" class="fill-slate-600 dark:fill-slate-400 font-sans font-bold text-[8px]" text-anchor="middle">BH-5</text>
+                </svg>
+
+                <!-- Interactive Pulsing Map Pins (Positioned relative to campus layout) -->
+                <!-- 1. Blood donation pin (Health Center / G-Block Roundabout area) -->
+                <button onclick="openMapPreview('blood')" class="absolute top-[74.7%] left-[72%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-redAccent flex items-center justify-center text-white pulse-pin shadow-lg shadow-redAccent/50 group focus:outline-none">
+                    <i class="fa-solid fa-droplet text-sm group-hover:scale-110 transition-transform"></i>
+                </button>
+
+                <!-- 2. Lost & Found pin (CC-3 Block) -->
+                <button onclick="openMapPreview('lnf')" class="absolute top-[17.8%] left-[16%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-greenAccent flex items-center justify-center text-white pulse-pin shadow-lg shadow-greenAccent/50 group focus:outline-none" style="animation-delay: 0.3s">
+                    <i class="fa-solid fa-magnifying-glass text-sm group-hover:scale-110 transition-transform"></i>
+                </button>
+
+                <!-- 3. Commute pooling pin (Main Gate area on Jhalwa Rd) -->
+                <button onclick="openMapPreview('rides')" class="absolute top-[85.4%] left-[18%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-blueAccent flex items-center justify-center text-white pulse-pin shadow-lg shadow-blueAccent/50 group focus:outline-none" style="animation-delay: 0.6s">
+                    <i class="fa-solid fa-car text-sm group-hover:scale-110 transition-transform"></i>
+                </button>
+
+                <!-- 4. Vehicle rental pin (BH-4 Hostel Parking) -->
+                <button onclick="openMapPreview('rentals')" class="absolute top-[93.2%] left-[71%] -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-violetAccent flex items-center justify-center text-white pulse-pin shadow-lg shadow-violetAccent/50 group focus:outline-none" style="animation-delay: 0.9s">
+                    <i class="fa-solid fa-motorcycle text-sm group-hover:scale-110 transition-transform"></i>
+                </button>
+
+
+                <!-- Interactive Map Popup Card -->
+                <div id="map-preview-card" class="absolute bottom-6 right-6 left-6 md:left-auto md:w-80 p-5 rounded-2xl bg-white/95 dark:bg-darkCard/95 border border-slate-200 dark:border-white/10 backdrop-blur-xl shadow-2xl translate-y-12 opacity-0 pointer-events-none transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div id="map-preview-icon" class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm"></div>
+                        <h4 id="map-preview-title" class="font-display text-lg font-bold text-slate-800 dark:text-white">Landmark</h4>
+                    </div>
+                    <p id="map-preview-desc" class="text-xs text-slate-500 dark:text-slate-400 leading-normal">Select a pin on the map to display detail summaries.</p>
+                    <div class="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 flex justify-between items-center">
+                        <span id="map-preview-stat" class="text-xs font-bold text-slate-400 dark:text-slate-500">No active updates</span>
+                        <a id="map-preview-link" href="#" class="text-xs bg-slate-100 hover:bg-violetAccent hover:text-white dark:bg-white/10 px-3 py-1.5 rounded-lg font-bold text-slate-600 dark:text-slate-300 transition-all">Explore &rarr;</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- SECTION 6: FINAL CTA -->
+    <section class="py-32 relative overflow-hidden z-10 border-t border-slate-200/50 dark:border-white/5 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-darkBg dark:to-[#0d0d18] flex items-center justify-center">
+        <div class="max-w-4xl mx-auto px-6 text-center flex flex-col items-center">
+            <!-- Neon background sphere -->
+            <div class="absolute w-[400px] h-[400px] rounded-full bg-violetAccent/5 blur-[120px] pointer-events-none"></div>
+
+            <h2 class="font-display text-5xl md:text-8xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-8">
+                Ready to survive<br>college smarter?
+            </h2>
+            
+            <a id="cta-join-button" href="auth.html?view=register" class="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-violetAccent to-pinkAccent rounded-2xl text-white font-extrabold text-xl shadow-2xl shadow-violetAccent/30 transition-transform duration-300 hover:scale-105 active:scale-95 focus:outline-none">
+                <span>Join the Survival Squad</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform duration-300"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- CHATBOT WIDGET (Preserved & Styled) -->
     <div id="chat-widget-container">
-        <button id="chat-toggle-button" title="Chat with UniLink Assistant">
-            <i class="fas fa-comment-dots fa-2x"></i>
+        <button id="chat-toggle-button" class="w-16 h-16 rounded-full flex items-center justify-center border-none cursor-pointer focus:outline-none" title="Chat with UniLink Assistant">
+            <i class="fas fa-comment-dots text-2xl"></i>
         </button>
 
-        <div id="chat-window">
-            <div id="chat-header">
-                <span>UniLink Assistant</span>
-                <button id="chat-close-button" title="Close chat">&times;</button>
+        <div id="chat-window" class="border border-slate-200 dark:border-white/8 bg-white dark:bg-darkCard">
+            <div id="chat-header" class="bg-violetAccent text-white px-5 py-4 font-bold flex justify-between items-center border-b border-slate-100 dark:border-white/5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-greenAccent animate-pulse"></span>
+                    <span class="font-display tracking-wide text-sm">UniLink Assistant</span>
+                </div>
+                <button id="chat-close-button" class="bg-none border-none text-white text-2xl font-bold cursor-pointer leading-none hover:text-white/80 focus:outline-none" title="Close chat">&times;</button>
             </div>
             
-            <div id="chat-messages">
+            <div id="chat-messages" class="flex-1 p-5 overflow-y-auto flex flex-col gap-4 bg-slate-50 dark:bg-[#0F101C]/80">
                 <div class="chat-bubble bot">
-                    Hi! How can I help you today?
+                    Hi! I'm your campus AI assistant. Ask me anything like:<br>
+                    <em class="text-xs text-slate-500 dark:text-slate-400 mt-2 block">"Is anyone renting a scooter?" or "I lost my ID card, has anyone seen it?"</em>
                 </div>
             </div>
 
-            <form id="chat-form">
-                <input type="text" id="chat-input" placeholder="Ask a question..." autocomplete="off">
-                <button type
-                ="submit" id="chat-send-button" title="Send">
-                    <i class="fas fa-paper-plane"></i>
+            <form id="chat-form" class="flex p-4 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-[#171827]">
+                <input type="text" id="chat-input" class="flex-1 px-4 py-2.5 bg-white dark:bg-darkBg border border-slate-200 dark:border-white/10 text-slate-800 dark:text-white rounded-xl text-sm focus:outline-none focus:border-violetAccent transition-colors" placeholder="Ask a question..." autocomplete="off">
+                <button type="submit" id="chat-send-button" class="ml-2 w-10 h-10 bg-violetAccent text-white rounded-xl flex items-center justify-center cursor-pointer hover:bg-violetAccent/90 focus:outline-none transition-colors" title="Send">
+                    <i class="fas fa-paper-plane text-sm"></i>
                 </button>
             </form>
         </div>
     </div>
-   <script>
-    // Check if user is logged in
-    function isLoggedIn() {
-        return localStorage.getItem('token') !== null;
-    }
 
-    // Handle logout
-    function logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData'); // Clear any cached user data
-        updateAuthUI();
-        // Redirect to home to ensure a clean state
-        window.location.href = 'main.html';
-    }
-
-    // Update UI based on login status
-    // This is the new, "safer" updateAuthUI function.
-function updateAuthUI() {
-    const isLoggedInUser = isLoggedIn();
-
-    // Get all the UI elements (it's OK if some are null)
-    const authButtonsHero = document.getElementById('auth-buttons-hero');
-    const navLoggedOut = document.getElementById('nav-logged-out');
-    const navLoggedIn = document.getElementById('nav-logged-in');
-    const mobileNavLoggedOut = document.getElementById('mobile-nav-logged-out');
-    const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
-    
-    if (isLoggedInUser) {
-        // --- USER IS LOGGED IN ---
-
-        // 1. Update Hero Buttons
-        if (authButtonsHero) {
-            authButtonsHero.innerHTML = `
-                <a href="profile.html" class="main-button-gradient text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    GO TO YOUR PROFILE
-                </a>
-            `;
+    <!-- Scripts Section -->
+    <script>
+        // Check if user is logged in
+        function isLoggedIn() {
+            return localStorage.getItem('token') !== null;
         }
 
-        // 2. Update Navbar
-        if (navLoggedOut) navLoggedOut.classList.add('hidden');
-        if (navLoggedIn) navLoggedIn.classList.remove('hidden');
-
-        // 3. Update Mobile Navbar (This will no longer crash)
-        if (mobileNavLoggedOut) mobileNavLoggedOut.classList.add('hidden');
-        if (mobileNavLoggedIn) mobileNavLoggedIn.classList.remove('hidden');
-
-    } else {
-        // --- USER IS LOGGED OUT ---
-
-        // 1. Update Hero Buttons
-        if (authButtonsHero) {
-            authButtonsHero.innerHTML = `
-                <a href="auth.html?view=register" class="main-button-gradient text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <div class="w-2 h-2 rounded-full border-2 border-white mr-2"></div>
-                    SIGN UP NOW
-                </a>
-                <a href="auth.html?view=login" class="login-button-outline px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <svg class="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                    </svg>
-                    LOGIN
-                </a>
-            `;
+        // Handle logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData'); // Clear cached user data
+            updateAuthUI();
+            window.location.href = 'main.html';
         }
 
-        // 2. Update Navbar
-        if (navLoggedOut) navLoggedOut.classList.remove('hidden');
-        if (navLoggedIn) navLoggedIn.classList.add('hidden');
+        // Update UI based on login status
+        function updateAuthUI() {
+            const loggedIn = isLoggedIn();
+            const navLoggedOut = document.getElementById('nav-logged-out');
+            const navLoggedIn = document.getElementById('nav-logged-in');
+            const mobileNavLoggedOut = document.getElementById('mobile-nav-logged-out');
+            const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
+            const authButtonsHero = document.getElementById('auth-buttons-hero');
+            const ctaJoinButton = document.getElementById('cta-join-button');
 
-        // 3. Update Mobile Navbar (This will no longer crash)
-        if (mobileNavLoggedOut) mobileNavLoggedOut.classList.remove('hidden');
-        if (mobileNavLoggedIn) mobileNavLoggedIn.classList.add('hidden');
-    }
-}
+            if (loggedIn) {
+                if (navLoggedOut) navLoggedOut.classList.add('hidden');
+                if (navLoggedIn) navLoggedIn.classList.remove('hidden');
+                if (mobileNavLoggedOut) mobileNavLoggedOut.classList.add('hidden');
+                if (mobileNavLoggedIn) mobileNavLoggedIn.classList.remove('hidden');
 
-    // Handle module clicks (your existing logic was correct)
-    function setupModuleClicks() {
-        document.querySelectorAll('.module-card').forEach(card => {
-            const link = card.querySelector('a');
-            if (!link) return;
-
-            const targetUrl = link.href;
-
-            card.addEventListener('click', function(e) {
-                if (e.target.closest('a') || e.target.closest('button')) {
-                    return;
+                if (authButtonsHero) {
+                    authButtonsHero.innerHTML = `
+                        <a href="profile.html" class="w-full sm:w-auto text-center px-8 py-4 bg-gradient-to-r from-violetAccent to-pinkAccent hover:scale-105 text-white font-bold rounded-2xl shadow-xl shadow-violetAccent/20 transition-all text-lg duration-300">
+                            Go To Your Profile
+                        </a>
+                    `;
                 }
 
-                if (!isLoggedIn()) {
-                    e.preventDefault(); // Stop the click
-                    alert('Please log in to access this module');
-                    window.location.href = 'auth.html?view=login';
-                    return;
+                if (ctaJoinButton) {
+                    ctaJoinButton.innerHTML = `
+                        <span>Go to Dashboard</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    `;
+                    ctaJoinButton.setAttribute('href', 'profile.html');
+                }
+            } else {
+                if (navLoggedOut) navLoggedOut.classList.remove('hidden');
+                if (navLoggedIn) navLoggedIn.classList.add('hidden');
+                if (mobileNavLoggedOut) mobileNavLoggedOut.classList.remove('hidden');
+                if (mobileNavLoggedIn) mobileNavLoggedIn.classList.add('hidden');
+
+                if (authButtonsHero) {
+                    authButtonsHero.innerHTML = `
+                        <a href="auth.html?view=register" class="w-full sm:w-auto text-center px-8 py-4 bg-violetAccent hover:bg-violetAccent/90 hover:scale-105 text-white font-bold rounded-2xl shadow-xl shadow-violetAccent/20 transition-all text-lg duration-300">
+                            Join the Survival Squad
+                        </a>
+                        <a href="auth.html?view=login" class="w-full sm:w-auto text-center px-8 py-4 bg-slate-200 hover:bg-slate-300 dark:bg-white/5 border border-slate-300 dark:border-white/10 dark:hover:bg-white/10 hover:scale-105 text-slate-700 dark:text-slate-200 font-bold rounded-2xl transition-all text-lg duration-300">
+                            Log In to Survive
+                        </a>
+                    `;
                 }
 
-                // If logged in, proceed to the module
-                window.location.href = targetUrl;
-            });
-        });
-    }
-
-    // Mobile menu functionality
-    function setupMobileMenu() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        if (!mobileMenuButton || !mobileMenu) {
-            // No mobile menu on this page, or HTML is missing
-            return;
+                if (ctaJoinButton) {
+                    ctaJoinButton.innerHTML = `
+                        <span>Join the Survival Squad</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    `;
+                    ctaJoinButton.setAttribute('href', 'auth.html?view=register');
+                }
+            }
         }
 
-        const openIcon = mobileMenuButton.querySelector('svg.block');
-        const closeIcon = mobileMenuButton.querySelector('svg.hidden');
-
-        mobileMenuButton.addEventListener('click', function() {
-            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-            
-            mobileMenu.classList.toggle('hidden');
-            openIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
-            
-            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
-        });
-    }
-    // --- CHATBOT WIDGET LOGIC ---
-function setupChatWidget() {
-        const widgetContainer = document.getElementById('chat-widget-container');
-        const toggleButton = document.getElementById('chat-toggle-button');
-        const chatWindow = document.getElementById('chat-window');
-        const closeButton = document.getElementById('chat-close-button');
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-input');
-        const sendButton = document.getElementById('chat-send-button');
-        const messagesContainer = document.getElementById('chat-messages');
-
-        toggleButton.addEventListener('click', () => {
-            widgetContainer.classList.add('expanded');
-        });
-
-        closeButton.addEventListener('click', () => {
-            widgetContainer.classList.remove('expanded');
-        });
-
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const question = chatInput.value.trim();
-            if (!question) return;
-
-            // 1. Display user message
-            addMessageToUI('user', question);
-            chatInput.value = '';
-            chatInput.disabled = true;
-            sendButton.disabled = true;
-
-            // 2. Create the bot's bubble *before* the request
-            // This is where the streaming text will appear
-            const botBubble = addMessageToUI('bot', ''); // Start with an empty bubble
-            
-            // Get the <p> tag inside the bubble (or just the bubble itself)
-            // We will stream text into this element
-            
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question: question }),
+        // Intercept module clicks when logged out
+        function setupModuleClicks() {
+            document.querySelectorAll('.module-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!isLoggedIn()) {
+                        e.preventDefault();
+                        alert('Please log in to access this module');
+                        window.location.href = 'auth.html?view=login';
+                    }
                 });
+            });
+        }
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        // Setup Mobile Menu Toggle
+        function setupMobileMenu() {
+            const menuBtn = document.getElementById('mobile-menu-button');
+            const menu = document.getElementById('mobile-menu');
+            if (!menuBtn || !menu) return;
+
+            const openIcon = menuBtn.querySelector('svg.block');
+            const closeIcon = menuBtn.querySelector('svg.hidden');
+
+            menuBtn.addEventListener('click', () => {
+                const expanded = menuBtn.getAttribute('aria-expanded') === 'true';
+                menu.classList.toggle('hidden');
+                openIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+                menuBtn.setAttribute('aria-expanded', !expanded);
+            });
+        }
+
+        // Toggle Chat window externally
+        function toggleChat() {
+            const container = document.getElementById('chat-widget-container');
+            if (container) {
+                container.classList.add('expanded');
+                const chatInput = document.getElementById('chat-input');
+                if (chatInput) chatInput.focus();
+            }
+        }
+
+        // Setup Streaming Chatbot widget
+        function setupChatWidget() {
+            const widget = document.getElementById('chat-widget-container');
+            const toggleBtn = document.getElementById('chat-toggle-button');
+            const closeBtn = document.getElementById('chat-close-button');
+            const form = document.getElementById('chat-form');
+            const input = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('chat-send-button');
+            const messagesDiv = document.getElementById('chat-messages');
+
+            if (!widget || !toggleBtn || !closeBtn || !form || !input || !sendBtn || !messagesDiv) return;
+
+            toggleBtn.addEventListener('click', () => widget.classList.add('expanded'));
+            closeBtn.addEventListener('click', () => widget.classList.remove('expanded'));
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const question = input.value.trim();
+                if (!question) return;
+
+                // Add User Bubble
+                addBubble('user', question);
+                input.value = '';
+                input.disabled = true;
+                sendBtn.disabled = true;
+
+                // Create Empty Bot Bubble for Streaming
+                const botBubble = addBubble('bot', '');
+
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question })
+                    });
+
+                    if (!response.ok) throw new Error('Response failed');
+
+                    // Read response stream
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let done = false;
+
+                    while (!done) {
+                        const { value, done: streamDone } = await reader.read();
+                        done = streamDone;
+                        if (done) break;
+
+                        const chunk = decoder.decode(value);
+                        botBubble.textContent += chunk;
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    }
+                } catch (error) {
+                    console.error('Chatbot error:', error);
+                    if (!botBubble.textContent) {
+                        botBubble.textContent = 'Oops! Having issues connecting to the server. Try again.';
+                    }
+                } finally {
+                    input.disabled = false;
+                    sendBtn.disabled = false;
+                    input.focus();
                 }
+            });
 
-                // --- START OF STREAMING FIX ---
+            function addBubble(sender, text) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('chat-bubble', sender);
+                bubble.textContent = text;
+                messagesDiv.appendChild(bubble);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                return bubble;
+            }
+        }
 
-                // 3. Get the stream reader and text decoder
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                let done = false;
+        // Campus Map Preview Card Control
+        const mapLandmarks = {
+            blood: {
+                title: 'Health Center 🩸',
+                desc: 'Need blood urgently? Or want to register as a donor so you can save a classmate\'s life instead of just playing games in your hostel?',
+                iconClass: 'bg-redAccent',
+                icon: 'fa-droplet',
+                stat: '1 urgent donor request',
+                link: 'bd.html'
+            },
+            lnf: {
+                title: 'Hostels & CC-3 🎒',
+                desc: 'Lost your keys, ID, or wallet for the third time this week? See if someone returned it before they spent your canteen coupons.',
+                iconClass: 'bg-greenAccent',
+                icon: 'fa-magnifying-glass',
+                stat: '15 items in the lost pile today',
+                link: 'lnf.html'
+            },
+            rides: {
+                title: 'Main Gate 🚗',
+                desc: 'Auto cancelled on you again, didn\'t it? Find a classmate already heading to the station and split the auto fare.',
+                iconClass: 'bg-blueAccent',
+                icon: 'fa-car',
+                stat: '3 escape plans departing soon',
+                link: 'cp.html'
+            },
+            rentals: {
+                title: 'BH-4 Hostel Parking 🛵',
+                desc: 'Need to fetch Maggi from the complex but too lazy to walk? Rent a senior\'s scooter for Rs. 30/hour.',
+                iconClass: 'bg-violetAccent',
+                icon: 'fa-motorcycle',
+                stat: '12 active scooters parked here',
+                link: 'carrental.html'
+            }
+        };
 
-                // 4. Read from the stream until it's done
-                while (!done) {
-                    const { value, done: streamDone } = await reader.read();
-                    done = streamDone;
+        function openMapPreview(type) {
+            const card = document.getElementById('map-preview-card');
+            const iconDiv = document.getElementById('map-preview-icon');
+            const titleH = document.getElementById('map-preview-title');
+            const descP = document.getElementById('map-preview-desc');
+            const statSpan = document.getElementById('map-preview-stat');
+            const linkA = document.getElementById('map-preview-link');
 
-                    if (done) break;
+            const info = mapLandmarks[type];
+            if (!info || !card) return;
 
-                    // 5. Decode the chunk and append it to the bot bubble
-                    const chunkText = decoder.decode(value);
-                    botBubble.textContent += chunkText; // Append text as it arrives
+            // Update details
+            iconDiv.className = `w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm ${info.iconClass}`;
+            iconDiv.innerHTML = `<i class="fa-solid ${info.icon}"></i>`;
+            titleH.textContent = info.title;
+            descP.textContent = info.desc;
+            statSpan.textContent = info.stat;
+            linkA.setAttribute('href', info.link);
 
-                    // 6. Keep scrolling to the bottom
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }
+            // Intercept map click checks if logged out
+            if (info.link !== '#') {
+                linkA.onclick = function(e) {
+                    if (!isLoggedIn()) {
+                        e.preventDefault();
+                        alert('Please log in to access this module');
+                        window.location.href = 'auth.html?view=login';
+                    }
+                };
+            } else {
+                linkA.onclick = function(e) {
+                    e.preventDefault();
+                    toggleChat();
+                };
+            }
 
-                // --- END OF STREAMING FIX ---
+            // Animate card entry
+            card.classList.remove('pointer-events-none');
+            gsap.to(card, {
+                translateY: 0,
+                opacity: 1,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        }
 
-            } catch (error) {
-                console.error("Chatbot error:", error);
-                if (botBubble.textContent === '') {
-                    // If we failed before getting any text
-                    botBubble.textContent = 'Sorry, I am having trouble connecting. Please try again.';
-                }
-            } finally {
-                // 7. Re-enable the form
-                chatInput.disabled = false;
-                sendButton.disabled = false;
-                chatInput.focus();
+        // Close map card when clicking outside
+        document.addEventListener('click', (e) => {
+            const card = document.getElementById('map-preview-card');
+            if (card && !card.contains(e.target) && !e.target.closest('.pulse-pin')) {
+                card.classList.add('pointer-events-none');
+                gsap.to(card, {
+                    translateY: 12,
+                    opacity: 0,
+                    duration: 0.2,
+                    ease: 'power2.in'
+                });
             }
         });
 
-        function addMessageToUI(sender, message) {
-            const bubble = document.createElement('div');
-            bubble.classList.add('chat-bubble');
-            bubble.classList.add(sender); // 'user' or 'bot'
-            bubble.textContent = message;
-            messagesContainer.appendChild(bubble);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            // Return the bubble element so we can add text to it later
-            return bubble; 
-        }
-    }
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Setup Listeners
-        setupModuleClicks();
-        setupMobileMenu();
-        setupChatWidget();
+        // Theme Toggle Script
+        function setupThemeToggle() {
+            const toggle = document.getElementById('dark-theme-toggle');
+            const mobileToggle = document.getElementById('mobile-dark-theme-toggle');
+            const settingsBtn = document.getElementById('settings-toggle-btn');
+            const settingsDropdown = document.getElementById('settings-dropdown');
+            const mobileSettingsBtn = document.getElementById('mobile-settings-toggle-btn');
+            const mobileSettingsPanel = document.getElementById('mobile-settings-panel');
 
-        // 2. Add Logout Listeners (for both desktop and mobile)
-        const logoutButton = document.getElementById('logout-button');
-        const mobileLogoutButton = document.getElementById('mobile-logout-button');
-        
-        if (logoutButton) {
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent link default behavior
-                logout();
-            });
+            // 1. Dropdown toggle
+            if (settingsBtn && settingsDropdown) {
+                settingsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    settingsDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!settingsDropdown.contains(e.target) && e.target !== settingsBtn && !settingsBtn.contains(e.target)) {
+                        settingsDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Mobile settings toggle
+            if (mobileSettingsBtn && mobileSettingsPanel) {
+                mobileSettingsBtn.addEventListener('click', () => {
+                    mobileSettingsPanel.classList.toggle('hidden');
+                });
+            }
+
+            // Sync toggle inputs on page load
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                if (toggle) toggle.checked = true;
+                if (mobileToggle) mobileToggle.checked = true;
+            } else {
+                if (toggle) toggle.checked = false;
+                if (mobileToggle) mobileToggle.checked = false;
+            }
+
+            // Toggle change listener
+            function handleThemeChange(checked) {
+                if (checked) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (toggle) toggle.checked = true;
+                    if (mobileToggle) mobileToggle.checked = true;
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    if (toggle) toggle.checked = false;
+                    if (mobileToggle) mobileToggle.checked = false;
+                }
+            }
+
+            if (toggle) {
+                toggle.addEventListener('change', () => handleThemeChange(toggle.checked));
+            }
+            if (mobileToggle) {
+                mobileToggle.addEventListener('change', () => handleThemeChange(mobileToggle.checked));
+            }
         }
-        if (mobileLogoutButton) {
-            mobileLogoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent link default behavior
-                logout();
+
+        // GSAP Animations Entry
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navbar Glass on scroll
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 50) {
+                    nav.classList.add('py-4');
+                    nav.classList.remove('py-6');
+                } else {
+                    nav.classList.add('py-6');
+                    nav.classList.remove('py-4');
+                }
             });
-        }
-        
-        // 3. Update the UI based on auth state
-        updateAuthUI();
-    });
-</script>
+
+            // Cursor Parallax Floating Assets in Hero
+            document.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                document.querySelectorAll('.floating-asset').forEach(asset => {
+                    const depth = parseFloat(asset.getAttribute('data-depth')) || 0.2;
+                    const moveX = (mouseX - window.innerWidth / 2) * depth * 0.1;
+                    const moveY = (mouseY - window.innerHeight / 2) * depth * 0.1;
+                    
+                    gsap.to(asset, {
+                        x: moveX,
+                        y: moveY,
+                        duration: 1.5,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+
+            // Staggered reveal for Hero text
+            const heroTimeline = gsap.timeline();
+            heroTimeline.from('h1', {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out'
+            }).from('p', {
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            }, '-=0.6').from('#auth-buttons-hero', {
+                y: 20,
+                opacity: 0,
+                duration: 0.6,
+                ease: 'power3.out'
+            }, '-=0.4');
+
+
+
+            // Magnetic CTA button interaction
+            const ctaBtn = document.getElementById('cta-join-button');
+            if (ctaBtn) {
+                ctaBtn.addEventListener('mousemove', (e) => {
+                    const rect = ctaBtn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    gsap.to(ctaBtn, {
+                        x: x * 0.3,
+                        y: y * 0.3,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+                
+                ctaBtn.addEventListener('mouseleave', () => {
+                    gsap.to(ctaBtn, {
+                        x: 0,
+                        y: 0,
+                        duration: 0.5,
+                        ease: 'elastic.out(1, 0.3)'
+                    });
+                });
+            }
+
+            // Initialize general UI logic
+            updateAuthUI();
+            setupModuleClicks();
+            setupMobileMenu();
+            setupChatWidget();
+            setupThemeToggle();
+
+            // Bind logout buttons
+            const logoutBtn = document.getElementById('logout-button');
+            const mobileLogoutBtn = document.getElementById('mobile-logout-button');
+            if (logoutBtn) logoutBtn.addEventListener('click', (e) => { e.preventDefault(); logout(); });
+            if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', (e) => { e.preventDefault(); logout(); });
+        });
+    </script>
 </body>
 </html>

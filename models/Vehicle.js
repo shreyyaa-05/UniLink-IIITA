@@ -42,6 +42,16 @@ const vehicleSchema = new mongoose.Schema({
         type: String,
         required: false,
         default: '/images/vehicle_placeholder.png', // A default image
+    },
+    parkingLocation: {
+        type: String,
+        required: false,
+        default: 'Inside Campus',
+    },
+    note: {
+        type: String,
+        required: false,
+        default: 'Please return safely! 🛵',
     }
 }, {
     timestamps: true, // Adds createdAt and updatedAt

@@ -29,7 +29,8 @@ exports.updateMyProfile = async (req, res) => {
     try {
         const {
             name, bio, department, year, bloodGroup, 
-            notificationSettings, preferredLanguage
+            notificationSettings, preferredLanguage,
+            availabilityStatus, hostel
         } = req.body;
 
         const fieldsToUpdate = {};
@@ -42,6 +43,8 @@ exports.updateMyProfile = async (req, res) => {
         if (bloodGroup !== undefined) fieldsToUpdate.bloodGroup = bloodGroup;
         if (notificationSettings !== undefined) fieldsToUpdate.notificationSettings = notificationSettings;
         if (preferredLanguage !== undefined) fieldsToUpdate.preferredLanguage = preferredLanguage;
+        if (availabilityStatus !== undefined) fieldsToUpdate.availabilityStatus = availabilityStatus;
+        if (hostel !== undefined) fieldsToUpdate.hostel = hostel;
 
         // Use $set for fields and $push for history in one query
         const updateQuery = {
@@ -88,7 +91,7 @@ exports.getDonors = async (req, res) => {
             bloodGroup: { $ne: null } 
         })
         // Only select the fields that are safe to show publicly
-        .select('name studentId department year bloodGroup'); 
+        .select('name studentId department year bloodGroup availabilityStatus hostel'); 
 
         res.json(donors);
 

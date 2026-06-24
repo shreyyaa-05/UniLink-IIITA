@@ -47,10 +47,35 @@ const UserSchema = new mongoose.Schema({
     // This field is optional
   },
   bloodGroup: {
-        type: String,
-        enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', null], // Add valid blood groups
-        default: null,
-    },
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', null],
+    default: null,
+  },
+  availabilityStatus: {
+    type: String,
+    enum: ['Available Today', 'Busy'],
+    default: 'Available Today',
+  },
+  hostel: {
+    type: String,
+    default: '',
+  },
+  isDonorVerified: {
+    type: Boolean,
+    default: false,
+  },
+  donorVerificationOtp: {
+    type: String,
+    default: null,
+  },
+  donorVerificationOtpExpires: {
+    type: Date,
+    default: null,
+  },
+  lastDonatedAt: {
+    type: Date,
+    default: null,
+  },
   // Add below bio field
 friends: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -88,7 +113,7 @@ friends: [{
         default: 'en' // 'en' for English, 'hi' for Hindi, etc.
     },
     resetPasswordToken: String,
-    resetPasswordExpire: Date
+    resetPasswordExpires: Date
     
     // ... (keep resetPasswordToken, etc.)
 });
@@ -119,8 +144,8 @@ UserSchema.methods.getResetPasswordToken = function() {
         .update(resetToken)
         .digest('hex');
 
-    // 3. Set the expire time (10 minutes)
-    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; 
+    // 3. Set the expire time (15 minutes)
+    this.resetPasswordExpires = Date.now() + 15 * 60 * 1000; 
 
     // 4. Return the unhashed token (this is what gets emailed)
     return resetToken;

@@ -7,7 +7,7 @@ const User = require('../models/User'); // We might need this later
 const getVehicles = async (req, res) => {
     try {
         const vehicles = await Vehicle.find({ status: 'available' })
-            .populate('user', 'name year department studentId') // Get owner's details
+            .populate('user', 'name year department studentId email') // Get owner's details and email
             .sort({ createdAt: -1 }); // Show newest first
 
         res.json(vehicles);
@@ -79,7 +79,7 @@ const updateVehicleStatus = async (req, res) => {
 // @access  Private (Requires authentication)
 const createVehicle = async (req, res) => {
     try {
-        const { title, vehicleType, price, rate, description, specs, image } = req.body;
+        const { title, vehicleType, price, rate, description, specs, image, parkingLocation, note } = req.body;
 
         // --- 1. CONTROLLER VALIDATION (Missing basic required fields) ---
         if (!title || !vehicleType || !price || !rate || !specs) {
@@ -109,6 +109,8 @@ const createVehicle = async (req, res) => {
             // specs is sent as an array from carrental.js
             specs: specs,
             image,
+            parkingLocation: parkingLocation || 'Inside Campus',
+            note: note || 'Please return safely! 🛵',
         });
 
         // Respond with success

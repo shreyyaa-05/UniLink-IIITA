@@ -1,945 +1,311 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniLink - Lost & Found</title>
+    <title>UniLink | IIITA Museum of Misplaced Objects</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    
+    <!-- GSAP for Smooth Transitions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Theme detector -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- Tailwind Config matching homepage -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        handwritten: ['"Caveat"', 'cursive'],
+                    },
+                    colors: {
+                        darkBg: '#09090E',
+                        darkCard: '#13131F',
+                        violetAccent: '#8B5CF6',
+                        pinkAccent: '#EC4899',
+                        greenAccent: '#10B981',
+                        blueAccent: '#06B6D4',
+                        redAccent: '#EF4444',
+                        coralAccent: '#F43F5E',
+                        emeraldAccent: '#10B981',
+                        goldAccent: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --primary-purple: #6a0dad;
-            --light-purple: #9b59b6;
-            --dark-purple: #4b0082;
-            --accent-purple: #8a2be2;
-            --text-light: #f8f8ff;
-            --bg-light: #f5f5f5;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background-color: var(--bg-light);
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FCFCFA;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        .font-display {
+            font-family: 'Bricolage Grotesque', sans-serif;
         }
-        
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, var(--primary-purple), var(--dark-purple));
-            color: var(--text-light);
-            padding: 20px 0;
-            box-shadow: var(--shadow);
+
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
         }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        /* Nav panel glassmorphism */
+        .nav-glass {
+            background: rgba(252, 252, 250, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        html.dark .nav-glass {
+            background: rgba(9, 9, 14, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        .logo img {
-            height: 50px;
-            width: auto;
+
+        /* Subtle grid lines matching main homepage */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-        
-        .logo h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
+        html.dark .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
         }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        
-        nav a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            padding: 8px 12px;
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
             border-radius: 4px;
         }
-        
-        nav a:hover, nav a.active {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Logout Button Styles */
-        .logout-btn {
-            background-color: transparent;
-            border: 2px solid var(--text-light);
-            color: var(--text-light);
-            padding: 8px 20px;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .logout-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(106, 13, 173, 0.8), rgba(75, 0, 130, 0.8)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            color: var(--text-light);
-            padding: 80px 0;
-            text-align: center;
-        }
-        
-        .hero h2 {
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            background-color: var(--accent-purple);
-            color: var(--text-light);
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-        }
-        
-        .cta-button:hover {
-            background-color: var(--light-purple);
-            transform: translateY(-3px);
-        }
-        
-        /* Search Section */
-        .search-section {
-            padding: 40px 0;
-            background-color: white;
-            box-shadow: var(--shadow);
-            margin-top: -30px;
-            border-radius: 10px;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .search-container h3 {
-            color: var(--primary-purple);
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
-        
-        .search-box {
-            display: flex;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .search-box input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid var(--light-purple);
-            border-radius: 30px;
-            font-size: 1rem;
-            outline: none;
-            padding-right: 60px;
-        }
-        
-        .search-box button {
-            background-color: var(--primary-purple);
-            color: white;
-            border: none;
-            padding: 0 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
-        
-        .search-box button:hover {
-            background-color: var(--dark-purple);
-        }
-        
-        
-        
-        .search-options {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .search-option {
-            background-color: var(--light-purple);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .search-option:hover {
-            background-color: var(--primary-purple);
-        }
-        
-        /* Main Content */
-        .main-content {
-            padding: 60px 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 40px;
-            color: var(--primary-purple);
-            font-size: 2rem;
-        }
-        
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e0e0e0;
-        }
-        
-        .tab {
-            padding: 12px 25px;
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #666;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .tab.active {
-            color: var(--primary-purple);
-        }
-        
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary-purple);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* Form Styles */
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-purple);
-        }
-        
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-group input:focus, 
-        .form-group select:focus, 
-        .form-group textarea:focus {
-            border-color: var(--light-purple);
-            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2);
-            outline: none;
-        }
-        
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-        
-        /* Upload Area */
-        .upload-area {
-            border: 2px dashed var(--light-purple);
-            border-radius: 10px;
-            padding: 40px 20px;
-            text-align: center;
-            background-color: rgba(155, 89, 182, 0.05);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-        
-        .upload-area:hover {
-            background-color: rgba(155, 89, 182, 0.1);
-        }
-        
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--light-purple);
-            margin-bottom: 15px;
-        }
-        
-        .upload-area p {
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .upload-area span {
-            color: var(--primary-purple);
-            font-weight: 600;
-        }
-        
-        .upload-area input {
-            display: none;
-        }
-        
-        .preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .preview-item {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        
-        .preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .preview-item .remove {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: rgba(255, 255, 255, 0.8);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #ff4757;
-        }
-        
-        .submit-btn {
-            background-color: var(--primary-purple);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            margin: 30px auto 0;
-            box-shadow: var(--shadow);
-        }
-        
-        .submit-btn:hover {
-            background-color: var(--dark-purple);
-            transform: translateY(-3px);
-        }
-        
-        /* Items Grid */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-        
-        .item-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-        
-        .item-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .item-image {
-            height: 200px;
-            width: 100%;
-            overflow: hidden;
-        }
-        
-        .item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: all 0.5s ease;
-        }
-        
-        .item-card:hover .item-image img {
-            transform: scale(1.05);
-        }
-        
-        .item-info {
-            padding: 20px;
-        }
-        
-        .item-info h4 {
-            color: var(--primary-purple);
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-        
-        .item-info p {
-            color: #666;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-        }
-        
-        .item-meta {
-            display: flex;
-            justify-content: space-between;
-            color: #888;
-            font-size: 0.85rem;
-        }
-        
-        .item-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .status-lost {
-            background-color: #ffeaa7;
-            color: #e17055;
-        }
-        
-        .status-found {
-            background-color: #a29bfe;
-            color: white;
-        }
-        
-        .status-resolved {
-            background-color: #55efc4;
-            color: #00b894;
-        }
-        
-        /* Filters */
-        .filters {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-        
-        .filter-row {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .filter-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-purple);
-        }
-        
-        .filter-group select, 
-        .filter-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .filter-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .filter-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .filter-apply {
-            background-color: var(--primary-purple);
-            color: white;
-        }
-        
-        .filter-reset {
-            background-color: #ddd;
-            color: #666;
-        }
-        
-        .filter-btn:hover {
-            opacity: 0.9;
-        }
-        
-        /* Visual Search Modal */
-       
-        
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .modal-header h3 {
-            color: var(--primary-purple);
-            margin: 0;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .close-modal:hover {
-            color: var(--primary-purple);
-        }
-        
-      
-        
-        /* Footer */
-        footer {
-            background: linear-gradient(135deg, var(--dark-purple), #2d1b69);
-            color: var(--text-light);
-            padding: 50px 0 20px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-column h4 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .footer-column h4::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--accent-purple);
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 12px;
-        }
-        
-        .footer-column a {
-            color: #ddd;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .footer-column a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-icons a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-        
-        .social-icons a:hover {
-            background-color: var(--accent-purple);
-            transform: translateY(-3px);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            color: #bbb;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            nav ul {
-                gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .hero h2 {
-                font-size: 2.2rem;
-            }
-            
-            .search-box {
-                flex-direction: column;
-            }
-            
-            .search-box input {
-                border-radius: 30px;
-                margin-bottom: 10px;
-                padding-right: 15px;
-            }
-            
-            .search-box button {
-                position: relative;
-                border-radius: 30px;
-                padding: 12px;
-                width: 100%;
-            }
-            
-            
-            
-            .tabs {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .tab {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .filter-row {
-                flex-direction: column;
-            }
-        }
-        
-        /* Hidden class for items that are found */
-        .hidden {
-            display: none;
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #1F1F2E;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B5CF6;
+        }
+
+        /* Tab active indicators */
+        .tab-active-lost {
+            color: #F43F5E !important;
+            border-color: #F43F5E !important;
+        }
+        .tab-active-found {
+            color: #10B981 !important;
+            border-color: #10B981 !important;
+        }
+        .tab-active-reunited {
+            color: #F59E0B !important;
+            border-color: #F59E0B !important;
+        }
+        
+        /* Dragover effect */
+        .dragover-active {
+            border-color: #8B5CF6 !important;
+            background-color: rgba(139, 92, 246, 0.05) !important;
         }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="logonew.png" alt="UniLink Logo">
-                    <h1>UniLink</h1>
+<body class="text-slate-900 dark:bg-darkBg dark:text-slate-100 min-h-screen relative overflow-x-hidden transition-colors duration-300">
+
+    <!-- Grid lines background overlay -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+
+    <!-- Navigation Header -->
+    <nav class="nav-glass fixed w-full z-40 top-0 transition-all duration-300 py-4">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center gap-3">
+                    <a href="main.html" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violetAccent to-pinkAccent flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-link text-white text-lg"></i>
+                        </div>
+                        <span class="font-display text-2xl font-bold tracking-tight text-slate-950 dark:text-white group-hover:text-violetAccent transition-colors duration-300">UniLink</span>
+                    </a>
                 </div>
-                <nav>
-                    <ul>
-                        <li><a href="main.html" class="active">Home</a></li>
-                        <li><a href="contactus.html">Contact</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li>
-                            <a href="#" class="logout-btn">Logout</a>
-                        </li>
-                    </ul>
-                </nav>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="main.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Home</a>
+                    <a href="contactus.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Contact</a>
+                    <a href="faq.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">FAQ</a>
+                    <a href="profile.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Profile</a>
+                    
+                    <!-- Settings Dropdown -->
+                    <div class="relative">
+                        <button id="settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2.5 rounded-xl hover:bg-slate-200/50 dark:hover:bg-white/5 transition-all focus:outline-none" title="Settings">
+                            <i class="fa-solid fa-gear text-lg"></i>
+                        </button>
+                        
+                        <div id="settings-dropdown" class="hidden absolute right-0 top-14 w-56 p-4 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 shadow-xl z-50 backdrop-blur-xl transition-all duration-200">
+                            <h4 class="font-display font-bold text-slate-800 dark:text-white text-sm mb-3">Settings</h4>
+                            <div class="flex items-center justify-between border-t border-slate-100 dark:border-white/5 pt-3">
+                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Dark Theme</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="dark-theme-toggle" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-violetAccent"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Logout Link -->
+                    <div class="flex items-center gap-4 border-l border-slate-200 dark:border-white/10 pl-6">
+                        <a href="#" class="logout-btn text-sm font-semibold text-redAccent hover:bg-redAccent/10 border border-redAccent/20 py-2 px-4 rounded-full transition-all duration-300">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="md:hidden flex items-center gap-2">
+                    <button id="mobile-settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-gear text-lg"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-lg">
+                        <svg class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
+        </div>
+
+        <!-- Mobile Panels -->
+        <div id="mobile-settings-panel" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-[#FCFCFA]/95 dark:bg-darkBg/95 backdrop-blur-xl p-4 flex justify-between items-center">
+            <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">Dark Theme</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="mobile-dark-theme-toggle" class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-violetAccent"></div>
+            </label>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-[#FCFCFA]/95 dark:bg-darkBg/95 backdrop-blur-xl">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="main.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 transition-all">Home</a>
+                <a href="contactus.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 transition-all">Contact</a>
+                <a href="faq.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 transition-all">FAQ</a>
+                <a href="profile.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5 transition-all">Profile</a>
+                <a href="#" class="logout-btn block text-center w-full px-4 py-3 rounded-xl text-base font-semibold text-redAccent border border-redAccent/20 hover:bg-redAccent/10 transition-all">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-12 md:pt-40 md:pb-16 z-10 max-w-7xl mx-auto px-6 text-center space-y-6">
+        <h2 class="font-display font-black text-4xl sm:text-6xl md:text-7xl text-slate-900 dark:text-white tracking-tight leading-[1.05] max-w-4xl mx-auto">
+            Things IIIT students have<br>managed to lose.
+            <span class="block bg-gradient-to-r from-violetAccent via-pinkAccent to-blueAccent bg-clip-text text-transparent italic font-normal font-handwritten text-4xl sm:text-6xl md:text-7xl mt-2 select-none">And somehow get back.</span>
+        </h2>
+        
+        <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 font-semibold max-w-xl mx-auto leading-relaxed border-y border-slate-200/50 dark:border-white/5 py-3 font-display">
+            "We still don't know how someone lost an entire ECE lab textbook."
+        </p>
+
+        <div class="flex justify-center pt-2">
+            <button onclick="toggleReportDrawer(true)" class="px-6 py-3.5 bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-bold rounded-2xl hover:opacity-90 shadow-md transition-all flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Report an Item
+            </button>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h2>Find What You've Lost, Return What You've Found</h2>
-            <p>UniLink connects people who have lost items with those who have found them. Together, we can reunite lost belongings with their owners.</p>
-            <a href="#report" class="cta-button">Report an Item</a>
+    <!-- Pinterest-Style Gallery & Tabs Section -->
+    <section id="gallery-section" class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        <!-- Category Tabs -->
+        <div class="flex justify-center border-b border-slate-200 dark:border-white/10 mb-8">
+            <div class="flex gap-8">
+                <!-- Lost Tab Button -->
+                <button class="tab-btn px-4 py-3 font-display font-bold text-base sm:text-lg text-slate-400 dark:text-slate-500 border-b-2 border-transparent hover:text-slate-900 dark:hover:text-white transition-all active tab-active-lost" data-tab="lost">
+                    LOST (<span id="count-lost">0</span>)
+                </button>
+                <!-- Found Tab Button -->
+                <button class="tab-btn px-4 py-3 font-display font-bold text-base sm:text-lg text-slate-400 dark:text-slate-500 border-b-2 border-transparent hover:text-slate-900 dark:hover:text-white transition-all" data-tab="found">
+                    FOUND (<span id="count-found">0</span>)
+                </button>
+                <!-- Reunited Tab Button -->
+                <button class="tab-btn px-4 py-3 font-display font-bold text-base sm:text-lg text-slate-400 dark:text-slate-500 border-b-2 border-transparent hover:text-slate-900 dark:hover:text-white transition-all" data-tab="reunited">
+                    REUNITED (<span id="count-reunited">0</span>)
+                </button>
+            </div>
+        </div>
+
+        <!-- LOST Tab Content -->
+        <div id="lost-tab-content" class="tab-content">
+            <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6" id="lost-items-grid">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+
+        <!-- FOUND Tab Content -->
+        <div id="found-tab-content" class="tab-content hidden">
+            <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6" id="found-items-grid">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+
+        <!-- REUNITED Tab Content -->
+        <div id="reunited-tab-content" class="tab-content hidden">
+            <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6" id="reunited-items-grid">
+                <!-- Populated dynamically -->
+            </div>
         </div>
     </section>
 
-    <!-- Search Section -->
-    <section class="search-section">
-        <div class="container">
-            <div class="search-container">
-                <h3>Search for Lost or Found Items</h3>
-                <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Describe what you're looking for...">
-                    
-                    <button id="search-button"><i class="fas fa-search"></i> Search</button>
-                    
+    <!-- Search Section (Airbnb inspired, placed AFTER the gallery) -->
+    <section id="search-section" class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        <div class="bg-white dark:bg-darkCard rounded-3xl border border-slate-200/80 dark:border-white/5 shadow-xl p-6 sm:p-8 space-y-6">
+            <div class="max-w-2xl mx-auto text-center space-y-2">
+                <h3 class="font-display font-bold text-2xl text-slate-955 dark:text-white">Looking for something?</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Search the campus lost pile, narrow it down, and claim what belongs to you.</p>
+            </div>
+            
+            <!-- Rounded Search Box -->
+            <div class="max-w-3xl mx-auto flex flex-col sm:flex-row gap-3 items-stretch">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
+                    <input type="text" id="search-input" placeholder='e.g., "grey hoodie"' class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-950 dark:text-white focus:outline-none focus:ring-2 focus:ring-violetAccent transition-all text-sm">
                 </div>
-                <div class="search-options">
-                    <div class="search-option">Electronics</div>
-                    <div class="search-option">Jewelry</div>
-                    <div class="search-option">Documents</div>
-                    <div class="search-option">Clothing</div>
-                    <div class="search-option">Other</div>
-                </div>
+                <button id="search-button" class="px-8 py-4 bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-bold rounded-2xl hover:opacity-90 shadow-md transition-all flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
             </div>
-        </div>
-    </section>
 
-    <!-- Visual Search Modal -->
-    
-
-
-
-    <!-- Main Content -->
-    <section class="main-content">
-        <div class="container">
-            <h2 class="section-title" id="report">Report Lost or Found Item</h2>
-            
-            <div class="tabs">
-                <button class="tab active" data-tab="lost">I Lost Something</button>
-                <button class="tab" data-tab="found">I Found Something</button>
-            </div>
-            
-            <!-- Lost Item Form -->
-            <div class="tab-content active" id="lost-tab">
-                <div class="form-container">
-                    <form id="lost-form">
-                        <div class="form-group">
-                            <label for="item-name">Item Name</label>
-                            <input type="text" id="item-name" placeholder="e.g., iPhone 12, Black Wallet, Keys...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="category">Category</label>
-                            <select id="category">
-                                <option value="">Select a category</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="jewelry">Jewelry & Accessories</option>
-                                <option value="documents">Documents</option>
-                                <option value="clothing">Clothing</option>
-                                <option value="bags">Bags & Wallets</option>
-                                <option value="keys">Keys</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="lost-location">Where did you lose it?</label>
-                            <input type="text" id="lost-location" placeholder="e.g., Main Library, Student Union, Parking Lot B...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="lost-date">When did you lose it?</label>
-                            <input type="date" id="lost-date">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea id="description" placeholder="Provide details about the item: color, brand, distinctive features, contents..."></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-    <label for="itemImage">Image URL (Optional):</label>
-    <input type="text" id="itemImage" name="itemImage" placeholder="https.imgur.com/your-image.png">
-</div>
-                        
-                        <div class="form-group">
-                            <label for="contact">Contact Information</label>
-                            <input type="text" id="contact" placeholder="Email or phone number where you can be reached">
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">Report Lost Item</button>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Found Item Form -->
-            <div class="tab-content" id="found-tab">
-                <div class="form-container">
-                    <form id="found-form">
-                        <div class="form-group">
-                            <label for="found-item-name">Item Name</label>
-                            <input type="text" id="found-item-name" placeholder="e.g., iPhone 12, Black Wallet, Keys...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="found-category">Category</label>
-                            <select id="found-category">
-                                <option value="">Select a category</option>
-                                <option value="electronics">Electronics</option>
-                                <option value="jewelry">Jewelry & Accessories</option>
-                                <option value="documents">Documents</option>
-                                <option value="clothing">Clothing</option>
-                                <option value="bags">Bags & Wallets</option>
-                                <option value="keys">Keys</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="found-location">Where did you find it?</label>
-                            <input type="text" id="found-location" placeholder="e.g., Main Library, Student Union, Parking Lot B...">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="found-date">When did you find it?</label>
-                            <input type="date" id="found-date">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="found-description">Description</label>
-                            <textarea id="found-description" placeholder="Provide details about the item: color, brand, distinctive features, contents..."></textarea>
-                        </div>
-                        
-                        <div class="form-group">
-        <label for="foundItemImage">Image URL (Optional):</label>
-        <input type="text" id="foundItemImage" name="foundItemImage" placeholder="https.imgur.com/your-image.png">
-    </div>
-    
-    <div class="form-group">
-        <label>Upload Images</label>
-        <div class="upload-area" id="upload-found" style="display: none;">
-            </div>
-    </div>
-                        
-                        <div class="form-group">
-                            <label for="found-contact">Contact Information</label>
-                            <input type="text" id="found-contact" placeholder="Email or phone number where you can be reached">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="storage-location">Current Location of Item</label>
-                            <input type="text" id="storage-location" placeholder="Where is the item currently stored?">
-                        </div>
-                        
-                        <button type="submit" class="submit-btn">Report Found Item</button>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Lost Items Section -->
-            <h2 class="section-title" id="lost-items">Lost Items</h2>
-            
-            <!-- Filters
-            <div class="filters">
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label for="category-filter">Category</label>
-                        <select id="category-filter">
+            <!-- Filters Area -->
+            <div class="max-w-4xl mx-auto border-t border-slate-100 dark:border-white/5 pt-6">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <!-- Filter Category -->
+                    <div class="space-y-1">
+                        <label for="category-filter" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Category</label>
+                        <select id="category-filter" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 focus:outline-none text-xs">
                             <option value="">All Categories</option>
                             <option value="electronics">Electronics</option>
                             <option value="jewelry">Jewelry & Accessories</option>
@@ -950,462 +316,1405 @@
                             <option value="other">Other</option>
                         </select>
                     </div>
-                    <div class="filter-group">
-                        <label for="date-filter">Date Lost</label>
-                        <input type="date" id="date-filter">
+                    <!-- Filter Location -->
+                    <div class="space-y-1">
+                        <label for="location-filter" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Location</label>
+                        <input type="text" id="location-filter" placeholder="e.g. Canteen, Library" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 focus:outline-none text-xs">
                     </div>
-                    <div class="filter-group">
-                        <label for="location-filter">Location</label>
-                        <input type="text" id="location-filter" placeholder="Filter by location...">
+                    <!-- Filter Date -->
+                    <div class="space-y-1">
+                        <label for="date-filter" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date Reported</label>
+                        <input type="date" id="date-filter" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-800 dark:text-slate-200 focus:outline-none text-xs">
                     </div>
                 </div>
-                <div class="filter-actions">
-                    <button class="filter-btn filter-apply" id="apply-filters">Apply Filters</button>
-                    <button class="filter-btn filter-reset" id="reset-filters">Reset Filters</button>
+                <!-- Filter Actions -->
+                <div class="flex justify-end gap-3 mt-4">
+                    <button id="reset-filters" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-all">
+                        Reset Filters
+                    </button>
                 </div>
-            </div> -->
-            
-            <div class="items-grid" id="lost-items-grid">
-                <!-- Lost items will be populated here -->
-            </div>
-            
-            <!-- Found Items Section -->
-            <h2 class="section-title" id="found-items" style="margin-top: 80px;">Found Items</h2>
-            <div class="items-grid" id="found-items-grid">
-                <!-- Found items will be populated here -->
             </div>
         </div>
     </section>
 
+    <!-- Playful Campus Statistics Section -->
+    <section class="max-w-7xl mx-auto px-6 py-16 border-t border-slate-200/50 dark:border-white/5">
+        <div class="text-center max-w-xl mx-auto mb-12 space-y-2">
+            <h3 class="font-display font-black text-3xl text-slate-950 dark:text-white">Campus Misplacement Index</h3>
+            <p class="text-xs text-slate-550 dark:text-slate-405 font-medium">Playful statistics from UniLink's lost & found archives.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+            <!-- Stat Item 1 -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-sm text-center flex flex-col justify-between">
+                <span class="text-3xl">🚰</span>
+                <div class="mt-4">
+                    <h5 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Most Lost Item</h5>
+                    <p class="text-base font-display font-bold text-slate-850 dark:text-slate-100 mt-1">Water bottles</p>
+                </div>
+            </div>
+            <!-- Stat Item 2 -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-sm text-center flex flex-col justify-between">
+                <span class="text-3xl">☕</span>
+                <div class="mt-4">
+                    <h5 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Most Dangerous Place</h5>
+                    <p class="text-base font-display font-bold text-slate-850 dark:text-slate-100 mt-1">Cafeteria</p>
+                </div>
+            </div>
+            <!-- Stat Item 3 -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-sm text-center flex flex-col justify-between">
+                <span class="text-3xl">📐</span>
+                <div class="mt-4">
+                    <h5 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">ECE Students</h5>
+                    <p class="text-base font-display font-bold text-slate-850 dark:text-slate-100 mt-1">lose calculators</p>
+                </div>
+            </div>
+            <!-- Stat Item 4 -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-sm text-center flex flex-col justify-between">
+                <span class="text-3xl">💤</span>
+                <div class="mt-4">
+                    <h5 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">IT Students</h5>
+                    <p class="text-base font-display font-bold text-slate-850 dark:text-slate-100 mt-1">lose sleep</p>
+                </div>
+            </div>
+            <!-- Stat Item 5 -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-sm text-center flex flex-col justify-between">
+                <span class="text-3xl">⏱️</span>
+                <div class="mt-4">
+                    <h5 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">MBA Students</h5>
+                    <p class="text-base font-display font-bold text-slate-850 dark:text-slate-100 mt-1">lose patience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide-Out Reporting Drawer -->
+    <div id="report-drawer-backdrop" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-350" onclick="toggleReportDrawer(false)"></div>
+    <div id="report-drawer" class="fixed right-0 top-0 h-full w-full max-w-lg bg-white dark:bg-darkCard z-50 shadow-2xl translate-x-full transition-transform duration-300 overflow-y-auto flex flex-col justify-between border-l border-slate-200 dark:border-white/10">
+        <!-- Drawer Content Header -->
+        <div class="p-6 sm:p-8 flex justify-between items-center border-b border-slate-100 dark:border-white/5">
+            <h3 class="font-display text-xl font-bold text-slate-950 dark:text-white">Report Misplaced Belonging</h3>
+            <button onclick="toggleReportDrawer(false)" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 p-6 sm:p-8 overflow-y-auto space-y-6">
+            <!-- Step 1: Type Selection (Lost vs Found) -->
+            <div id="wizard-step-1" class="space-y-6">
+                <div class="text-center">
+                    <h4 class="font-display text-base font-bold text-slate-800 dark:text-white">Is it lost or found?</h4>
+                    <p class="text-xs text-slate-400 mt-1">Select one option to start the guided reporting process.</p>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- Lost Option Card -->
+                    <button onclick="selectReportType('lost')" class="p-6 rounded-2xl border-2 border-slate-100 hover:border-rose-450 dark:border-slate-800 dark:hover:border-rose-950 bg-slate-50/50 dark:bg-slate-900/50 text-left flex flex-col justify-between h-36 transition-all group">
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/20 flex items-center justify-center text-rose-500">
+                            <i class="fa-solid fa-circle-question text-xl"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-950 dark:text-white text-sm">I lost something</h5>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Report a lost personal item to list it on the community board</p>
+                        </div>
+                    </button>
+                    <!-- Found Option Card -->
+                    <button onclick="selectReportType('found')" class="p-6 rounded-2xl border-2 border-slate-100 hover:border-emerald-455 dark:border-slate-800 dark:hover:border-emerald-955 bg-slate-50/50 dark:bg-slate-900/50 text-left flex flex-col justify-between h-36 transition-all group">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center text-emerald-500">
+                            <i class="fa-solid fa-hand-holding-heart text-xl"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-955 dark:text-white text-sm">I found something</h5>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Report an item you found on campus to return it back home</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Guided Form for Lost Item -->
+            <form id="lost-form" class="hidden space-y-6">
+                <!-- Progress Header -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        <span id="lost-progress-text">Step 2: Tell us about the item</span>
+                        <span id="lost-progress-frac">2 / 3</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div id="lost-progress-bar" class="bg-rose-500 h-full w-2/3 transition-all duration-300"></div>
+                    </div>
+                </div>
+
+                <!-- Lost Step 2: Item Details -->
+                <div id="lost-step-2" class="space-y-4">
+                    <div class="space-y-1">
+                        <label for="item-name" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Item Name</label>
+                        <input type="text" id="item-name" placeholder="e.g. CASIO Scientific Calculator" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="category" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Category</label>
+                        <select id="category" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500 text-sm">
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="jewelry">Jewelry & Accessories</option>
+                            <option value="documents">Documents</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="bags">Bags & Wallets</option>
+                            <option value="keys">Keys</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label for="description" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Description</label>
+                        <textarea id="description" rows="4" placeholder="Details like color, brand, distinctive marks, contents..." class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500 text-sm"></textarea>
+                    </div>
+                    
+                    <!-- File Drag and Drop Image Uploader (No URL input) -->
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Upload Photos (Max 3)</label>
+                        
+                        <div id="lost-drop-zone" class="border-2 border-dashed border-slate-250 hover:border-violetAccent dark:border-slate-800 dark:hover:border-violetAccent rounded-2xl p-6 text-center cursor-pointer transition-all duration-300 bg-slate-50/50 dark:bg-slate-900/40 relative group">
+                            <input type="file" id="lost-file-input" accept="image/png, image/jpeg, image/jpg, image/heic" class="hidden" multiple>
+                            
+                            <div class="space-y-2 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-xl bg-violetAccent/10 text-violetAccent flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fa-solid fa-camera text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Drop photos here</p>
+                                    <p class="text-[10px] text-slate-450 dark:text-slate-500 mt-0.5">or click to upload from your gallery</p>
+                                </div>
+                                <p class="text-[9px] text-slate-400">Accepts PNG, JPG, JPEG, HEIC</p>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail Previews -->
+                        <div id="lost-thumbnails-container" class="grid grid-cols-3 gap-3"></div>
+                    </div>
+                </div>
+
+                <!-- Lost Step 3: Logistics & Contact -->
+                <div id="lost-step-3" class="hidden space-y-4">
+                    <div class="space-y-1">
+                        <label for="lost-location" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Where did you lose it?</label>
+                        <input type="text" id="lost-location" placeholder="e.g. CC3 Lab 2, Main Canteen" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="lost-date" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">When did you lose it?</label>
+                        <input type="date" id="lost-date" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="contact" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Contact Information</label>
+                        <input type="text" id="contact" placeholder="Email or Phone Number" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-rose-500 text-sm">
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-white/5">
+                    <button type="button" onclick="prevLostStep()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition-all">
+                        Back
+                    </button>
+                    <button type="button" id="lost-next-btn" onclick="nextLostStep()" class="px-6 py-2.5 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 shadow-md transition-all text-xs">
+                        Next Step
+                    </button>
+                    <button type="submit" id="lost-submit-btn" class="hidden px-6 py-2.5 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 shadow-md transition-all text-xs">
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+
+            <!-- Guided Form for Found Item -->
+            <form id="found-form" class="hidden space-y-6">
+                <!-- Progress Header -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        <span id="found-progress-text">Step 2: Tell us about the item</span>
+                        <span id="found-progress-frac">2 / 3</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div id="found-progress-bar" class="bg-emerald-500 h-full w-2/3 transition-all duration-300"></div>
+                    </div>
+                </div>
+
+                <!-- Found Step 2: Item Details -->
+                <div id="found-step-2" class="space-y-4">
+                    <div class="space-y-1">
+                        <label for="found-item-name" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Item Name</label>
+                        <input type="text" id="found-item-name" placeholder="e.g. CASIO Scientific Calculator" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="found-category" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Category</label>
+                        <select id="found-category" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                            <option value="">Select Category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="jewelry">Jewelry & Accessories</option>
+                            <option value="documents">Documents</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="bags">Bags & Wallets</option>
+                            <option value="keys">Keys</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label for="found-description" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Description</label>
+                        <textarea id="found-description" rows="4" placeholder="Details like color, brand, distinctive marks, contents..." class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm"></textarea>
+                    </div>
+                    
+                    <!-- File Drag and Drop Image Uploader (No URL input) -->
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Upload Photos (Max 3)</label>
+                        
+                        <div id="found-drop-zone" class="border-2 border-dashed border-slate-250 hover:border-emeraldAccent dark:border-slate-800 dark:hover:border-emeraldAccent rounded-2xl p-6 text-center cursor-pointer transition-all duration-300 bg-slate-50/50 dark:bg-slate-900/40 relative group">
+                            <input type="file" id="found-file-input" accept="image/png, image/jpeg, image/jpg, image/heic" class="hidden" multiple>
+                            
+                            <div class="space-y-2 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-xl bg-emeraldAccent/10 text-emeraldAccent flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <i class="fa-solid fa-camera text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700 dark:text-slate-200">Drop photos here</p>
+                                    <p class="text-[10px] text-slate-450 dark:text-slate-500 mt-0.5">or click to upload from your gallery</p>
+                                </div>
+                                <p class="text-[9px] text-slate-400">Accepts PNG, JPG, JPEG, HEIC</p>
+                            </div>
+                        </div>
+
+                        <!-- Thumbnail Previews -->
+                        <div id="found-thumbnails-container" class="grid grid-cols-3 gap-3"></div>
+                    </div>
+                </div>
+
+                <!-- Found Step 3: Logistics & Contact -->
+                <div id="found-step-3" class="hidden space-y-4">
+                    <div class="space-y-1">
+                        <label for="found-location" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Where did you find it?</label>
+                        <input type="text" id="found-location" placeholder="e.g. Canteen, BH-4 Parking, CC3" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="found-date" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">When did you find it?</label>
+                        <input type="date" id="found-date" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="found-contact" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Contact Information</label>
+                        <input type="text" id="found-contact" placeholder="Email or Phone Number" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="storage-location" class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Current Location of Item</label>
+                        <input type="text" id="storage-location" placeholder="Where is the item stored?" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 text-sm">
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-white/5">
+                    <button type="button" onclick="prevFoundStep()" class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-805 dark:text-slate-400 dark:hover:text-white transition-all">
+                        Back
+                    </button>
+                    <button type="button" id="found-next-btn" onclick="nextFoundStep()" class="px-6 py-2.5 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 shadow-md transition-all text-xs">
+                        Next Step
+                    </button>
+                    <button type="submit" id="found-submit-btn" class="hidden px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 shadow-md transition-all text-xs">
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Info Modal -->
+    <div id="contact-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white dark:bg-darkCard w-full max-w-md p-6 rounded-3xl border border-slate-200 dark:border-white/10 shadow-2xl space-y-4">
+            <div class="flex justify-between items-start">
+                <h3 id="contact-modal-title" class="font-display text-xl font-bold text-slate-900 dark:text-white">Contact Info</h3>
+                <button onclick="closeContactModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="contact-modal-body" class="space-y-4 py-2">
+                <!-- Dynamic info -->
+            </div>
+            <button onclick="closeContactModal()" class="w-full py-3 bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold rounded-2xl hover:opacity-90 transition-all text-xs shadow-md">
+                Close
+            </button>
+        </div>
+    </div>
+
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h4>UniLink</h4>
-                    <p>Connecting lost items with their owners through our community platform. Together we can make a difference.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <footer class="bg-slate-900 text-slate-400 dark:bg-darkCard py-16 border-t border-slate-800 dark:border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-violetAccent to-pinkAccent flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-link text-white text-sm"></i>
+                        </div>
+                        <span class="font-display text-xl font-bold text-white tracking-tight">UniLink</span>
+                    </div>
+                    <p class="text-xs leading-relaxed text-slate-400">
+                        Connecting lost items with their owners through our community platform. Together we make college life less chaotic.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-colors"><i class="fab fa-facebook-f text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-colors"><i class="fab fa-twitter text-xs"></i></a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center transition-colors"><i class="fab fa-instagram text-xs"></i></a>
                     </div>
                 </div>
                 
-                <div class="footer-column">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="main.html">Home</a></li>
-                        <li><a href="lnf.html">Lost Items</a></li>
-                        <li><a href="lnf.html">Found Items</a></li>
+                <div class="space-y-4">
+                    <h4 class="font-display font-bold text-white text-sm">Quick Links</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="main.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="lnf.html" class="hover:text-white transition-colors">Lost Items</a></li>
+                        <li><a href="lnf.html" class="hover:text-white transition-colors">Found Items</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-column">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Safety Tips</a></li>
-                        <li><a href="contactus.html">Contact Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
+                <div class="space-y-4">
+                    <h4 class="font-display font-bold text-white text-sm">Resources</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="faq.html" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="contactus.html" class="hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-column">
-                    <h4>Contact Info</h4>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> IIIT Allahabad,Prayagraj</li>
-                        <li><i class="fas fa-phone"></i>7976295779</li>
-                        <li><i class="fas fa-envelope"></i> unilink@gmail.com</li>
+                <div class="space-y-4">
+                    <h4 class="font-display font-bold text-white text-sm">Contact Info</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><i class="fas fa-map-marker-alt mr-2 text-slate-400"></i> IIIT Allahabad, Prayagraj</li>
+                        <li><i class="fas fa-phone mr-2 text-slate-400"></i> 7976295779</li>
+                        <li><i class="fas fa-envelope mr-2 text-slate-400"></i> unilink@gmail.com</li>
                     </ul>
                 </div>
             </div>
             
-            <div class="copyright">
-                <p>&copy; 2023 UniLink. All rights reserved.</p>
+            <div class="border-t border-slate-800 dark:border-white/5 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs">
+                <p>&copy; 2026 UniLink. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Use</a>
+                </div>
             </div>
         </div>
     </footer>
 
-===============================
+    <!-- MAIN APP LOGIC -->
     <script>
-// =======================================
-// API HELPER & AUTH
-// =======================================
-const API_BASE_URL = '';
+        // =======================================
+        // API HELPER & AUTH
+        // =======================================
+        const API_BASE_URL = '';
+        let allItems = []; 
+        let currentToken = '';
 
-const apiFetch = async (endpoint, method, body, token) => {
-    const headers = { 'Content-Type': 'application/json' };
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const options = {
-        method: method.toUpperCase(),
-        headers: headers,
-    };
-
-    if (body) {
-        options.body = JSON.stringify(body);
-    }
-
-    try {
-        const response = await fetch(endpoint, options);
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || data.msg || 'An API error occurred');
-        }
-        return data;
-    } catch (err) {
-        console.error('API Fetch Error:', err);
-        throw err;
-    }
-};
-
-function logout() {
-    localStorage.removeItem('token');
-    window.location.href = 'auth.html?view=login'; 
-}
-
-// =======================================
-// MAIN APP LOGIC
-// =======================================
-
-let allItems = []; 
-let currentToken = '';
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Check for login token
-    currentToken = localStorage.getItem('token');
-    if (!currentToken) {
-        alert('You must be logged in to view this page.');
-        window.location.href = 'auth.html?view=login';
-        return;
-    }
-
-    // Initialize form references
-    const lostForm = document.getElementById('lost-form');
-    const foundForm = document.getElementById('found-form');
-    const logoutButton = document.querySelector('.logout-btn');
-    const searchInput = document.getElementById('search-input');
-    const searchButton = document.getElementById('search-button');
-
-    // Initial Load
-    loadItems();
-
-    // Bind Event Listeners
-    if (logoutButton) {
-        logoutButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            logout();
-        });
-    }
-
-    // Report Lost Item Form
-    if (lostForm) {
-        lostForm.addEventListener('submit', handleLostFormSubmit);
-    }
-
-    // Report Found Item Form
-    if (foundForm) {
-        foundForm.addEventListener('submit', handleFoundFormSubmit);
-    }
-
-    // Search functionality
-    const handleSearch = async () => {
-        const query = searchInput.value.trim();
-        
-        if (!query) {
-            loadItems();
-            return;
-        }
-
-        try {
-            const data = await apiFetch(`/api/lnf/search?q=${query}`, 'GET', null, currentToken);
-            
-            if (data.success) {
-                renderAllItems(data.items);
-                document.getElementById('lost-items').scrollIntoView({ behavior: 'smooth' });
+        const apiFetch = async (endpoint, method, body, token) => {
+            const headers = { 'Content-Type': 'application/json' };
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
             }
-        } catch (err) {
-            alert(`Error searching: ${err.message}`);
-        }
-    };
 
-    searchButton.addEventListener('click', handleSearch);
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            handleSearch();
-        }
-    });
+            const options = {
+                method: method.toUpperCase(),
+                headers: headers,
+            };
 
-    // Tab switching functionality
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const targetTab = this.getAttribute('data-tab');
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+
+            try {
+                const response = await fetch(endpoint, options);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || data.msg || 'An API error occurred');
+                }
+                return data;
+            } catch (err) {
+                console.error('API Fetch Error:', err);
+                throw err;
+            }
+        };
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'auth.html?view=login'; 
+        }
+
+        // =======================================
+        // NAVIGATION & THEME CONTROLLER
+        // =======================================
+        function setupThemeAndDropdowns() {
+            const toggle = document.getElementById('dark-theme-toggle');
+            const mobileToggle = document.getElementById('mobile-dark-theme-toggle');
+            const settingsBtn = document.getElementById('settings-toggle-btn');
+            const settingsDropdown = document.getElementById('settings-dropdown');
+            const mobileSettingsBtn = document.getElementById('mobile-settings-toggle-btn');
+            const mobileSettingsPanel = document.getElementById('mobile-settings-panel');
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // 1. Settings Dropdown toggle
+            if (settingsBtn && settingsDropdown) {
+                settingsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    settingsDropdown.classList.toggle('hidden');
+                });
+                document.addEventListener('click', (e) => {
+                    if (!settingsDropdown.contains(e.target) && e.target !== settingsBtn && !settingsBtn.contains(e.target)) {
+                        settingsDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // 2. Mobile gear toggle
+            if (mobileSettingsBtn && mobileSettingsPanel) {
+                mobileSettingsBtn.addEventListener('click', () => {
+                    mobileSettingsPanel.classList.toggle('hidden');
+                });
+            }
+
+            // 3. Mobile menu burger toggle
+            if (mobileMenuBtn && mobileMenu) {
+                const openIcon = mobileMenuBtn.querySelector('svg.block');
+                const closeIcon = mobileMenuBtn.querySelector('svg.hidden');
+                mobileMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    openIcon.classList.toggle('hidden');
+                    closeIcon.classList.toggle('hidden');
+                });
+            }
+
+            // Sync toggle inputs on page load
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                if (toggle) toggle.checked = true;
+                if (mobileToggle) mobileToggle.checked = true;
+            } else {
+                if (toggle) toggle.checked = false;
+                if (mobileToggle) mobileToggle.checked = false;
+            }
+
+            // Handle theme switch
+            function handleThemeChange(checked) {
+                if (checked) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (toggle) toggle.checked = true;
+                    if (mobileToggle) mobileToggle.checked = true;
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    if (toggle) toggle.checked = false;
+                    if (mobileToggle) mobileToggle.checked = false;
+                }
+            }
+
+            if (toggle) {
+                toggle.addEventListener('change', () => handleThemeChange(toggle.checked));
+            }
+            if (mobileToggle) {
+                mobileToggle.addEventListener('change', () => handleThemeChange(mobileToggle.checked));
+            }
+        }
+
+        // =======================================
+        // ROTATING SEARCH PLACEHOLDER
+        // =======================================
+        const searchPlaceholders = [
+            "black wallet near canteen",
+            "IIITA ID card",
+            "grey hoodie",
+            "TI-84 calculator",
+            "earbuds case"
+        ];
+        let placeholderIndex = 0;
+        function rotateSearchPlaceholder() {
+            const searchInput = document.getElementById('search-input');
+            if (!searchInput) return;
+            searchInput.placeholder = `e.g., "${searchPlaceholders[placeholderIndex]}"`;
+            placeholderIndex = (placeholderIndex + 1) % searchPlaceholders.length;
+        }
+
+        // =======================================
+        // GUIDED WIZARD REPORT SLIDE-OUT DRAWER
+        // =======================================
+        let reportWizardType = 'lost'; 
+        let currentLostStepIdx = 2; 
+        let currentFoundStepIdx = 2; 
+        
+        let lostUploadedUrls = []; // stores { id, url }
+        let foundUploadedUrls = []; // stores { id, url }
+
+        function toggleReportDrawer(open) {
+            const drawer = document.getElementById('report-drawer');
+            const backdrop = document.getElementById('report-drawer-backdrop');
             
-            // Update active tab
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
+            if (open) {
+                backdrop.classList.remove('hidden');
+                drawer.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden';
+                resetWizard();
+            } else {
+                backdrop.classList.add('hidden');
+                drawer.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function resetWizard() {
+            // Show step 1 selection, hide form wizards
+            document.getElementById('wizard-step-1').classList.remove('hidden');
+            document.getElementById('lost-form').classList.add('hidden');
+            document.getElementById('found-form').classList.add('hidden');
             
-            // Show corresponding content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
+            // Reset state indices
+            currentLostStepIdx = 2;
+            currentFoundStepIdx = 2;
+            
+            // Clear uploaded state
+            lostUploadedUrls = [];
+            foundUploadedUrls = [];
+            document.getElementById('lost-thumbnails-container').innerHTML = '';
+            document.getElementById('found-thumbnails-container').innerHTML = '';
+            
+            // Setup Lost steps display
+            document.getElementById('lost-step-2').classList.remove('hidden');
+            document.getElementById('lost-step-3').classList.add('hidden');
+            document.getElementById('lost-next-btn').classList.remove('hidden');
+            document.getElementById('lost-submit-btn').classList.add('hidden');
+            
+            // Setup Found steps display
+            document.getElementById('found-step-2').classList.remove('hidden');
+            document.getElementById('found-step-3').classList.add('hidden');
+            document.getElementById('found-next-btn').classList.remove('hidden');
+            document.getElementById('found-submit-btn').classList.add('hidden');
+            
+            updateProgressIndicators();
+        }
+
+        function selectReportType(type) {
+            reportWizardType = type;
+            document.getElementById('wizard-step-1').classList.add('hidden');
+            
+            if (type === 'lost') {
+                document.getElementById('lost-form').classList.remove('hidden');
+                currentLostStepIdx = 2;
+            } else {
+                document.getElementById('found-form').classList.remove('hidden');
+                currentFoundStepIdx = 2;
+            }
+            updateProgressIndicators();
+        }
+
+        function updateProgressIndicators() {
+            if (reportWizardType === 'lost') {
+                const progressText = document.getElementById('lost-progress-text');
+                const progressFrac = document.getElementById('lost-progress-frac');
+                const progressBar = document.getElementById('lost-progress-bar');
+                
+                if (currentLostStepIdx === 2) {
+                    progressText.textContent = "Step 2: Tell us about the item";
+                    progressFrac.textContent = "2 / 3";
+                    progressBar.style.width = "66%";
+                } else {
+                    progressText.textContent = "Step 3: Where and how can we contact you?";
+                    progressFrac.textContent = "3 / 3";
+                    progressBar.style.width = "100%";
+                }
+            } else {
+                const progressText = document.getElementById('found-progress-text');
+                const progressFrac = document.getElementById('found-progress-frac');
+                const progressBar = document.getElementById('found-progress-bar');
+                
+                if (currentFoundStepIdx === 2) {
+                    progressText.textContent = "Step 2: Tell us about the item";
+                    progressFrac.textContent = "2 / 3";
+                    progressBar.style.width = "66%";
+                } else {
+                    progressText.textContent = "Step 3: Where and how can we contact you?";
+                    progressFrac.textContent = "3 / 3";
+                    progressBar.style.width = "100%";
+                }
+            }
+        }
+
+        // Lost Flow Actions
+        function nextLostStep() {
+            const name = document.getElementById('item-name').value.trim();
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value.trim();
+
+            if (!name || !category || !description) {
+                alert("Please fill in Item Name, Category, and Description before moving next.");
+                return;
+            }
+
+            currentLostStepIdx = 3;
+            document.getElementById('lost-step-2').classList.add('hidden');
+            document.getElementById('lost-step-3').classList.remove('hidden');
+            
+            document.getElementById('lost-next-btn').classList.add('hidden');
+            document.getElementById('lost-submit-btn').classList.remove('hidden');
+            
+            updateProgressIndicators();
+        }
+
+        function prevLostStep() {
+            if (currentLostStepIdx === 2) {
+                resetWizard();
+            } else {
+                currentLostStepIdx = 2;
+                document.getElementById('lost-step-2').classList.remove('hidden');
+                document.getElementById('lost-step-3').classList.add('hidden');
+                
+                document.getElementById('lost-next-btn').classList.remove('hidden');
+                document.getElementById('lost-submit-btn').classList.add('hidden');
+                
+                updateProgressIndicators();
+            }
+        }
+
+        // Found Flow Actions
+        function nextFoundStep() {
+            const name = document.getElementById('found-item-name').value.trim();
+            const category = document.getElementById('found-category').value;
+            const description = document.getElementById('found-description').value.trim();
+
+            if (!name || !category || !description) {
+                alert("Please fill in Item Name, Category, and Description before moving next.");
+                return;
+            }
+
+            currentFoundStepIdx = 3;
+            document.getElementById('found-step-2').classList.add('hidden');
+            document.getElementById('found-step-3').classList.remove('hidden');
+            
+            document.getElementById('found-next-btn').classList.add('hidden');
+            document.getElementById('found-submit-btn').classList.remove('hidden');
+            
+            updateProgressIndicators();
+        }
+
+        function prevFoundStep() {
+            if (currentFoundStepIdx === 2) {
+                resetWizard();
+            } else {
+                currentFoundStepIdx = 2;
+                document.getElementById('found-step-2').classList.remove('hidden');
+                document.getElementById('found-step-3').classList.add('hidden');
+                
+                document.getElementById('found-next-btn').classList.remove('hidden');
+                document.getElementById('found-submit-btn').classList.add('hidden');
+                
+                updateProgressIndicators();
+            }
+        }
+
+        // =======================================
+        // MODERN FILE DRAG-AND-DROP IMAGE UPLOADER
+        // =======================================
+        function setupFileUploader() {
+            // Setup lost drop zone
+            const lostDropZone = document.getElementById('lost-drop-zone');
+            const lostFileInput = document.getElementById('lost-file-input');
+            
+            lostDropZone.addEventListener('click', () => lostFileInput.click());
+            lostFileInput.addEventListener('change', (e) => handleFilesSelection(e.target.files, 'lost'));
+            
+            setupDragAndDropEvents(lostDropZone, 'lost');
+
+            // Setup found drop zone
+            const foundDropZone = document.getElementById('found-drop-zone');
+            const foundFileInput = document.getElementById('found-file-input');
+            
+            foundDropZone.addEventListener('click', () => foundFileInput.click());
+            foundFileInput.addEventListener('change', (e) => handleFilesSelection(e.target.files, 'found'));
+            
+            setupDragAndDropEvents(foundDropZone, 'found');
+        }
+
+        function setupDragAndDropEvents(dropZone, type) {
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.add('dragover-active');
+                }, false);
             });
-            document.getElementById(`${targetTab}-tab`).classList.add('active');
-        });
-    });
-});
 
-/**
- * Fetches all items from the API and renders them
- */
-async function loadItems() {
-    const lostGrid = document.getElementById('lost-items-grid');
-    lostGrid.innerHTML = '<p>Loading items...</p>';
-    
-    try {
-        const data = await apiFetch('/api/lnf', 'GET', null, currentToken);
-        if (data.success && data.items) {
-            allItems = data.items;
-            renderAllItems(allItems);
-        } else {
-            lostGrid.innerHTML = '<p>No items found.</p>';
-        }
-    } catch (err) {
-        lostGrid.innerHTML = `<p style="color: red;">Error loading items: ${err.message}</p>`;
-    }
-}
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.remove('dragover-active');
+                }, false);
+            });
 
-/**
- * CORRECTED: Handles the "Report Lost Item" form submission
- */
-async function handleLostFormSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.disabled = true;
-    submitButton.textContent = 'Reporting...';
-
-    try {
-        // Get data from the correct input IDs - FIXED SYNTAX
-        const formData = {
-            itemType: 'lost',
-            itemName: document.getElementById('item-name').value,
-            category: document.getElementById('category').value,
-            image: document.getElementById('itemImage').value,
-            description: document.getElementById('description').value,
-            location: document.getElementById('lost-location').value,
-            date: document.getElementById('lost-date').value,
-            contact: document.getElementById('contact').value
-        };
-
-        console.log('Submitting lost item:', formData);
-
-        // Basic validation
-        if (!formData.itemName || !formData.description || !formData.location) {
-            throw new Error('Please fill out Item Name, Description, and Location.');
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFilesSelection(files, type);
+            }, false);
         }
 
-        // Call the POST API to your backend
-        const data = await apiFetch('/api/lnf', 'POST', formData, currentToken);
+        function handleFilesSelection(files, type) {
+            const currentList = type === 'lost' ? lostUploadedUrls : foundUploadedUrls;
+            const uploaderInput = document.getElementById(type === 'lost' ? 'lost-file-input' : 'found-file-input');
+            
+            if (currentList.length + files.length > 3) {
+                alert("You can only upload a maximum of 3 photos.");
+                uploaderInput.value = '';
+                return;
+            }
 
-        if (data.success) {
-            alert('Item reported successfully!');
-            form.reset();
-            loadItems();
-        }
-    } catch (err) {
-        alert(`Error reporting item: ${err.message}`);
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Report Lost Item';
-    }
-}
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/heic'];
 
-/**
- * CORRECTED: Handles the "Report Found Item" form submission
- */
-async function handleFoundFormSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.disabled = true;
-    submitButton.textContent = 'Reporting...';
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (!allowedTypes.includes(file.type.toLowerCase()) && !file.name.toLowerCase().endsWith('.heic')) {
+                    alert(`File "${file.name}" is not a valid format. Please upload JPG, PNG, JPEG, or HEIC.`);
+                    continue;
+                }
 
-    try {
-        // Get data from the 'found' form input IDs - FIXED SYNTAX
-        const formData = {
-            itemType: 'found',
-            itemName: document.getElementById('found-item-name').value,
-            category: document.getElementById('found-category').value,
-            image: document.getElementById('foundItemImage').value,
-            description: document.getElementById('found-description').value,
-            location: document.getElementById('found-location').value,
-            date: document.getElementById('found-date').value,
-            contact: document.getElementById('found-contact').value,
-            storageLocation: document.getElementById('storage-location').value
-        };
+                // Render dynamic thumbnail with local ObjectURL
+                const thumbnailId = 'thumb-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                createThumbnailPreview(file, type, thumbnailId);
 
-        console.log('Submitting found item:', formData);
-
-        // Validation
-        if (!formData.itemName) {
-            throw new Error('Please fill out "Item Name".');
-        }
-        if (!formData.description) {
-            throw new Error('Please fill out "Description".');
-        }
-        if (!formData.location) {
-            throw new Error('Please fill out "Where did you find it?".');
+                // Run XHR Upload process to Cloudinary
+                uploadFileXhr(file, type, thumbnailId);
+            }
+            uploaderInput.value = ''; // Reset input
         }
 
-        const data = await apiFetch('/api/lnf', 'POST', formData, currentToken);
+        function createThumbnailPreview(file, type, thumbnailId) {
+            const container = document.getElementById(type === 'lost' ? 'lost-thumbnails-container' : 'found-thumbnails-container');
+            const localUrl = URL.createObjectURL(file);
 
-        if (data.success) {
-            alert('Item reported successfully!');
-            form.reset();
-            loadItems();
-        }
-    } catch (err) {
-        alert(`Error reporting item: ${err.message}`);
-    } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Report Found Item';
-    }
-}
-
-/**
- * Renders items to the DOM
- */
-function renderAllItems(items) {
-    const lostItemsGrid = document.getElementById('lost-items-grid');
-    const foundItemsGrid = document.getElementById('found-items-grid');
-
-    lostItemsGrid.innerHTML = '';
-    foundItemsGrid.innerHTML = '';
-
-    let lostCount = 0;
-    let foundCount = 0;
-
-    items.forEach(item => {
-        const card = createItemCard(item);
-        if (item.itemType === 'lost') {
-            lostItemsGrid.appendChild(card);
-            lostCount++;
-        } else {
-            foundItemsGrid.appendChild(card);
-            foundCount++;
-        }
-    });
-
-    if (lostCount === 0) {
-        lostItemsGrid.innerHTML = '<p>No lost items found.</p>';
-    }
-    if (foundCount === 0) {
-        foundItemsGrid.innerHTML = '<p>No found items reported.</p>';
-    }
-}
-
-/**
- * Creates a single item card HTML element
- */
-function createItemCard(item) {
-    const card = document.createElement('div');
-    card.className = 'item-card';
-
-    const imageUrl = (item.image && item.image.startsWith('http')) 
-        ? item.image 
-        : 'https://via.placeholder.com/300x200.png?text=No+Image';
-    
-    const itemTypeClass = item.itemType === 'lost' ? 'status-lost' : 'status-found';
-    const itemTypeText = item.itemType.toUpperCase();
-
-    const itemDate = new Date(item.date).toLocaleDateString();
-    const userName = item.user ? `${item.user.name} (${item.user.studentId})` : 'Unknown User';
-
-    card.innerHTML = `
-        <div class="item-image">
-            <img src="${imageUrl}" alt="${item.itemName}">
-        </div>
-        <div class="item-info">
-            <span class="item-status ${itemTypeClass}">${itemTypeText}</span>
-            <h4>${item.itemName}</h4>
-            <p>${item.description}</p>
-            <div class="item-meta">
-                <span><i class="fas fa-map-marker-alt"></i> ${item.location}</span>
-                <span><i class="fas fa-calendar-alt"></i> ${itemDate}</span>
-            </div>
-            <div class="item-meta" style="margin-top: 10px;">
-                <span><i class="fas fa-user"></i> ${userName}</span>
-            </div>
-        </div>
-    `;
-    return card;
-}
-</script>
-    // lnf.html <script>
-// ... (after createItemCard)
-
-/**
- * Reusable function to perform a search and render results.
- * This will be used by the search bar AND the category buttons.
- */
-async function performSearch(query) {
-    // Find the grids to show the results
-    const lostItemsGrid = document.getElementById('lost-items-grid');
-    const foundItemsGrid = document.getElementById('found-items-grid');
-
-    // Show a loading message
-    lostItemsGrid.innerHTML = '<p>Searching...</p>';
-    foundItemsGrid.innerHTML = ''; // Clear the other grid
-
-    try {
-        // Use the existing search API endpoint
-        const data = await apiFetch(`/api/lnf/search?q=${encodeURIComponent(query)}`, 'GET', null, currentToken);
-        
-        if (data.success && data.items.length > 0) {
-            // We can reuse our main render function
-            renderAllItems(data.items); 
-        } else {
-            lostItemsGrid.innerHTML = '<p>No items found matching your search.</p>';
-        }
-    } catch (err) {
-        console.error('Search failed:', err);
-        lostItemsGrid.innerHTML = `<p style="color: red;">Search error: ${err.message}</p>`;
-    }
-}
-
-    
-    
-    /**
-     * Shows a preview of the selected image in the modal
-     */
-    function showPreview(file) {
-        const previewContainer = document.getElementById('search-preview');
-        previewContainer.innerHTML = ''; // Clear old preview
-        
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const previewItem = document.createElement('div');
-            previewItem.className = 'preview-item';
-            // Add a clickable remove button
-            previewItem.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
-                <div class="remove" onclick="clearVisualSearch()">&times;</div>
+            const div = document.createElement('div');
+            div.id = thumbnailId;
+            div.className = 'relative w-full aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-900 group';
+            
+            div.innerHTML = `
+                <img src="${localUrl}" class="w-full h-full object-cover">
+                <!-- Spinner Overlay -->
+                <div id="loader-${thumbnailId}" class="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] flex flex-col items-center justify-center p-2 text-white transition-opacity">
+                    <div class="w-5 h-5 rounded-full border-2 border-white/20 border-t-white animate-spin"></div>
+                    <span id="pct-${thumbnailId}" class="text-[9px] mt-1 font-bold">0%</span>
+                </div>
+                <!-- Status icon -->
+                <div id="status-${thumbnailId}" class="hidden absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-check text-[10px]"></i>
+                </div>
+                <!-- Remove File Trigger -->
+                <button type="button" onclick="removeUploadedFile('${thumbnailId}', '${type}')" class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-slate-900/60 text-white flex items-center justify-center text-xs hover:bg-slate-900 transition-colors shadow-md">
+                    &times;
+                </button>
             `;
-            previewContainer.appendChild(previewItem);
-        };
-        reader.readAsDataURL(file);
-    }
-    
-    /**
-     * Handles the visual search API call
-     */
-    
-</script>
+            container.appendChild(div);
+        }
+
+        function uploadFileXhr(file, type, thumbnailId) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/lnf/upload', true);
+            xhr.setRequestHeader('Authorization', `Bearer ${currentToken}`);
+
+            // Live progress updates
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const pct = Math.round((e.loaded / e.total) * 100);
+                    const pctSpan = document.getElementById(`pct-${thumbnailId}`);
+                    if (pctSpan) {
+                        pctSpan.textContent = `${pct}%`;
+                    }
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        const res = JSON.parse(xhr.responseText);
+                        if (res.success && res.url) {
+                            // Save url in arrays
+                            const targetArray = type === 'lost' ? lostUploadedUrls : foundUploadedUrls;
+                            targetArray.push({ id: thumbnailId, url: res.url });
+
+                            // Display checkmark status
+                            const loaderOverlay = document.getElementById(`loader-${thumbnailId}`);
+                            if (loaderOverlay) loaderOverlay.classList.add('hidden');
+                            
+                            const statusCheck = document.getElementById(`status-${thumbnailId}`);
+                            if (statusCheck) statusCheck.classList.remove('hidden');
+                        } else {
+                            handleUploadError(thumbnailId, res.message || 'Error occurred');
+                        }
+                    } catch (e) {
+                        handleUploadError(thumbnailId, 'Upload failed');
+                    }
+                } else {
+                    handleUploadError(thumbnailId, 'Server returned error');
+                }
+            };
+
+            xhr.onerror = function() {
+                handleUploadError(thumbnailId, 'Network error');
+            };
+
+            xhr.send(formData);
+        }
+
+        function handleUploadError(thumbnailId, message) {
+            const loaderOverlay = document.getElementById(`loader-${thumbnailId}`);
+            if (loaderOverlay) {
+                loaderOverlay.innerHTML = `
+                    <i class="fa-solid fa-triangle-exclamation text-rose-500 text-base mb-1"></i>
+                    <span class="text-[9px] font-bold text-rose-400">Failed</span>
+                `;
+            }
+            console.error(`Upload error on ${thumbnailId}: ${message}`);
+        }
+
+        function removeUploadedFile(thumbnailId, type) {
+            // Remove from HTML DOM
+            const thumbEl = document.getElementById(thumbnailId);
+            if (thumbEl) thumbEl.remove();
+
+            // Filter out of Javascript array
+            if (type === 'lost') {
+                lostUploadedUrls = lostUploadedUrls.filter(item => item.id !== thumbnailId);
+            } else {
+                foundUploadedUrls = foundUploadedUrls.filter(item => item.id !== thumbnailId);
+            }
+        }
+
+        // =======================================
+        // WITTY CAMPUS CAPTIONS GENERATOR
+        // =======================================
+        function getWittySubtitle(item) {
+            const category = (item.category || '').toLowerCase();
+            const location = (item.location || '').toLowerCase();
+            const name = (item.itemName || '').toLowerCase();
+
+            if (name.includes('key')) {
+                return "Single key. Owner still unknown.";
+            }
+            if (name.includes('bottle')) {
+                return "Another water bottle. Hydration casualty.";
+            }
+            if (name.includes('calculator') || name.includes('ti-') || category === 'electronics') {
+                return "TI calculator. Endsem survivor.";
+            }
+            if (name.includes('jacket') || name.includes('hoodie') || category === 'clothing') {
+                return "Puffer jacket. Cafeteria casualty.";
+            }
+            if (location.includes('canteen') || location.includes('cafeteria')) {
+                return "Lost during a samosa break.";
+            }
+            if (location.includes('library')) {
+                return "Sacrificed to the study gods.";
+            }
+            if (location.includes('cc') || location.includes('lab')) {
+                return "Lab exam casualty.";
+            }
+            
+            if (category === 'documents') return "Identity crisis pending.";
+            if (category === 'jewelry') return "A touch of lost campus glamour.";
+            if (category === 'bags') return "Contains student dreams (and ID cards).";
+            
+            return "Misplaced in the campus continuum.";
+        }
+
+        // =======================================
+        // CONTACT INFO MODAL
+        // =======================================
+        function openContactModal(itemName, contact, storageLocation, itemType, status, imageUrlsString) {
+            const modal = document.getElementById('contact-modal');
+            const title = document.getElementById('contact-modal-title');
+            const body = document.getElementById('contact-modal-body');
+            
+            title.textContent = `Inquire: ${itemName}`;
+            
+            const images = imageUrlsString ? imageUrlsString.split(',') : [];
+            let imagesGalleryHtml = '';
+            
+            if (images.length > 0 && images[0].startsWith('http')) {
+                imagesGalleryHtml = `
+                    <div class="space-y-1 mt-1">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Gallery Preview</div>
+                        <div class="grid grid-cols-${Math.min(images.length, 3)} gap-2">
+                            ${images.map(img => `<img src="${img}" class="w-full h-24 object-cover rounded-xl border border-slate-100 dark:border-white/5 cursor-pointer hover:opacity-90 transition-opacity" onclick="window.open('${img}', '_blank')">`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            let html = `
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 space-y-3">
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">How to contact</div>
+                    <div class="text-sm font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-violetAccent"></i>
+                        <span>${contact}</span>
+                    </div>
+                </div>
+            `;
+            
+            if (itemType === 'found') {
+                html += `
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 space-y-3">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Current Storage Location</div>
+                        <div class="text-sm font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-box-archive text-violetAccent"></i>
+                            <span>${storageLocation || 'Held by the student finder'}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += imagesGalleryHtml;
+            
+            body.innerHTML = html;
+            modal.classList.remove('hidden');
+        }
+
+        function closeContactModal() {
+            document.getElementById('contact-modal').classList.add('hidden');
+        }
+
+        // =======================================
+        // FRONT-END FILTER LOGIC
+        // =======================================
+        function applyFilters() {
+            const categoryVal = document.getElementById('category-filter').value;
+            const locationVal = document.getElementById('location-filter').value.toLowerCase().trim();
+            const dateVal = document.getElementById('date-filter').value;
+
+            let filtered = allItems;
+
+            if (categoryVal) {
+                filtered = filtered.filter(item => item.category === categoryVal);
+            }
+            if (locationVal) {
+                filtered = filtered.filter(item => item.location && item.location.toLowerCase().includes(locationVal));
+            }
+            if (dateVal) {
+                filtered = filtered.filter(item => {
+                    if (!item.date) return false;
+                    const itemDate = new Date(item.date).toISOString().split('T')[0];
+                    return itemDate === dateVal;
+                });
+            }
+
+            renderAllItems(filtered);
+        }
+
+        // =======================================
+        // MAIN APP INITIALIZATION
+        // =======================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check auth token
+            currentToken = localStorage.getItem('token');
+            if (!currentToken) {
+                alert('You must be logged in to view this page.');
+                window.location.href = 'auth.html?view=login';
+                return;
+            }
+
+            // Setup general UI components
+            setupThemeAndDropdowns();
+            setupFileUploader();
+            
+            // Start placeholder rotation
+            setInterval(rotateSearchPlaceholder, 3500);
+            rotateSearchPlaceholder();
+
+            // Bind logouts
+            document.querySelectorAll('.logout-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    logout();
+                });
+            });
+
+            // Initial Load
+            loadItems();
+
+            // Bind Search Form Button
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+
+            const handleSearch = async () => {
+                const query = searchInput.value.trim();
+                
+                if (!query) {
+                    loadItems();
+                    return;
+                }
+
+                try {
+                    const data = await apiFetch(`/api/lnf/search?q=${encodeURIComponent(query)}`, 'GET', null, currentToken);
+                    if (data.success && data.items) {
+                        allItems = data.items;
+                        renderAllItems(allItems);
+                        // Scroll back to items gallery to show search results
+                        document.getElementById('gallery-section').scrollIntoView({ behavior: 'smooth' });
+                    }
+                } catch (err) {
+                    alert(`Error searching: ${err.message}`);
+                }
+            };
+
+            if (searchButton) searchButton.addEventListener('click', handleSearch);
+            if (searchInput) searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+
+            // Bind filters input triggers
+            document.getElementById('category-filter').addEventListener('change', applyFilters);
+            document.getElementById('location-filter').addEventListener('input', applyFilters);
+            document.getElementById('date-filter').addEventListener('change', applyFilters);
+            
+            // Reset filters button
+            document.getElementById('reset-filters').addEventListener('click', () => {
+                document.getElementById('category-filter').value = '';
+                document.getElementById('location-filter').value = '';
+                document.getElementById('date-filter').value = '';
+                applyFilters();
+            });
+
+            // Bind forms submissions
+            const lostForm = document.getElementById('lost-form');
+            const foundForm = document.getElementById('found-form');
+
+            if (lostForm) lostForm.addEventListener('submit', handleLostFormSubmit);
+            if (foundForm) foundForm.addEventListener('submit', handleFoundFormSubmit);
+
+            // Tab-switching functionality
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove all actives
+                    tabButtons.forEach(b => {
+                        b.classList.remove('active', 'tab-active-lost', 'tab-active-found', 'tab-active-reunited');
+                        b.classList.add('text-slate-400', 'dark:text-slate-500');
+                    });
+                    tabContents.forEach(c => c.classList.add('hidden'));
+
+                    // Set active to clicked tab
+                    this.classList.add('active');
+                    this.classList.remove('text-slate-400', 'dark:text-slate-500');
+                    
+                    if (targetTab === 'lost') {
+                        this.classList.add('tab-active-lost');
+                    } else if (targetTab === 'found') {
+                        this.classList.add('tab-active-found');
+                    } else if (targetTab === 'reunited') {
+                        this.classList.add('tab-active-reunited');
+                    }
+
+                    // Show content grid
+                    document.getElementById(`${targetTab}-tab-content`).classList.remove('hidden');
+                });
+            });
+        });
+
+        // =======================================
+        // DATA LOAD AND RENDER
+        // =======================================
+        async function loadItems() {
+            const lostGrid = document.getElementById('lost-items-grid');
+            const foundGrid = document.getElementById('found-items-grid');
+            const reunitedGrid = document.getElementById('reunited-items-grid');
+
+            const loader = renderLoader();
+            lostGrid.innerHTML = loader;
+            foundGrid.innerHTML = loader;
+            reunitedGrid.innerHTML = loader;
+            
+            try {
+                const data = await apiFetch('/api/lnf', 'GET', null, currentToken);
+                if (data.success && data.items) {
+                    allItems = data.items;
+                    renderAllItems(allItems);
+                } else {
+                    lostGrid.innerHTML = renderEmptyState('lost');
+                    foundGrid.innerHTML = renderEmptyState('found');
+                    reunitedGrid.innerHTML = renderEmptyState('reunited');
+                }
+            } catch (err) {
+                const errMsg = `<p class="col-span-full text-center text-xs font-semibold text-rose-500">Error loading items: ${err.message}</p>`;
+                lostGrid.innerHTML = errMsg;
+                foundGrid.innerHTML = errMsg;
+                reunitedGrid.innerHTML = errMsg;
+            }
+        }
+
+        function renderLoader() {
+            return `
+                <div class="col-span-full py-12 flex flex-col items-center justify-center gap-3">
+                    <div class="w-8 h-8 rounded-full border-4 border-slate-200 border-t-violetAccent animate-spin"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Archiving college misplaced objects...</span>
+                </div>
+            `;
+        }
+
+        function renderEmptyState(type) {
+            return `
+                <div class="col-span-full py-16 text-center space-y-3">
+                    <div class="w-16 h-16 mx-auto rounded-2xl bg-white dark:bg-darkCard border border-slate-100 dark:border-white/5 flex items-center justify-center text-2xl">
+                        ${type === 'lost' ? '🔍' : type === 'found' ? '🎒' : '🤝'}
+                    </div>
+                    <h5 class="font-display font-bold text-slate-800 dark:text-slate-200">Museum case empty</h5>
+                    <p class="text-xs text-slate-450 max-w-xs mx-auto font-medium">Nobody has lost or found any ${type} items recently.</p>
+                </div>
+            `;
+        }
+
+        function renderAllItems(items) {
+            const lostItemsGrid = document.getElementById('lost-items-grid');
+            const foundItemsGrid = document.getElementById('found-items-grid');
+            const reunitedItemsGrid = document.getElementById('reunited-items-grid');
+
+            lostItemsGrid.innerHTML = '';
+            foundItemsGrid.innerHTML = '';
+            reunitedItemsGrid.innerHTML = '';
+
+            let lostCount = 0;
+            let foundCount = 0;
+            let reunitedCount = 0;
+
+            items.forEach(item => {
+                const card = createItemCard(item);
+                if (item.status === 'claimed') {
+                    reunitedItemsGrid.appendChild(card);
+                    reunitedCount++;
+                } else if (item.itemType === 'lost') {
+                    lostItemsGrid.appendChild(card);
+                    lostCount++;
+                } else {
+                    foundItemsGrid.appendChild(card);
+                    foundCount++;
+                }
+            });
+
+            document.getElementById('count-lost').textContent = lostCount;
+            document.getElementById('count-found').textContent = foundCount;
+            document.getElementById('count-reunited').textContent = reunitedCount;
+
+            if (lostCount === 0) {
+                lostItemsGrid.innerHTML = renderEmptyState('lost');
+            }
+            if (foundCount === 0) {
+                foundItemsGrid.innerHTML = renderEmptyState('found');
+            }
+            if (reunitedCount === 0) {
+                reunitedItemsGrid.innerHTML = renderEmptyState('reunited');
+            }
+        }
+
+        // =======================================
+        // Pinterest Masonry Item Card
+        // =======================================
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'break-inside-avoid bg-white dark:bg-darkCard rounded-2xl border border-slate-200/80 dark:border-white/5 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col p-4 mb-6 relative';
+
+            // Split dynamic comma-separated images
+            const images = item.image ? item.image.split(',') : [];
+            const hasRealImage = images.length > 0 && images[0].startsWith('http');
+            const imageUrl = hasRealImage ? images[0] : '';
+            
+            // Render indicator badge for multiple images
+            const multipleBadge = images.length > 1
+                ? `<span class="absolute top-3 right-3 z-10 text-[9px] font-bold px-2 py-0.5 rounded-full bg-slate-900/60 text-white flex items-center gap-1 shadow"><i class="fa-solid fa-images"></i>+${images.length - 1}</span>`
+                : '';
+
+            const itemDate = new Date(item.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            const userName = item.user ? item.user.name : 'Classmate';
+            const wittySubtitle = getWittySubtitle(item);
+
+            let statusText = '';
+            let labelStyle = '';
+            let btnStyle = '';
+            let btnText = '';
+
+            if (item.status === 'claimed') {
+                statusText = 'REUNITED';
+                labelStyle = 'text-amber-600 bg-amber-50 dark:bg-amber-950/20 dark:text-amber-400';
+                btnStyle = 'text-amber-605 bg-amber-50/50 dark:bg-amber-950/10 cursor-not-allowed border-transparent';
+                btnText = 'Reunited 🎉';
+            } else if (item.itemType === 'lost') {
+                statusText = 'LOST';
+                labelStyle = 'text-rose-550 bg-rose-50 dark:bg-rose-950/20 dark:text-rose-450';
+                btnStyle = 'text-rose-500 border-rose-200 hover:bg-rose-500 hover:text-white dark:border-rose-900/30 dark:hover:bg-rose-500/20';
+                btnText = 'I Found This';
+            } else {
+                statusText = 'FOUND';
+                labelStyle = 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-450';
+                btnStyle = 'text-emerald-600 border-emerald-200 hover:bg-emerald-500 hover:text-white dark:border-emerald-900/30 dark:hover:bg-emerald-500/20';
+                btnText = 'Claim Belonging';
+            }
+
+            const coverGradient = item.status === 'claimed'
+                ? 'from-amber-400/10 to-amber-600/10 text-amber-500'
+                : item.itemType === 'lost'
+                    ? 'from-rose-400/10 to-rose-600/10 text-rose-500'
+                    : 'from-emerald-400/10 to-emerald-600/10 text-emerald-500';
+
+            const imageMarkup = hasRealImage
+                ? `
+                    <div class="relative w-full overflow-hidden rounded-xl mb-4">
+                        ${multipleBadge}
+                        <img src="${imageUrl}" alt="${item.itemName}" class="w-full h-auto max-h-[280px] object-cover rounded-xl transition-all">
+                    </div>
+                  `
+                : `
+                    <div class="w-full h-28 bg-gradient-to-br ${coverGradient} flex flex-col items-center justify-center gap-2 rounded-xl mb-4">
+                        <i class="fa-solid ${item.category === 'electronics' ? 'fa-laptop' : item.category === 'jewelry' ? 'fa-ring' : item.category === 'documents' ? 'fa-file-signature' : item.category === 'clothing' ? 'fa-shirt' : item.category === 'bags' ? 'fa-wallet' : item.category === 'keys' ? 'fa-key' : 'fa-box'} text-xl"></i>
+                        <span class="text-[9px] font-bold uppercase tracking-wider opacity-60">${item.category || 'Object'}</span>
+                    </div>
+                `;
+
+            // Prepare safe escape characters for modal handler
+            const safeItemName = item.itemName.replace(/'/g, "\\'");
+            const safeContact = (item.contact || 'No contact info').replace(/'/g, "\\'");
+            const safeStorage = (item.storageLocation || '').replace(/'/g, "\\'");
+            const safeImages = (item.image || '').replace(/'/g, "\\'");
+
+            card.innerHTML = `
+                <!-- Badge -->
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${labelStyle}">${statusText}</span>
+                    <span class="text-[9px] text-slate-400 flex items-center gap-1 font-semibold"><i class="fa-regular fa-clock"></i>${itemDate}</span>
+                </div>
+                
+                <!-- Hero Image -->
+                ${imageMarkup}
+
+                <!-- Body Info -->
+                <div class="space-y-3 flex-1 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-display font-bold text-slate-900 dark:text-white text-base">${item.itemName}</h4>
+                        <!-- Witty Caption -->
+                        <div class="text-[11px] font-handwritten text-violetAccent dark:text-pinkAccent font-bold mt-0.5">${wittySubtitle}</div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-2">${item.description}</p>
+                    </div>
+                    
+                    <div class="pt-3 border-t border-slate-100 dark:border-white/5 space-y-1.5 text-[11px] text-slate-400 dark:text-slate-500">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot w-3"></i>
+                            <span class="line-clamp-1">${item.location}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-user w-3"></i>
+                            <span class="line-clamp-1">By: ${userName}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <div class="pt-2">
+                        <button onclick="openContactModal('${safeItemName}', '${safeContact}', '${safeStorage}', '${item.itemType}', '${item.status}', '${safeImages}')" class="w-full py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider border transition-all ${btnStyle}" ${item.status === 'claimed' ? 'disabled' : ''}>
+                            ${btnText}
+                        </button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // =======================================
+        // FORM SUBMISSION HANDLERS
+        // =======================================
+        async function handleLostFormSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitButton = document.getElementById('lost-submit-btn');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Reporting...';
+
+            try {
+                const formData = {
+                    itemType: 'lost',
+                    itemName: document.getElementById('item-name').value,
+                    category: document.getElementById('category').value,
+                    // Send comma-separated uploaded image URLs
+                    image: lostUploadedUrls.map(item => item.url).join(','),
+                    description: document.getElementById('description').value,
+                    location: document.getElementById('lost-location').value,
+                    date: document.getElementById('lost-date').value,
+                    contact: document.getElementById('contact').value
+                };
+
+                if (!formData.itemName || !formData.description || !formData.location) {
+                    throw new Error('Please fill out Item Name, Description, and Location.');
+                }
+
+                const data = await apiFetch('/api/lnf', 'POST', formData, currentToken);
+                if (data.success) {
+                    alert('Item reported successfully!');
+                    form.reset();
+                    lostUploadedUrls = [];
+                    document.getElementById('lost-thumbnails-container').innerHTML = '';
+                    toggleReportDrawer(false);
+                    loadItems();
+                }
+            } catch (err) {
+                alert(`Error reporting item: ${err.message}`);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Report';
+            }
+        }
+
+        async function handleFoundFormSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitButton = document.getElementById('found-submit-btn');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Reporting...';
+
+            try {
+                const formData = {
+                    itemType: 'found',
+                    itemName: document.getElementById('found-item-name').value,
+                    category: document.getElementById('found-category').value,
+                    // Send comma-separated uploaded image URLs
+                    image: foundUploadedUrls.map(item => item.url).join(','),
+                    description: document.getElementById('found-description').value,
+                    location: document.getElementById('found-location').value,
+                    date: document.getElementById('found-date').value,
+                    contact: document.getElementById('found-contact').value,
+                    storageLocation: document.getElementById('storage-location').value
+                };
+
+                if (!formData.itemName || !formData.description || !formData.location) {
+                    throw new Error('Please fill out Item Name, Description, and Location.');
+                }
+
+                const data = await apiFetch('/api/lnf', 'POST', formData, currentToken);
+                if (data.success) {
+                    alert('Item reported successfully!');
+                    form.reset();
+                    foundUploadedUrls = [];
+                    document.getElementById('found-thumbnails-container').innerHTML = '';
+                    toggleReportDrawer(false);
+                    loadItems();
+                }
+            } catch (err) {
+                alert(`Error reporting item: ${err.message}`);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Report';
+            }
+        }
+    </script>
 </body>
 </html>

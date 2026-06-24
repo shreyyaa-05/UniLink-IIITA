@@ -9,6 +9,7 @@ dotenv.config(); // Load .env variables
 const connectDB = async () => {
     try {
         // We removed the deprecated options
+        console.log(process.env.MONGO_URI);
         const conn = await mongoose.connect(process.env.MONGO_URI);
         console.log(`MongoDB Connected... 💾`);
 

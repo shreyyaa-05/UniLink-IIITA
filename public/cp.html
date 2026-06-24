@@ -3,1515 +3,1243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniLink | IIIT Ride Sharing</title>
+    <title>IIITA Ride Sharing - UniLink</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-purple: #8b6bc9;
-            --light-purple: #c5b4e3;
-            --dark-purple: #826fa7;
-            --accent-purple: #9d84d6;
-            --background: #f8f4ff;
-            --card-bg: #ffffff;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --border: #e0d0f5;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-           background: linear-gradient(rgba(150, 150, 194, 0.5), rgba(167, 167, 180, 0.5)), url('bg2.png');
-            background-color: var(--background);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        /* Updated Header Styles */
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-purple);
-            text-decoration: none;
-        }
-        
-        .logo-img {
-            height: 40px;
-            width: auto;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-        
-        nav a {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 8px 0;
-            position: relative;
-        }
-        
-        nav a:hover, nav a.active {
-            color: var(--primary-purple);
-        }
-        
-        nav a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary-purple);
-            border-radius: 3px;
-        }
-        
-        .user-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .btn {
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--primary-purple);
-            color: var(--primary-purple);
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary-purple);
-            color: white;
-        }
-        
-        .btn-primary {
-            background: var(--primary-purple);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--dark-purple);
-        }
-        
-        .logout-button {
-            background: transparent;
-            border: 2px solid #ef4444;
-            color: #ef4444;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .logout-button:hover {
-            background-color: rgba(239, 68, 68, 0.1);
+    <!-- Google Fonts: Bricolage Grotesque (Playful & Bold Display) and Plus Jakarta Sans (Sleek UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    
+    <script>
+        // Check local theme storage
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
 
-        /* Hero Section */
-        .hero {
-            padding: 80px 0;
-            text-align: center;
-            background-size: cover;
-            background-position: center;
-            color: white;
-            border-radius: 0 0 20px 20px;
-            margin-bottom: 40px;
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        handwritten: ['"Caveat"', 'cursive'],
+                    },
+                    colors: {
+                        darkBg: '#0F1117',
+                        darkCard: '#181B25',
+                        bgLight: '#FAF8F4',
+                        cardLight: '#FFFFFF',
+                        borderLight: '#EAE6E0',
+                        // Intent-based journey colors
+                        intentCoral: '#E07A5F',
+                        intentIndigo: '#1E3A8A',
+                        intentTeal: '#2E8B9A',
+                        intentMaroon: '#9A3B3B',
+                        intentMustard: '#C68A3B',
+                        intentNavy: '#1E293B',
+                        // Functional
+                        warmAccent: '#1E3A8A',
+                        warmAccentHover: '#1E40AF',
+                    }
+                }
+            }
         }
-        
-        .hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 15px;
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
+
+        .font-display {
+            font-family: 'Bricolage Grotesque', sans-serif;
         }
-        
-        .search-box {
-            background: white;
-            border-radius: 30px;
-            padding: 10px;
-            max-width: 700px;
-            margin: 0 auto;
-            display: flex;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
         }
-        
-        .search-box input {
-            flex: 1;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 30px;
-            outline: none;
+
+        /* Nav panel glassmorphism */
+        .nav-glass {
+            background: rgba(250, 248, 244, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(234, 230, 224, 0.6);
         }
-        
-        .search-box button {
-            background: var(--primary-purple);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 500;
+        html.dark .nav-glass {
+            background: rgba(15, 17, 23, 0.88);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        /* Main Content */
-        .main-content {
-            display: flex;
-            gap: 30px;
-            margin: 40px 0;
+
+        /* Ambient route overlay */
+        .ambient-svg {
+            opacity: 0.045;
         }
-        
-        /* Filters Sidebar */
-        .filters {
-            flex: 1;
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            height: fit-content;
+        html.dark .ambient-svg {
+            opacity: 0.025;
         }
-        
-        .filters h2 {
-            margin-bottom: 20px;
-            color: var(--primary-purple);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-        }
-        
-        .filter-group {
-            margin-bottom: 20px;
-        }
-        
-        .filter-group h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: var(--text-light);
-        }
-        
-        .filter-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .filter-option {
-            padding: 8px 15px;
-            background: var(--background);
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .filter-option:hover, .filter-option.active {
-            background: var(--primary-purple);
-            color: white;
-        }
-        
-        /* Time Range Slider Styles */
-        .time-range-container {
-            margin-top: 15px;
-        }
-        
-        .slider-container {
-            position: relative;
-            height: 40px;
-            margin: 20px 0;
-        }
-        
-        .slider-track {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: var(--border);
-            border-radius: 3px;
-            transform: translateY(-50%);
-        }
-        
-        .slider-range {
-            position: absolute;
-            top: 50%;
-            height: 6px;
-            background: var(--primary-purple);
-            border-radius: 3px;
-            transform: translateY(-50%);
-        }
-        
-        .slider-thumb {
-            position: absolute;
-            top: 50%;
-            width: 20px;
-            height: 20px;
-            background: var(--primary-purple);
-            border-radius: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .slider-thumb:hover {
-            transform: translateY(-50%) scale(1.1);
-        }
-        
-        .time-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 14px;
-            color: var(--text-light);
-        }
-        
-        .time-display {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: 500;
-            color: var(--primary-purple);
-            background: var(--background);
-            padding: 10px;
-            border-radius: 8px;
-        }
-        
-        /* Ride Listings */
-        .ride-listings {
-            flex: 2;
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .section-header h2 {
-            color: var(--primary-purple);
-        }
-        
-        .sort-options select {
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: white;
-            outline: none;
-        }
-        
-        .ride-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-            border-left: 4px solid var(--primary-purple);
-        }
-        
-        .ride-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .ride-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-        
-        .rider-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--light-purple);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
-        }
-        
-        .rider-details h3 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-        
-        .rider-details p {
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        
-        .ride-meta {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-light);
-        }
-        
-        .route {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: var(--background);
-            border-radius: 10px;
-        }
-        
-        .route-point {
-            flex: 1;
-        }
-        
-        .route-point h4 {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-bottom: 5px;
-        }
-        
-        .route-point p {
-            font-weight: 500;
-        }
-        
-        .route-divider {
-            width: 30px;
-            height: 2px;
-            background: var(--light-purple);
-            margin: 0 10px;
-        }
-        
-        .ride-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
-        }
-        
-        .ride-cost {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-purple);
-        }
-        
-        .seats {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .seat-icon {
-            color: var(--text-light);
-            font-size: 18px;
-        }
-        
-        .seat-icon.filled {
-            color: var(--primary-purple);
-        }
-        
-        .owner-controls {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        
-        /* Request Ride Modal */
-        .modal {
+
+        /* Custom scrollbar for horizontal chips */
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .filter-chip-active {
+            background-color: #1E3A8A !important;
+            color: white !important;
+            border-color: #1E3A8A !important;
+        }
+        html.dark .filter-chip-active {
+            background-color: #3B82F6 !important;
+            color: white !important;
+            border-color: #3B82F6 !important;
+        }
+
+        /* Intent color card borders */
+        .intent-coral { border-left: 3px solid #E07A5F; }
+        .intent-indigo { border-left: 3px solid #1E3A8A; }
+        .intent-teal { border-left: 3px solid #2E8B9A; }
+        .intent-maroon { border-left: 3px solid #9A3B3B; }
+        .intent-mustard { border-left: 3px solid #C68A3B; }
+        .intent-navy { border-left: 3px solid #1E293B; }
+        .intent-default { border-left: 3px solid #94A3B8; }
+
+        .intent-dot-coral { background-color: #E07A5F; }
+        .intent-dot-indigo { background-color: #1E3A8A; }
+        .intent-dot-teal { background-color: #2E8B9A; }
+        .intent-dot-maroon { background-color: #9A3B3B; }
+        .intent-dot-mustard { background-color: #C68A3B; }
+        .intent-dot-navy { background-color: #1E293B; }
+        .intent-dot-default { background-color: #94A3B8; }
+
+        /* Toast notification */
+        .toast-notification {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
+            top: 80px;
+            right: 24px;
+            z-index: 9999;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateX(120%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            max-width: 360px;
         }
-        
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-height: 90vh;
-            overflow-y: auto;
+        .toast-notification.show {
+            transform: translateX(0);
         }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .toast-notification.success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
         }
-        
-        .modal-header h2 {
-            color: var(--primary-purple);
+        .toast-notification.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
         }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-light);
+        html.dark .toast-notification.success {
+            background: #064e3b;
+            color: #a7f3d0;
+            border-color: #065f46;
         }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            outline: none;
-            transition: border 0.3s ease;
-        }
-        
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--primary-purple);
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        /* Post Request Section */
-        .post-request-section {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--accent-purple);
-        }
-        
-        .post-request-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .post-request-header h2 {
-            color: var(--primary-purple);
-        }
-        
-        .post-request-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .request-card {
-            background: var(--background);
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .request-info h3 {
-            margin-bottom: 5px;
-            color: var(--text-dark);
-        }
-        
-        .request-info p {
-            color: var(--text-light);
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        
-        .request-meta {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
-        .request-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            color: var(--text-light);
-        }
-        
-        .request-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--dark-purple);
-            color: white;
-            padding: 40px 0 20px;
-            margin-top: 60px;
-        }
-        
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .footer-section h3 {
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
-        
-        .footer-section ul {
-            list-style: none;
-        }
-        
-        .footer-section ul li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-section a {
-            color: #e0d0f5;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .footer-section a:hover {
-            color: white;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-        
-        .social-links a:hover {
-            background: var(--accent-purple);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e0d0f5;
-            font-size: 14px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .main-content {
-                flex-direction: column;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            nav ul {
-                gap: 15px;
-            }
-            
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .ride-footer {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
-            
-            .owner-controls {
-                width: 100%;
-                justify-content: flex-end;
-            }
-            
-            .request-card {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .request-actions {
-                width: 100%;
-                justify-content: flex-end;
-            }
+        html.dark .toast-notification.error {
+            background: #7f1d1d;
+            color: #fecaca;
+            border-color: #991b1b;
         }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="main.html" class="logo">
-                    <!-- ADD YOUR LOGO HERE - Replace 'logonew.png' with your actual logo file -->
-                    <img src="logonew.png" alt="UniLink Logo" class="logo-img">
-                    <span>UniLink</span>
-                </a>
-                <nav>
-                    <ul>
-                        <li><a href="main.html" class="active">Home</a></li>
-                        <li><a href="contactus.html">Contact</a></li>
-                        <li><a href="faq.html">FAQ</a></li>
-                         <li><a href="profile.html">Profile</a></li>
-                    </ul>
-                </nav>
-                <div class="user-actions">
-                    <!-- Only show logout button since user must be logged in to access this page -->
-                    <button class="logout-button" id="logoutBtn">LOGOUT</button>
+<body class="bg-bgLight text-slate-800 dark:bg-darkBg dark:text-slate-100 transition-colors duration-300 min-h-screen relative font-sans">
+
+    <!-- Ambient warm grid background -->
+    <div class="fixed inset-0 pointer-events-none z-0 ambient-svg">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="bg-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#C4B5A3" stroke-width="0.4" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#bg-grid)" />
+            
+            <!-- Subtle route lines in warm tones -->
+            <path d="M 100,200 Q 300,200 350,350 T 600,500" stroke="#C4B5A3" stroke-width="0.8" fill="none" stroke-dasharray="6,6" />
+            <path d="M 800,100 Q 900,300 850,500" stroke="#C4B5A3" stroke-width="0.8" fill="none" stroke-dasharray="4,8" />
+        </svg>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="nav-glass fixed w-full z-40 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <a href="main.html" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-warmAccent to-blue-500 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-link text-white text-lg"></i>
+                        </div>
+                        <span class="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-warmAccent transition-colors duration-300">UniLink</span>
+                    </a>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="main.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white transition-colors">Home</a>
+                    <a href="contactus.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white transition-colors">Contact</a>
+                    <a href="faq.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white transition-colors">FAQ</a>
+                    <a href="profile.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white transition-colors">Profile</a>
+                    
+                    <!-- Settings Toggle Dropdown -->
+                    <div class="relative">
+                        <button id="settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white p-2.5 rounded-xl hover:bg-slate-200/40 dark:hover:bg-white/5 transition-all focus:outline-none" title="Settings">
+                            <i class="fa-solid fa-gear text-lg"></i>
+                        </button>
+                        
+                        <div id="settings-dropdown" class="hidden absolute right-0 top-14 w-56 p-4 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 shadow-xl z-50 backdrop-blur-xl transition-all duration-200">
+                            <h4 class="font-display font-bold text-slate-800 dark:text-white text-sm mb-3">Settings</h4>
+                            <div class="flex items-center justify-between border-t border-slate-100 dark:border-white/5 pt-3">
+                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Dark Theme</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="dark-theme-toggle" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-warmAccent"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="flex items-center gap-4 border-l border-slate-200 dark:border-white/10 pl-6">
+                        <a href="#" onclick="logout(); return false;" class="text-sm font-semibold text-rose-600 hover:bg-rose-50 dark:text-rose-450 dark:hover:bg-white/5 border border-rose-200 dark:border-rose-450/20 py-2 px-4 rounded-full transition-all">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+ 
+                <!-- Mobile Menu Toggles -->
+                <div class="md:hidden flex items-center gap-2">
+                    <button id="mobile-settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-gear text-lg"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-slate-600 hover:text-slate-900 dark:text-slate-350 dark:hover:text-white focus:outline-none p-2 rounded-lg">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <h1>IIIT Allahabad</h1>
-            <p>Where Excellence Meets Innovation. Join our community of students helping students.</p>
-            <div class="search-box">
-                <input type="text" placeholder="Where do you want to go?">
-                <button><i class="fas fa-search"></i> Search</button>
+ 
+        <!-- Mobile Panels -->
+        <div id="mobile-settings-panel" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-bgLight/95 dark:bg-darkBg/95 backdrop-blur-xl p-4 flex justify-between items-center">
+            <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">Dark Theme</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="mobile-dark-theme-toggle" class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-warmAccent"></div>
+            </label>
+        </div>
+ 
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-bgLight/95 dark:bg-darkBg/95 backdrop-blur-xl">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="main.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Home</a>
+                <a href="contactus.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Contact</a>
+                <a href="faq.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">FAQ</a>
+                <a href="profile.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Profile</a>
+                <div class="pt-4 border-t border-slate-200/50 dark:border-white/5 mt-4">
+                    <a href="#" onclick="logout(); return false;" class="block text-center w-full px-4 py-2.5 rounded-xl text-base font-semibold text-rose-600 dark:text-rose-450 border border-rose-200 dark:border-rose-450/20 hover:bg-rose-50 dark:hover:bg-white/5 transition-all">
+                        Logout
+                    </a>
+                </div>
             </div>
         </div>
-    </section>
-
-    <!-- Main Content -->
-    <div class="container">
-        <div class="main-content">
-            <!-- Filters Sidebar -->
-            <div class="filters">
-                <h2>Filters</h2>
-                
-                <div class="filter-group">
-                    <h3>Vehicle Type</h3>
-                    <div class="filter-options">
-                        <div class="filter-option active" data-filter="vehicle" data-value="all">Any</div>
-                        <div class="filter-option" data-filter="vehicle" data-value="car">Car</div>
-                        <div class="filter-option" data-filter="vehicle" data-value="bike">Bike</div>
-                        <div class="filter-option" data-filter="vehicle" data-value="auto">Auto</div>
-                    </div>
-                </div>
-                
-                <div class="filter-group">
-                    <h3>Date</h3>
-                    <div class="filter-options">
-                        <div class="filter-option active" data-filter="date" data-value="all">Any</div>
-                        <div class="filter-option" data-filter="date" data-value="today">Today</div>
-                        <div class="filter-option" data-filter="date" data-value="tomorrow">Tomorrow</div>
-                        <div class="filter-option" data-filter="date" data-value="week">This Week</div>
-                    </div>
-                </div>
-                
-                <div class="filter-group">
-                    <h3>Time Range</h3>
-                    <div class="time-range-container">
-                        <div class="slider-container">
-                            <div class="slider-track"></div>
-                            <div class="slider-range" id="sliderRange"></div>
-                            <div class="slider-thumb" id="thumbStart"></div>
-                            <div class="slider-thumb" id="thumbEnd"></div>
-                        </div>
-                        <div class="time-labels">
-                            <span>12 AM</span>
-                            <span>6 AM</span>
-                            <span>12 PM</span>
-                            <span>6 PM</span>
-                            <span>12 AM</span>
-                        </div>
-                        <div class="time-display" id="timeDisplay">
-                            Selected Time Range: 4:00 PM - 6:00 PM
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="filter-group">
-                    <h3>Budget</h3>
-                    <div class="filter-options">
-                        <div class="filter-option active" data-filter="budget" data-value="all">Any</div>
-                        <div class="filter-option" data-filter="budget" data-value="100">Under ₹100</div>
-                        <div class="filter-option" data-filter="budget" data-value="200">₹100-₹200</div>
-                        <div class="filter-option" data-filter="budget" data-value="201">₹200+</div>
-                    </div>
-                </div>
-                
-                <button class="btn btn-primary" id="applyFilters" style="width: 100%; margin-top: 20px;">Apply Filters</button>
-                <button class="btn btn-outline" id="resetFilters" style="width: 100%; margin-top: 10px;">Reset Filters</button>
+    </nav>
+ 
+    <!-- Main Content wrapper -->
+    <div class="pt-16 min-h-screen relative z-10">
+        
+        <!-- HERO SECTION (STUDENT GROUP CHAT METAPHOR) -->
+        <header class="max-w-4xl mx-auto px-6 py-16 text-center space-y-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-primaryAmber/5 border border-primaryAmber/10 dark:bg-primaryAmber/10 dark:border-primaryAmber/20 rounded-full text-xs font-bold text-primaryAmber tracking-wide uppercase select-none">
+                💬 Hostel Chat becomes feature
             </div>
             
-            <!-- Ride Listings -->
-            <div class="ride-listings">
-                <!-- Post Request Section -->
-                <div class="post-request-section">
-                    <div class="post-request-header">
-                        <h2>Looking for a Ride?</h2>
-                        <button class="btn btn-primary" id="postRequestBtn">Post Ride Request</button>
-                    </div>
-                    <div class="post-request-content" id="requestsContainer">
-                        <!-- Ride requests will be dynamically inserted here -->
-                    </div>
+            <h1 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl tracking-tight leading-[1.15] text-slate-900 dark:text-white">
+                The group chat said,<br>
+                <span class="bg-gradient-to-r from-primaryAmber to-lightAmber bg-clip-text text-transparent font-handwritten text-4xl sm:text-5xl md:text-6xl select-none block my-1">"Anyone going?"</span>
+                UniLink made it a feature.
+            </h1>
+            
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-medium max-w-xl mx-auto leading-relaxed">
+                Share rides, split costs, and get where you need to go with people already headed that way.
+            </p>
+ 
+            <p class="text-xs text-slate-500 dark:text-slate-500 max-w-lg mx-auto">
+                From Gate 1 to Civil Lines, Prayagraj Junction to the airport — IIIT students have been coordinating rides forever. UniLink just made it easier.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4 pt-2">
+                <button onclick="scrollToContainer('available-rides-anchor')" class="px-6 py-3 bg-primaryAmber hover:bg-darkAmber hover:scale-[1.02] text-white font-semibold rounded-xl transition-all duration-200 text-xs shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Find a Ride
+                </button>
+                <button onclick="openOfferModal()" class="px-6 py-3 bg-white border border-slate-200 hover:bg-slate-50 dark:bg-darkCard dark:border-white/10 dark:text-white dark:hover:bg-white/5 font-semibold rounded-xl transition-all duration-200 text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-[10px] text-slate-400"></i> I've Got Empty Seats
+                </button>
+            </div>
+        </header>
+ 
+        <!-- POPULAR ROUTES SECTIONS (QUICK ROUTE CHIPS) -->
+        <section class="max-w-7xl mx-auto px-6 py-6 border-y border-slate-200/50 dark:border-white/5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h3 class="text-xs font-bold text-slate-400 dark:text-slate-550 uppercase tracking-widest shrink-0">Popular Routes</h3>
+                <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-1 scroll-smooth">
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Civil Lines">IIITA → Civil Lines</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Prayagraj Junction">IIITA → Prayagraj Junction</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Airport">IIITA → Airport</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Sangam">IIITA → Sangam</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Katra Market">IIITA → Katra Market</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Phoenix Mall">IIITA → Phoenix Mall</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="Health Centre">IIITA → Health Centre</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="IIITA" data-end="New Lecture Complex">IIITA → New Lecture Complex</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="Girls Hostel" data-end="Main Gate">Girls Hostel → Main Gate</button>
+                    <button class="route-chip px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 hover:border-primaryAmber hover:text-primaryAmber dark:hover:text-accentAmber transition-all" data-start="Boys Hostel" data-end="SAC">Boys Hostel → SAC</button>
                 </div>
+            </div>
+        </section>
+ 
+        <!-- PORTAL GRID CONTAINER -->
+        <main class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8" id="available-rides-anchor">
+            
+            <!-- Sticky Search / Filters Panel -->
+            <aside class="lg:col-span-4 space-y-6">
                 
-                <div class="section-header">
-                    <h2>Available Rides</h2>
-                    <button class="btn btn-primary" id="openOfferModalBtn">Offer a Ride</button>
-                    <div class="sort-options">
-                        <select id="sortRides">
-                            <option value="none">Sort by: None</option>
-                            <option value="latest">Sort by: Latest</option>
-                            <option value="cheapest">Sort by: Cheapest</option>
-                            <option value="nearest">Sort by: Nearest</option>
+                <!-- Compact Sticky Search box -->
+                <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-5 space-y-4 shadow-sm sticky top-20">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display font-bold text-base text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-sliders text-primaryAmber"></i> Filters
+                        </h3>
+                        <button onclick="resetFilters()" class="text-xs text-slate-400 dark:text-slate-550 hover:text-primaryAmber font-bold">Reset</button>
+                    </div>
+ 
+                    <!-- Search Input -->
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Where are you heading?</label>
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="Search destinations..." class="w-full py-2.5 pl-9 pr-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                            <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <!-- Campus Vehicle Filters -->
+                    <div class="space-y-1.5">
+                        <label class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Vehicle Type</label>
+                        <div class="grid grid-cols-3 gap-2" id="vehicle-filter-container">
+                            <button class="filter-option filter-chip-active py-2 rounded-xl text-[10px] font-bold border border-slate-200 dark:border-white/15 text-slate-650 bg-slate-50 dark:bg-slate-900" data-filter="vehicle" data-value="all">Any</button>
+                            <button class="filter-option py-2 rounded-xl text-[10px] font-bold border border-slate-200 dark:border-white/15 text-slate-650 bg-slate-50 dark:bg-slate-900" data-filter="vehicle" data-value="car">🚗 Car</button>
+                            <button class="filter-option py-2 rounded-xl text-[10px] font-bold border border-slate-200 dark:border-white/15 text-slate-650 bg-slate-50 dark:bg-slate-900" data-filter="vehicle" data-value="bike">🛵 Scooter</button>
+                            <button class="filter-option py-2 rounded-xl text-[10px] font-bold border border-slate-200 dark:border-white/15 text-slate-650 bg-slate-50 dark:bg-slate-900" data-filter="vehicle" data-value="auto">🛺 Auto</button>
+                            <button class="filter-option py-2 rounded-xl text-[10px] font-bold border border-slate-200 dark:border-white/15 text-slate-650 bg-slate-50 dark:bg-slate-900" data-filter="vehicle" data-value="other">🚴 Bike</button>
+                            <button class="filter-option py-2 rounded-xl text-[10px] font-bold border border-slate-200 dark:border-white/15 text-slate-650 bg-slate-50 dark:bg-slate-900" data-filter="vehicle" data-value="walking">🚶 Buddy</button>
+                        </div>
+                    </div>
+
+                    <!-- Campus Time Frame Filters -->
+                    <div class="space-y-1.5">
+                        <label class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Leaving Time</label>
+                        <div class="flex flex-wrap gap-2" id="time-filter-container">
+                            <button class="filter-option filter-chip-active px-2.5 py-1.5 rounded-lg text-[9px] font-bold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 text-slate-650" data-filter="time" data-value="all">Anytime</button>
+                            <button class="filter-option px-2.5 py-1.5 rounded-lg text-[9px] font-bold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 text-slate-650" data-filter="time" data-value="now">Leaving Now</button>
+                            <button class="filter-option px-2.5 py-1.5 rounded-lg text-[9px] font-bold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 text-slate-650" data-filter="time" data-value="30m">Within 30m</button>
+                            <button class="filter-option px-2.5 py-1.5 rounded-lg text-[9px] font-bold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 text-slate-650" data-filter="time" data-value="afterclass">After Classes</button>
+                            <button class="filter-option px-2.5 py-1.5 rounded-lg text-[9px] font-bold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 text-slate-650" data-filter="time" data-value="evening">Evening Outing</button>
+                            <button class="filter-option px-2.5 py-1.5 rounded-lg text-[9px] font-bold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 text-slate-650" data-filter="time" data-value="latenight">Late Night Return</button>
+                        </div>
+                    </div>
+
+                    <!-- Campus Budget Filter Options -->
+                    <div class="space-y-1.5">
+                        <label class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Share Budget</label>
+                        <div class="flex flex-col gap-2" id="budget-filter-container">
+                            <button class="filter-option filter-chip-active py-2 px-3 rounded-xl text-left text-[10px] font-semibold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 flex justify-between" data-filter="budget" data-value="all">
+                                <span>Any Budget</span>
+                            </button>
+                            <button class="filter-option py-2 px-3 rounded-xl text-left text-[10px] font-semibold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 flex justify-between" data-filter="budget" data-value="50">
+                                <span>☕ Tea Budget</span>
+                                <span class="text-slate-400">Under ₹50</span>
+                            </button>
+                            <button class="filter-option py-2 px-3 rounded-xl text-left text-[10px] font-semibold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 flex justify-between" data-filter="budget" data-value="150">
+                                <span>🍜 Food Run</span>
+                                <span class="text-slate-400">₹50–₹150</span>
+                            </button>
+                            <button class="filter-option py-2 px-3 rounded-xl text-left text-[10px] font-semibold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 flex justify-between" data-filter="budget" data-value="300">
+                                <span>🛍️ Civil Lines Trip</span>
+                                <span class="text-slate-400">₹150–₹300</span>
+                            </button>
+                            <button class="filter-option py-2 px-3 rounded-xl text-left text-[10px] font-semibold border border-slate-200 dark:border-white/15 bg-slate-50 dark:bg-slate-900 flex justify-between" data-filter="budget" data-value="301">
+                                <span>✈️ Airport Mission</span>
+                                <span class="text-slate-400">₹300+</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Gender Preference Selector -->
+                    <div class="space-y-1">
+                        <label for="gender-select" class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Gender Preference</label>
+                        <select id="gender-select" class="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                            <option value="any">Anyone</option>
+                            <option value="female">Female Only</option>
+                            <option value="male">Male Only</option>
                         </select>
                     </div>
+
+                    <button onclick="applyFilters()" class="w-full py-2.5 bg-primaryAmber hover:bg-darkAmber text-white font-bold rounded-xl text-xs shadow-md transition-all">Apply Filters</button>
                 </div>
+            </aside>
+
+            <!-- Ride Listings Column -->
+            <section class="lg:col-span-8 space-y-8">
                 
-                <div id="ridesContainer">
-                    <!-- Ride cards will be dynamically inserted here -->
+                <!-- ACTIVE REQUESTS CARD SECTION -->
+                <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 p-6 rounded-3xl space-y-4 shadow-sm">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-2">
+                        <div class="space-y-0.5">
+                            <h3 class="font-display font-bold text-base text-slate-900 dark:text-white">Looking for a Ride?</h3>
+                            <p class="text-[11px] text-slate-450 dark:text-slate-500">Missed the shuttle? Classmates looking to pool right now.</p>
+                        </div>
+                        <button onclick="openRequestModal()" class="px-3.5 py-1.5 bg-primaryAmber/5 border border-primaryAmber/10 hover:bg-primaryAmber/10 text-primaryAmber font-bold rounded-xl text-[10px] transition-all">Post Ride Request</button>
+                    </div>
+                    
+                    <div id="requestsContainer" class="flex flex-col gap-3">
+                        <!-- Dynamic request list container -->
+                    </div>
                 </div>
-            </div>
-        </div>
+
+                <!-- MAIN RIDE OFFERS CONTAINER -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="space-y-0.5">
+                            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-white">Available Rides</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Auto guy said ₹250. Let's find another plan.</p>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <select id="sortRides" class="py-1.5 px-3 rounded-xl bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 text-slate-650 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                                <option value="none">Sort by: Default</option>
+                                <option value="latest">Latest Offers</option>
+                                <option value="cheapest">Cheapest Share</option>
+                            </select>
+                            <button onclick="openOfferModal()" class="px-4 py-2 bg-primaryAmber hover:bg-darkAmber text-white font-bold rounded-xl text-xs shadow-md transition-all">Offer a Ride</button>
+                        </div>
+                    </div>
+
+                    <div id="ridesContainer" class="grid grid-cols-1 gap-4">
+                        <!-- Dynamic ride cards will list here -->
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- Request Ride Modal -->
-    <div class="modal" id="requestRideModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Offer a Ride</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="rideRequestForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="from">From</label>
-                        <input type="text" id="from" placeholder="Starting location" required>
+    <!-- POST A RIDE OFFER MODAL (CONVERSATIONAL INTERACTION) -->
+    <div class="modal fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden" id="requestRideModal">
+        <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-3xl w-full max-w-lg mx-4 space-y-6 border border-slate-200 dark:border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-white/5 pb-2">
+                <h3 class="font-display text-lg font-bold text-slate-900 dark:text-white">Offer Empty Seats</h3>
+                <button onclick="closeOfferModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white"><i            <form id="rideRequestForm" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label for="from" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Where are you starting from?</label>
+                        <input type="text" id="from" placeholder="e.g. Girls Hostel 1" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
-                    <div class="form-group">
-                        <label for="to">To</label>
-                        <input type="text" id="to" placeholder="Destination" required>
+                    <div class="space-y-1">
+                        <label for="to" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Where are you headed?</label>
+                        <input type="text" id="to" placeholder="e.g. Prayagraj Junction" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="date">Date</label>
-                        <input type="date" id="date" required>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label for="date" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Departure Date</label>
+                        <input type="date" id="date" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
-                    <div class="form-group">
-                        <label for="time">Time</label>
-                        <input type="time" id="time" required>
+                    <div class="space-y-1">
+                        <label for="time" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Departure Time</label>
+                        <input type="time" id="time" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="vehicle">Vehicle Type</label>
-                        <select id="vehicle" required>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label for="vehicle" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">What are you riding/driving?</label>
+                        <select id="vehicle" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                             <option value="">Select vehicle</option>
-                            <option value="car">Car</option>
-                            <option value="bike">Bike</option>
-                            <option value="auto">Auto</option>
+                            <option value="car">🚗 Car</option>
+                            <option value="bike">🛵 Scooter</option>
+                            <option value="auto">🛺 Auto</option>
+                            <option value="other">🚴 Other</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="seats">Seats Available</label>
-                        <input type="number" id="seats" min="1" max="10" placeholder="Number of seats" required>
+                    <div class="space-y-1">
+                        <label for="seats" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">How many empty seats?</label>
+                        <input type="number" id="seats" min="1" max="10" placeholder="e.g. 3" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="cost">Cost per Person (₹)</label>
-                    <input type="number" id="cost" placeholder="Estimated cost per person" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="details">Additional Details</label>
-                    <textarea id="details" rows="3" placeholder="Any specific requirements or details about the ride"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="contact">Contact Email</label>
-                    <input type="email" id="contact" placeholder="Your email for communication" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Ride Offer</button>
-            </form>
-            <<div class="ride-list-container" style="max-width: 800px; margin: 40px auto; padding: 20px;">
-    <h2 style="color: var(--text-dark); margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 10px; font-size: 1.75rem;">
-        Available Rides
-    </h2>
 
-    <div id="ride-list">
-        <p>Loading available rides...</p>
-    </div>
-</div>
-</div>
+                <div class="space-y-1">
+                    <label for="cost" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Cost sharing per person (₹)</label>
+                    <input type="number" id="cost" placeholder="e.g. 50 (Keep it fair)" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                </div>
+
+                <div class="space-y-1">
+                    <label for="details" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Any context? (Optional)</label>
+                    <textarea id="details" rows="2" placeholder="e.g. Going to Civil Lines after class if anyone wants to join." class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber"></textarea>
+                </div>
+
+                <div class="space-y-1">
+                    <label for="contact" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Your Contact Email</label>
+                    <input type="email" id="contact" placeholder="student@iiita.ac.in" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-primaryAmber hover:bg-darkAmber text-white font-bold rounded-xl text-xs shadow-md transition-all">Post Ride Offer</button>e/90 text-white font-bold rounded-xl text-xs shadow-md transition-all">Post Ride Offer</button>
+            </form>
         </div>
     </div>
 
-    <!-- Post Request Modal -->
-    <div class="modal" id="postRequestModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Post Ride Request</h2>
-                <button class="close-modal">&times;</button>
+    <!-- POST A RIDE REQUEST MODAL (CONVERSATIONAL INTERACTION) -->
+    <div class="modal fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden" id="postRequestModal">
+        <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-3xl w-full max-w-lg mx-4 space-y-6 border border-slate-200 dark:border-white/10 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center border-b border-slate-100 dark:border-white/5 pb-2">
+                <h3 class="font-display text-lg font-bold text-slate-900 dark:text-white">Ask classmates for a Ride</h3>
+                <button onclick="closeRequestModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <form id="postRequestForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="reqFrom">From</label>
-                        <input type="text" id="reqFrom" placeholder="Starting location" required>
+            
+            <form id="postRequestForm" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label for="reqFrom" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Starting point</label>
+                        <input type="text" id="reqFrom" placeholder="e.g. Boys Hostel 4" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
-                    <div class="form-group">
-                        <label for="reqTo">To</label>
-                        <input type="text" id="reqTo" placeholder="Destination" required>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="reqDate">Date</label>
-                        <input type="date" id="reqDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="reqTime">Preferred Time</label>
-                        <input type="time" id="reqTime" required>
+                    <div class="space-y-1">
+                        <label for="reqTo" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Destination</label>
+                        <input type="text" id="reqTo" placeholder="e.g. Civil Lines" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="prefVehicle">Preferred Vehicle Type</label>
-                        <select id="prefVehicle">
-                            <option value="any">Any</option>
-                            <option value="car">Car</option>
-                            <option value="bike">Bike</option>
-                            <option value="auto">Auto</option>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label for="reqDate" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Date</label>
+                        <input type="date" id="reqDate" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-750 dark:text-slate-350 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="reqTime" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Preferred time</label>
+                        <input type="time" id="reqTime" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-750 dark:text-slate-350 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label for="prefVehicle" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Preferred vehicle</label>
+                        <select id="prefVehicle" class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
+                            <option value="any">Any Vehicle</option>
+                            <option value="car">🚗 Car</option>
+                            <option value="bike">🛵 Scooter</option>
+                            <option value="auto">🛺 Auto</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="approxFare">Approximate Fare (₹)</label>
-                        <input type="number" id="approxFare" placeholder="Willing to pay up to" required>
+                    <div class="space-y-1">
+                        <label for="approxFare" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Willing to share up to (₹)</label>
+                        <input type="number" id="approxFare" placeholder="e.g. 100" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="passengers">Number of Passengers</label>
-                    <input type="number" id="passengers" min="1" max="10" placeholder="Number of people" required>
+
+                <div class="space-y-1">
+                    <label for="passengers" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Number of passengers</label>
+                    <input type="number" id="passengers" min="1" max="10" placeholder="e.g. 1" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                 </div>
-                
-                <div class="form-group">
-                    <label for="preferences">Preferences</label>
-                    <textarea id="preferences" rows="3" placeholder="Any specific preferences (e.g., female driver, AC car, etc.)"></textarea>
+
+                <div class="space-y-1">
+                    <label for="preferences" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Any preferences? (Optional)</label>
+                    <textarea id="preferences" rows="2" placeholder="e.g. Safe driver, carrying two small luggage bags." class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber"></textarea>
                 </div>
-                
-                <div class="form-group">
-                    <label for="reqContact">Contact Email</label>
-                    <input type="email" id="reqContact" placeholder="Your email for communication" required>
+
+                <div class="space-y-1">
+                    <label for="reqContact" class="text-[10px] font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Your Contact Email</label>
+                    <input type="email" id="reqContact" placeholder="student@iiita.ac.in" required class="w-full py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 text-xs focus:outline-none focus:border-primaryAmber focus:ring-1 focus:ring-primaryAmber">
                 </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Post Ride Request</button>
+
+                <button type="submit" class="w-full py-3 bg-primaryAmber hover:bg-darkAmber text-white font-bold rounded-xl text-xs shadow-md transition-all">Post Ride Request</button>
             </form>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>UniLink</h3>
-                    <p>Connecting IIIT students for shared transportation and cost savings.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 dark:border-white/5 relative z-10 mt-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-primaryAmber to-lightAmber flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-link text-white text-sm"></i>
+                        </div>
+                        <span class="font-display text-lg font-bold text-white tracking-tight">UniLink</span>
                     </div>
+                    <p class="text-xs text-slate-450 leading-relaxed">
+                        Connecting IIIT students for shared transportation and cost savings. Split the ride, not the stress.
+                    </p>
                 </div>
                 
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Modules</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">FAQ</a></li>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-white uppercase text-xs tracking-wider">Quick Links</h4>
+                    <ul class="space-y-1 text-xs">
+                        <li><a href="main.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="contactus.html" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="faq.html" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="profile.html" class="hover:text-white transition-colors">Profile</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <ul>
-                        <li><i class="fas fa-envelope"></i> contact@unilink.iiit.ac.in</li>
-                        <li><i class="fas fa-phone"></i> +91 98765 43210</li>
-                        <li><i class="fas fa-map-marker-alt"></i> IIIT Allahabad, India</li>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-white uppercase text-xs tracking-wider">IIIT Allahabad</h4>
+                    <ul class="space-y-1 text-xs text-slate-450">
+                        <li><i class="fas fa-envelope mr-1.5 text-primaryAmber"></i> contact@unilink.iiit.ac.in</li>
+                        <li><i class="fas fa-map-marker-alt mr-2 text-primaryAmber"></i> Prayagraj, UP, India</li>
                     </ul>
                 </div>
             </div>
             
-            <div class="copyright">
-                <p>&copy; 2023 UniLink - IIIT Ride Sharing Platform. All rights reserved.</p>
+            <div class="text-center pt-8 border-t border-slate-800 mt-8 text-xs text-slate-500">
+                <p>&copy; 2026 UniLink - IIIT Ride Sharing. Powered by students helping students.</p>
             </div>
         </div>
     </footer>
+
+    <!-- Axios Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    // Modal functionality for Post Request
-    // ===============================================
-    // 5. "POST A REQUEST" FORM LOGIC
-    // ===============================================
-    
-    const postRequestForm = document.getElementById('postRequestForm');
-    const postRequestModal = document.getElementById('postRequestModal');
+    <script>
+        const API_BASE_URL = '';
+        const authConfig = { headers: {} };
+        let allRides = [];
+        let allRequests = [];
+        let currentUser = null;
+        let token = null;
 
-    if (postRequestForm) {
-        postRequestForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Stop the form from reloading the page
+        // Settings togglers
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsDropdown = document.getElementById('settings-dropdown');
+        if (settingsToggleBtn) {
+            settingsToggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsDropdown.classList.toggle('hidden');
+            });
+        }
 
-            // Get data from the "Request" form
-            const requestData = {
-                startLocation: document.getElementById('reqFrom').value,
-                endLocation: document.getElementById('reqTo').value,
-                preferredDepartureTime: document.getElementById('reqDate').value + 'T' + document.getElementById('reqTime').value,
-                vehicleType: document.getElementById('prefVehicle').value,
-                approximateFare: document.getElementById('approxFare').value,
-                passengers: document.getElementById('passengers').value,
-                preferences: document.getElementById('preferences').value,
-                contact: document.getElementById('reqContact').value
-            };
+        const darkThemeToggle = document.getElementById('dark-theme-toggle');
+        if (darkThemeToggle) {
+            darkThemeToggle.checked = document.documentElement.classList.contains('dark');
+            darkThemeToggle.addEventListener('change', () => {
+                if (darkThemeToggle.checked) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
 
-            // Basic validation
-            if (!requestData.startLocation || !requestData.endLocation || !requestData.preferredDepartureTime || !requestData.contact) {
-                alert('Please fill in all required fields for your request.');
+        const mobileSettingsToggleBtn = document.getElementById('mobile-settings-toggle-btn');
+        const mobileSettingsPanel = document.getElementById('mobile-settings-panel');
+        if (mobileSettingsToggleBtn) {
+            mobileSettingsToggleBtn.addEventListener('click', () => {
+                mobileSettingsPanel.classList.toggle('hidden');
+            });
+        }
+
+        const mobileDarkThemeToggle = document.getElementById('mobile-dark-theme-toggle');
+        if (mobileDarkThemeToggle) {
+            mobileDarkThemeToggle.checked = document.documentElement.classList.contains('dark');
+            mobileDarkThemeToggle.addEventListener('change', () => {
+                if (mobileDarkThemeToggle.checked) {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+
+        const menuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        document.addEventListener('click', () => {
+            if (settingsDropdown) settingsDropdown.classList.add('hidden');
+        });
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'auth.html';
+        }
+
+        // Scroll
+        const scrollToContainer = (id) => {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Open/Close Modals
+        const openOfferModal = () => {
+            document.getElementById('requestRideModal').classList.remove('hidden');
+        };
+        const closeOfferModal = () => {
+            document.getElementById('requestRideModal').classList.add('hidden');
+        };
+        const openRequestModal = () => {
+            document.getElementById('postRequestModal').classList.remove('hidden');
+        };
+        const closeRequestModal = () => {
+            document.getElementById('postRequestModal').classList.add('hidden');
+        };
+
+        // Global Filter State
+        let currentFilters = {
+            vehicle: 'all',
+            time: 'all',
+            budget: 'all',
+            gender: 'any'
+        };
+
+        // Reset all filters
+        const resetFilters = () => {
+            currentFilters = { vehicle: 'all', time: 'all', budget: 'all', gender: 'any' };
+            document.getElementById('search-input').value = '';
+            document.getElementById('gender-select').value = 'any';
+            
+            // Remove active classes
+            document.querySelectorAll('.filter-option').forEach(btn => {
+                if (btn.getAttribute('data-value') === 'all') {
+                    btn.classList.add('filter-chip-active');
+                } else {
+                    btn.classList.remove('filter-chip-active');
+                }
+            });
+
+            document.querySelectorAll('.route-chip').forEach(btn => {
+                btn.classList.remove('filter-chip-active');
+            });
+
+            applyFilters();
+        };
+
+        // Setup filter click listeners
+        const initFilterListeners = () => {
+            document.querySelectorAll('.filter-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.getAttribute('data-filter');
+                    const val = this.getAttribute('data-value');
+
+                    // Handle sibling toggles
+                    const parent = this.parentNode;
+                    parent.querySelectorAll('.filter-option').forEach(sib => sib.classList.remove('filter-chip-active'));
+                    this.classList.add('filter-chip-active');
+
+                    currentFilters[type] = val;
+                });
+            });
+
+            // Popular Route Chips
+            document.querySelectorAll('.route-chip').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const isActive = this.classList.contains('filter-chip-active');
+                    
+                    document.querySelectorAll('.route-chip').forEach(c => c.classList.remove('filter-chip-active'));
+                    
+                    if (isActive) {
+                        document.getElementById('search-input').value = '';
+                    } else {
+                        this.classList.add('filter-chip-active');
+                        const destination = this.getAttribute('data-end');
+                        document.getElementById('search-input').value = destination;
+                    }
+
+                    applyFilters();
+                });
+            });
+        };
+
+        // Apply filters locally on rendered cards
+        const applyFilters = () => {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const gender = document.getElementById('gender-select').value;
+            const cards = document.querySelectorAll('.ride-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                let show = true;
+
+                const start = card.getAttribute('data-start').toLowerCase();
+                const end = card.getAttribute('data-end').toLowerCase();
+                const vehicle = card.getAttribute('data-vehicle');
+                const cost = parseInt(card.getAttribute('data-cost'));
+                const details = card.getAttribute('data-details').toLowerCase();
+                const hour = parseInt(card.getAttribute('data-hour'));
+                const driverGender = card.getAttribute('data-gender'); // Simulated/Calculated or fallbacks
+
+                // Text search query matches start, end, or details
+                if (query && !start.includes(query) && !end.includes(query) && !details.includes(query)) {
+                    show = false;
+                }
+
+                // Vehicle Type Filter
+                if (currentFilters.vehicle !== 'all' && vehicle !== currentFilters.vehicle) {
+                    show = false;
+                }
+
+                // Share Budget Filter
+                if (currentFilters.budget !== 'all') {
+                    const budgetVal = parseInt(currentFilters.budget);
+                    if (budgetVal === 50 && cost > 50) show = false;
+                    else if (budgetVal === 150 && (cost <= 50 || cost > 150)) show = false;
+                    else if (budgetVal === 300 && (cost <= 150 || cost > 300)) show = false;
+                    else if (budgetVal === 301 && cost <= 300) show = false;
+                }
+
+                // Time Filter Mapping
+                if (currentFilters.time !== 'all') {
+                    // leaving now/30m matches within the hour, afterclass is 4-6 PM, evening is 6-9 PM, latenight is 9PM-4AM
+                    const currentHour = new Date().getHours();
+                    if (currentFilters.time === 'now' || currentFilters.time === '30m') {
+                        if (Math.abs(hour - currentHour) > 1) show = false;
+                    } else if (currentFilters.time === 'afterclass') {
+                        if (hour < 16 || hour > 18) show = false;
+                    } else if (currentFilters.time === 'evening') {
+                        if (hour < 18 || hour > 21) show = false;
+                    } else if (currentFilters.time === 'latenight') {
+                        if (hour < 21 && hour > 4) show = false;
+                    }
+                }
+
+                // Gender filter check
+                if (gender !== 'any') {
+                    if (gender === 'female' && !details.includes('female') && !details.includes('girl')) {
+                        // Soft matching simulated check
+                    }
+                }
+
+                card.style.display = show ? 'block' : 'none';
+                if (show) visibleCount++;
+            });
+
+            // Render Empty State if no results matches
+            const container = document.getElementById('ridesContainer');
+                        if (visibleCount === 0) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.id = 'empty-listings-state';
+                emptyDiv.className = 'py-16 text-center space-y-4 bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-white/5 p-6';
+                emptyDiv.innerHTML = `
+                    <div class="w-12 h-12 bg-primaryAmber/5 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                        <i class="fa-solid fa-map-pin text-sm text-primaryAmber"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-slate-800 dark:text-white font-bold text-sm">Looks like nobody's headed there yet.</p>
+                        <p class="text-xs text-slate-450 dark:text-slate-500">Be the one who starts the plan.</p>
+                    </div>
+                    <button onclick="openOfferModal()" class="px-5 py-2 bg-primaryAmber hover:bg-darkAmber text-white font-bold rounded-xl text-xs transition-all shadow-sm">Offer a Ride</button>
+                `;
+                container.appendChild(emptyDiv);
+            }
+        };
+
+        // Renders ride list offers
+        const renderRidesList = (rides) => {
+            const container = document.getElementById('ridesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (rides.length === 0) {
+                container.innerHTML = `
+                    <div class="py-16 text-center space-y-4 bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-white/5 p-6">
+                        <div class="w-12 h-12 bg-primaryAmber/5 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                            <i class="fa-solid fa-car-side text-sm text-primaryAmber"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-slate-800 dark:text-white font-bold text-sm">Looks like nobody's headed there yet.</p>
+                            <p class="text-xs text-slate-450 dark:text-slate-500">Be the one who starts the plan.</p>
+                        </div>
+                        <button onclick="openOfferModal()" class="px-5 py-2 bg-primaryAmber hover:bg-darkAmber text-white font-bold rounded-xl text-xs transition-all">Offer a Ride</button>
+                    </div>
+                `;
                 return;
             }
 
-            try {
-                // Post to the NEW requests endpoint
-                // ** You will need to create this in your backend **
-                const response = await axios.post('/api/ride-requests', requestData, authConfig);
+            rides.forEach(ride => {
+                const card = document.createElement('div');
+                card.className = 'ride-card bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all duration-300';
+                
+                const initials = ride.user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                const departure = new Date(ride.departureTime);
+                const hour = departure.getHours();
+                const departureString = departure.toLocaleString('en-US', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
 
-                if (response.data && response.data.success) {
-                    alert('Ride request posted successfully!');
-                    postRequestModal.style.display = 'none'; // Close modal
-                    postRequestForm.reset(); // Clear the form
+                // Map vehicle icons
+                let vehicleIcon = '🛵';
+                if (ride.vehicleType === 'car') vehicleIcon = '🚗';
+                else if (ride.vehicleType === 'auto') vehicleIcon = '🛺';
+                else if (ride.vehicleType === 'other') vehicleIcon = '🚴';
 
-                    // Re-fetch and re-render the REQUESTS list
-                    const allRequests = await fetchAllRequests();
-                    renderRequests(allRequests);
-                } else {
-                    alert('Failed to post request: ' + (response.data.message || 'Unknown error'));
+                // Seats indicators dots
+                let seatDots = '';
+                for (let i = 0; i < 4; i++) {
+                    if (i < ride.seatsAvailable) {
+                        seatDots += `<span class="w-2.5 h-2.5 rounded-full bg-primaryAmber/30 border border-primaryAmber"></span>`;
+                    } else {
+                        seatDots += `<span class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-700"></span>`;
+                    }
                 }
-            } catch (error) {
-                const errorMsg = error.response ? error.response.data.message : error.message;
-                alert('Error posting request: ' + errorMsg);
-            }
-        });
-    }
-        // Filter functionality
-    const applyFiltersBtn = document.getElementById('applyFilters');
-if (applyFiltersBtn) {
-    applyFiltersBtn.addEventListener('click', function() {
-        applyFilters(); // This calls your correct, existing function from line 1257
-    });
-}
-    const resetFiltersBtn = document.getElementById('resetFilters');
-    const filterOptions = document.querySelectorAll('.filter-option');
-    
-    // Current filter state
-    let currentFilters = {
-        vehicle: 'all',
-        date: 'all',
-        budget: 'all',
-        timeRange: { start: 16, end: 18 } // Default: 4 PM - 6 PM
-    };
-    
-    // Apply filters when button is clicked
-    
-    
-    // Reset filters when button is clicked
-    if (resetFiltersBtn) {
-        resetFiltersBtn.addEventListener('click', function() {
-            resetFilters();
-        });
-    }
-        // Handle filter option clicks
-    filterOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const filterType = this.getAttribute('data-filter');
-            const filterValue = this.getAttribute('data-value');
-            
-            // Remove active class from siblings in the same filter group
-            const parent = this.closest('.filter-options');
-            const siblings = parent.querySelectorAll('.filter-option');
-            siblings.forEach(sib => sib.classList.remove('active'));
-            
-            // Add active class to clicked option
-            this.classList.add('active');
-            
-            // Update current filters
-            currentFilters[filterType] = filterValue;
-        });
-    });
-     // ADD applyFilters FUNCTION RIGHT HERE:
-    function applyFilters() {
-        // Get all ride cards
-        const rideCards = document.querySelectorAll('.ride-card');
-        let visibleCount = 0;
-        const rideListContainer = document.getElementById('ridesContainer');
-    const oldMessage = rideListContainer.querySelector('.no-results');
-    if (oldMessage) {
-        oldMessage.remove();
-    }
-        
-        rideCards.forEach(card => {
-            let shouldShow = true;
-            
-            // Get ride data from card attributes
-            const vehicleType = card.getAttribute('data-vehicle') || '';
-            const rideDate = card.getAttribute('data-date') || '';
-            const rideDay = card.getAttribute('data-day') || '';
-            const rideCost = parseInt(card.getAttribute('data-cost') || '0');
-            const rideTime = parseInt(card.getAttribute('data-time') || '0');
-            
-            // Vehicle filter
-            if (currentFilters.vehicle !== 'all' && vehicleType !== currentFilters.vehicle) {
-                shouldShow = false;
-            }
-            
-            // Date filter
-            if (currentFilters.date !== 'all' && currentFilters.date !== rideDay) {
-                shouldShow = false;
-            }
-            
-            // Budget filter
-            if (currentFilters.budget !== 'all') {
-                const budget = parseInt(currentFilters.budget);
-                if (budget === 100 && rideCost > 100) {
-                    shouldShow = false;
-                } else if (budget === 200 && (rideCost <= 100 || rideCost > 200)) {
-                    shouldShow = false;
-                } else if (budget === 201 && rideCost <= 200) {
-                    shouldShow = false;
-                }
-            }
-            
-            // Time range filter (using the default 4 PM - 6 PM)
-            // if (rideTime < currentFilters.timeRange.start || rideTime > currentFilters.timeRange.end) {
-            //     shouldShow = false;
-            // }
-            
-            // Show or hide the card
-            card.style.display = shouldShow ? 'block' : 'none';
-            if (shouldShow) visibleCount++;
-        });
-        
-        // Show message if no rides match filters
-        // REPLACE it with this:
-        // Show message if no rides match filters
-        if (visibleCount === 0) {
-            const noResults = document.createElement('div');
-            noResults.className = 'no-results'; // <-- This class is important
-            noResults.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 20px;">No rides match the selected filters. Try adjusting your criteria.</p>';
-            rideListContainer.appendChild(noResults);
-        }
-    }
 
-    // AND THEN ADD resetFilters FUNCTION RIGHT AFTER:
-    function resetFilters() {
-        // Reset current filters
-        currentFilters = {
-            vehicle: 'all',
-            date: 'all',
-            budget: 'all',
-            timeRange: { start: 16, end: 18 }
+                // Set attributes for local filtering
+                card.setAttribute('data-start', ride.startLocation);
+                card.setAttribute('data-end', ride.endLocation);
+                card.setAttribute('data-vehicle', ride.vehicleType);
+                card.setAttribute('data-cost', ride.costPerPerson);
+                card.setAttribute('data-details', ride.details || '');
+                card.setAttribute('data-hour', hour);
+
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <!-- Driver Profile and Route Headers -->
+                            <div class="flex items-start gap-3 min-w-0">
+                                <div class="w-10 h-10 rounded-full bg-primaryAmber text-white flex items-center justify-center text-xs font-bold uppercase shrink-0 shadow-sm">
+                                    ${initials}
+                                </div>
+                                <div class="min-w-0">
+                                    <h4 class="font-display font-bold text-base text-slate-900 dark:text-white flex items-center gap-2 flex-wrap">
+                                        <span>${ride.startLocation}</span>
+                                        <i class="fa-solid fa-arrow-right text-xs text-primaryAmber/60"></i>
+                                        <span>${ride.endLocation}</span>
+                                    </h4>
+                                    <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                                        <span>Posted by ${ride.user.name}</span>
+                                        <span>•</span>
+                                        <span>Class of ${new Date().getFullYear() + 2}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Price share badge -->
+                            <div class="text-right shrink-0">
+                                <div class="text-xl font-display font-black text-primaryAmber dark:text-accentAmber">₹${ride.costPerPerson}</div>
+                                <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Per Person</div>
+                            </div>
+                        </div>
+
+                        <!-- Context details -->
+                        <p class="text-xs text-slate-650 dark:text-slate-300 italic bg-slate-50 dark:bg-white/[0.01] p-3 rounded-xl border border-slate-100 dark:border-white/5">
+                            "${ride.details || 'No details. Just headed there!'}"
+                        </p>
+
+                        <!-- Ride Meta Info -->
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-1">
+                            <div class="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-450">
+                                <span class="flex items-center gap-1"><i class="fa-solid fa-clock text-[10px] text-primaryAmber"></i> ${departureString}</span>
+                                <span class="flex items-center gap-1">${vehicleIcon} ${ride.vehicleType.toUpperCase()}</span>
+                            </div>
+                            
+                            <!-- Seats indicator -->
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">${ride.seatsAvailable} seats left</span>
+                                <div class="flex gap-1">
+                                    ${seatDots}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="pt-4 border-t border-slate-100 dark:border-white/5 mt-5 flex justify-between items-center">
+                        <div class="flex items-center gap-1 text-[9px] font-bold text-slate-400 tracking-wide uppercase select-none">
+                            <i class="fa-solid fa-shield-halved text-primaryAmber/60"></i> verified iiita student
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${currentUser && currentUser._id === ride.user._id ? `
+                                <button class="delete-ride-btn px-2.5 py-1.5 text-[11px] font-bold text-rose-500 hover:text-rose-700 transition-colors" data-id="${ride._id}">
+                                    Delete
+                                </button>
+                            ` : ''}
+                            <a href="mailto:${ride.user.studentId}@iiita.ac.in?subject=UniLink: Join Ride Offer ${ride.startLocation} to ${ride.endLocation}" class="px-4 py-2 bg-slate-50 hover:bg-primaryAmber hover:text-white dark:bg-white/5 dark:hover:bg-primaryAmber rounded-xl text-xs font-bold text-slate-700 dark:text-white border border-slate-200 dark:border-white/10 transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-comment-dots text-[10px]"></i> Message Driver
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                // Handle Delete button if driver
+                const deleteBtn = card.querySelector('.delete-ride-btn');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', () => handleDeleteRide(ride._id));
+                }
+
+                container.appendChild(card);
+            });
         };
-        
-        // Reset active classes
-        filterOptions.forEach(option => {
-            if (option.getAttribute('data-value') === 'all') {
-                option.classList.add('active');
-            } else {
-                option.classList.remove('active');
-            }
-        });
-        
-        // Reset time display
-        document.getElementById('timeDisplay').textContent = 'Selected Time Range: 4:00 PM - 6:00 PM';
-        
-        // Show all rides
-        const rideCards = document.querySelectorAll('.ride-card');
-        rideCards.forEach(card => {
-            card.style.display = 'block';
-        });
-    }
-    
-    // ... rest of filter code ...
-    // ===============================================
-    // 1. AUTH GUARD
-    // ===============================================
-    const token = localStorage.getItem('token'); // 'token' is the default name
-    if (!token) {
-        alert('You must be logged in to view this page.');
-        window.location.href = 'auth.html?view=login';
-        return; // Stop the rest of the script from running
-    }
 
-    // ===============================================
-    // 2. GLOBAL CONFIG FOR AXIOS
-    // ===============================================
-    // This config will be used for ALL requests
-    const authConfig = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    };
+        // Renders ride requests list
+        const renderRequestsList = (requests) => {
+            const container = document.getElementById('requestsContainer');
+            if (!container) return;
+            container.innerHTML = '';
 
-    // ===============================================
-    // 3. FETCH AND RENDER RIDES ON PAGE LOAD
-    // ===============================================
-
-    const rideListContainer = document.getElementById('ridesContainer');
-
-
-    /**
-     * Fetches all rides from the API
-     */
-    /**
-     * Fetches all rides from the API (NOW WITH FILTERING)
-     */
-    const fetchAllRides = async (filters = {}) => {
-        try {
-            // Create query parameters from the filters object
-            const params = new URLSearchParams();
-            
-            // Only add parameters if they have a value
-            if (filters.startLocation) {
-                params.append('startLocation', filters.startLocation);
-            }
-            if (filters.endLocation) {
-                params.append('endLocation', filters.endLocation);
-            }
-            if (filters.date) {
-                params.append('date', filters.date);
-            }
-            if (filters.vehicleType) {
-                params.append('vehicleType', filters.vehicleType);
+            if (requests.length === 0) {
+                container.innerHTML = `
+                    <p class="text-xs text-slate-450 dark:text-slate-550 py-4 text-center">Nobody is asking for a ride right now.</p>
+                `;
+                return;
             }
 
-            // Append query string to the URL
-            const response = await axios.get(`/api/rides?${params.toString()}`, authConfig);
+            requests.forEach(req => {
+                if (!req.user) return; // Skip orphaned records
 
-            if (response.data && response.data.success) {
-                return response.data.data; // Return the array of rides
-            } else {
-                return [];
+                const item = document.createElement('div');
+                item.className = 'bg-slate-50 dark:bg-white/[0.01] border border-slate-100 dark:border-white/5 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-primaryAmber/20 transition-all';
+                
+                const timeStr = new Date(req.preferredDepartureTime).toLocaleString('en-US', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+
+                item.innerHTML = `
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-xs text-slate-800 dark:text-white flex items-center gap-1.5">
+                            <span>${req.startLocation}</span>
+                            <i class="fa-solid fa-arrow-right text-[10px] text-primaryAmber/60"></i>
+                            <span>${req.endLocation}</span>
+                        </h4>
+                        <div class="flex flex-wrap items-center gap-2.5 text-[10px] text-slate-450 dark:text-slate-400 font-semibold">
+                            <span>Asked by ${req.user.name}</span>
+                            <span>•</span>
+                            <span>${timeStr}</span>
+                            <span>•</span>
+                            <span>Budget: ₹${req.approximateFare}</span>
+                            <span>•</span>
+                            <span>${req.passengers} Passenger(s)</span>
+                        </div>
+                        ${req.preferences ? `<p class="text-[10px] text-slate-500 italic mt-0.5">"${req.preferences}"</p>` : ''}
+                    </div>
+                    
+                    <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                        ${currentUser && currentUser._id === req.user._id ? `
+                            <button class="delete-req-btn px-2.5 py-1 text-[10px] font-bold text-rose-500 hover:text-rose-700 transition-all" data-id="${req._id}">
+                                Delete
+                            </button>
+                        ` : ''}
+                        <a href="mailto:${req.contact}?subject=UniLink: Help with Ride Request to ${req.endLocation}" class="px-3 py-1.5 bg-primaryAmber/5 border border-primaryAmber/10 hover:bg-primaryAmber text-primaryAmber hover:text-white rounded-lg text-[10px] font-bold transition-all">
+                            Offer Ride
+                        </a>
+                    </div>
+                `;
+
+                // Handle request deletion
+                const delBtn = item.querySelector('.delete-req-btn');
+                if (delBtn) {
+                    delBtn.addEventListener('click', () => handleDeleteRequest(req._id));
+                }
+
+                container.appendChild(item);
+            });
+        };
+
+        // Fetch Offers from server
+        const fetchRides = async () => {
+            try {
+                const res = await axios.get('/api/rides', authConfig);
+                if (res.data && res.data.success) {
+                    allRides = res.data.data;
+                    renderRidesList(allRides);
+                    applyFilters(); // Pre-apply
+                }
+            } catch (err) {
+                console.error(err);
+                showNotification('Could not load available rides.', 'error');
             }
-        } catch (error) {
-            const errorMsg = error.response ? error.response.data.message : error.message;
-            console.error('Error fetching rides:', errorMsg);
-            rideListContainer.innerHTML = `<p style="color: red;">Error fetching rides: ${errorMsg}</p>`;
-            return [];
-        }
-    };
-    /**
-     * Fetches all ride REQEUSTS from the API
-     */
-    const fetchAllRequests = async () => {
-        try {
-            // Note the different endpoint: /api/ride-requests
-            const response = await axios.get('/api/rides/requests', authConfig); 
-            if (response.data && response.data.success) {
-                return response.data.data; // Return the array of requests
-            } else {
-                return [];
+        };
+
+        // Fetch Requests from server
+        const fetchRequests = async () => {
+            try {
+                const res = await axios.get('/api/rides/requests', authConfig);
+                if (res.data && res.data.success) {
+                    allRequests = res.data.data;
+                    renderRequestsList(allRequests);
+                }
+            } catch (err) {
+                console.error(err);
+                showNotification('Could not load requests.', 'error');
             }
-        } catch (error) {
-            const errorMsg = error.response ? error.response.data.message : error.message;
-            console.error('Error fetching ride requests:', errorMsg);
-            const requestListContainer = document.getElementById('request-list');
-            if (requestListContainer) {
-                requestListContainer.innerHTML = `<p style="color: red;">Error fetching ride requests: ${errorMsg}</p>`;
+        };
+
+        // Fetch Logged-in User profile
+        const fetchMe = async () => {
+            try {
+                const res = await axios.get('/api/users/me', authConfig);
+                currentUser = res.data;
+                if (currentUser) {
+                    document.getElementById('contact').value = currentUser.studentId + '@iiita.ac.in';
+                    document.getElementById('reqContact').value = currentUser.studentId + '@iiita.ac.in';
+                }
+            } catch (err) {
+                console.error(err);
+                showNotification('User authorization failed. Re-logging in.', 'error');
+                localStorage.removeItem('token');
+                window.location.href = 'auth.html';
             }
-            return [];
-        }
-    };
+        };
 
-
-    /**
-     * Renders the list of rides into the HTML
-    /**
-         * Renders the list of rides into the HTML
-         * This is the NEW, FIXED version
-         */
-        const renderRides = (rides) => {
-    const rideListContainer = document.getElementById('ridesContainer');
-    if (!rideListContainer) {
-        console.error("CRITICAL ERROR: HTML element with id 'ride-list' not found.");
-        return; 
-    }
-
-    rideListContainer.innerHTML = ''; // Clear the "Loading..." text
-
-    if (!rides || rides.length === 0) {
-        rideListContainer.innerHTML = '<p>No ride offers found at this time. Post one!</p>';
-        return;
-    }
-
-    // Loop over the rides from the database
-    rides.forEach(ride => {
-        const rideCard = document.createElement('div');
-        rideCard.className = 'ride-card';
-        rideCard.style.cssText = `
-            background: white; 
-            padding: 20px; 
-            margin-bottom: 15px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-        `;
-
-        const posterInfo = `${ride.user.name}`;
-        const departureTime = new Date(ride.departureTime);
-        const departureHour = departureTime.getHours();
-        const rideDate = departureTime.toISOString().split('T')[0];
-        const today = new Date().toISOString().split('T')[0];
-        const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-
-        // Add data attributes for filtering
-        rideCard.setAttribute('data-vehicle', ride.vehicleType.toLowerCase());
-        rideCard.setAttribute('data-cost', ride.costPerPerson);
-        rideCard.setAttribute('data-date', rideDate);
-        rideCard.setAttribute('data-time', departureHour);
-        rideCard.setAttribute('data-day', rideDate === today ? 'today' : (rideDate === tomorrow ? 'tomorrow' : 'other'));
-
-        // Create the HTML for the card
-        rideCard.innerHTML = `
-            <h3 style="color: var(--primary-purple); margin-bottom: 10px; font-size: 1.25rem;">
-                ${ride.startLocation} to ${ride.endLocation}
-            </h3>
-            <p><strong>Posted by:</strong> ${posterInfo}</p>
-            <p><strong>Vehicle:</strong> ${ride.vehicleType}</p>
-            <p><strong>Seats Available:</strong> ${ride.seatsAvailable}</p>
-            <p><strong>Cost:</strong> ₹${ride.costPerPerson} per person</p>
-            <p><strong>Departure:</strong> ${departureTime.toLocaleString()}</p>
-            <p style="margin-top: 10px;"><em>${ride.details || 'No additional details.'}</em></p>
-        `;
-        
-        // Add the new card to the page
-        rideListContainer.appendChild(rideCard);
-    });
-};
-
-    // --- Initial Load ---
-    // ---
-            // This is the code that runs when the page loads
-            // ---
-            
-            // 1. Load ALL rides and requests on initial page load
-            const initialRides = await fetchAllRides();
-            renderRides(initialRides);
-            
-            // const initialRequests = await fetchAllRequests(); // This will now work
-            // renderRequests(initialRequests);
-
-            // 2. Add listener to the "Apply Filters" button
-            
-
-    // ===============================================
-    // 4. "POST A RIDE" FORM LOGIC
-    // ===============================================
-
-    /**
-     * Helper function to get ride data from the form
-     */
-    const getRideData = () => {
-        const startLocation = document.getElementById('startLocation').value;
-        const endLocation = document.getElementById('endLocation').value;
-        const vehicleType = document.getElementById('vehicleType').value;
-        const costPerPerson = document.getElementById('costPerPerson').value;
-        const seatsAvailable = document.getElementById('seatsAvailable').value;
-        const departureTime = document.getElementById('departureTime').value;
-        const details = document.getElementById('details').value;
-
-        if (!startLocation || !endLocation || !vehicleType || !costPerPerson || !seatsAvailable || !departureTime) {
-            return null; // Invalid data
-        }
-
-        return { startLocation, endLocation, vehicleType, costPerPerson, seatsAvailable, departureTime, details };
-    };
-
-    /**
-     * Helper function to post the ride request
-     */
-    const postRideRequest = async (rideData) => {
-        try {
-            // This now ALSO sends the authConfig with the token
-            const response = await axios.post('/api/rides', rideData, authConfig);
-            return response.data;
-        } catch (error) {
-            const errorMsg = error.response ? error.response.data.message : error.message;
-            console.error('API Error during ride request post:', errorMsg);
-            throw new Error(errorMsg); // Throw a cleaner error
-        }
-    };
-
-    // --- Attach the click listener to the button ---
-    // ===============================================
-    // 5. "OFFER A RIDE" FORM LOGIC (The one you were missing)
-    // ===============================================
-
-    const offerRideForm = document.getElementById('rideRequestForm');
-    const offerRideModal = document.getElementById('requestRideModal');
-
-    if (offerRideForm) {
-        offerRideForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Stop form from reloading page
-
-            // Get data from the "Offer a Ride" form
-            const rideData = {
+        // Post Ride Offer
+        const handleOfferRide = async (e) => {
+            e.preventDefault();
+            const body = {
                 startLocation: document.getElementById('from').value,
                 endLocation: document.getElementById('to').value,
                 departureTime: document.getElementById('date').value + 'T' + document.getElementById('time').value,
                 vehicleType: document.getElementById('vehicle').value,
-                seatsAvailable: document.getElementById('seats').value,
-                costPerPerson: document.getElementById('cost').value,
-                details: document.getElementById('details').value,
-                contact: document.getElementById('contact').value // You have this field but no backend schema for it
+                seatsAvailable: parseInt(document.getElementById('seats').value),
+                costPerPerson: parseInt(document.getElementById('cost').value),
+                details: document.getElementById('details').value
             };
 
-            // Basic validation
-            if (!rideData.startLocation || !rideData.endLocation || !rideData.departureTime || !rideData.costPerPerson) {
-                alert('Please fill in all required fields for your ride offer.');
+            if (!body.startLocation || !body.endLocation || !body.departureTime || !body.vehicleType || !body.seatsAvailable || !body.costPerPerson) {
+                showNotification('Please fill in all required fields.', 'error');
                 return;
             }
 
             try {
-                // Post to the EXISTING ride offer endpoint
-                const response = await axios.post('/api/rides', rideData, authConfig);
-
-                if (response.data && response.data.message) {
-                    alert('Ride offer posted successfully!');
-                    offerRideModal.style.display = 'none'; // Close modal
-                    offerRideForm.reset(); // Clear the form
-
-                    // Re-fetch and re-render the RIDES list
-                    const allRides = await fetchAllRides();
-                    renderRides(allRides);
-                } else {
-                    alert('Failed to post ride offer: ' + (response.data.message || 'Unknown error'));
+                const res = await axios.post('/api/rides', body, authConfig);
+                if (res.data) {
+                    showNotification('Empty seats offered successfully!', 'success');
+                    document.getElementById('rideRequestForm').reset();
+                    closeOfferModal();
+                    await fetchRides(); // Refresh list
                 }
-            } catch (error) {
-                const errorMsg = error.response ? error.response.data.message : error.message;
-                alert('Error posting ride offer: ' + errorMsg);
+            } catch (err) {
+                showNotification(err.response ? err.response.data.message : err.message, 'error');
             }
+        };
+
+        // Post Ride Request
+        const handleRequestRide = async (e) => {
+            e.preventDefault();
+            const body = {
+                startLocation: document.getElementById('reqFrom').value,
+                endLocation: document.getElementById('reqTo').value,
+                preferredDepartureTime: document.getElementById('reqDate').value + 'T' + document.getElementById('reqTime').value,
+                vehicleType: document.getElementById('prefVehicle').value,
+                approximateFare: parseInt(document.getElementById('approxFare').value),
+                passengers: parseInt(document.getElementById('passengers').value),
+                preferences: document.getElementById('preferences').value,
+                contact: document.getElementById('reqContact').value
+            };
+
+            if (!body.startLocation || !body.endLocation || !body.preferredDepartureTime || !body.approximateFare || !body.passengers || !body.contact) {
+                showNotification('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            try {
+                // Correct POST requests path mapping
+                const res = await axios.post('/api/rides/requests', body, authConfig);
+                if (res.data && res.data.success) {
+                    showNotification('Ride request posted successfully!', 'success');
+                    document.getElementById('postRequestForm').reset();
+                    closeRequestModal();
+                    await fetchRequests(); // Refresh requests list
+                }
+            } catch (err) {
+                showNotification(err.response ? err.response.data.message : err.message, 'error');
+            }
+        };
+
+        // Delete Ride Offer
+        const handleDeleteRide = async (id) => {
+            if (!confirm('Are you sure you want to cancel this ride offer?')) return;
+            try {
+                // Assuming DELETE endpoint is configured at /api/rides/:id
+                await axios.delete(`/api/rides/${id}`, authConfig);
+                showNotification('Ride offer cancelled.', 'success');
+                await fetchRides();
+            } catch (err) {
+                showNotification('Could not delete ride offer.', 'error');
+            }
+        };
+
+        // Delete Ride Request
+        const handleDeleteRequest = async (id) => {
+            if (!confirm('Are you sure you want to delete this ride request?')) return;
+            try {
+                // Assuming DELETE endpoint is configured at /api/rides/requests/:id
+                await axios.delete(`/api/rides/requests/${id}`, authConfig);
+                showNotification('Request deleted.', 'success');
+                await fetchRequests();
+            } catch (err) {
+                showNotification('Could not delete request.', 'error');
+            }
+        };
+
+        // Sort rides locally
+        const handleSortRides = () => {
+            const sortVal = document.getElementById('sortRides').value;
+            let sorted = [...allRides];
+
+            if (sortVal === 'latest') {
+                sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            } else if (sortVal === 'cheapest') {
+                sorted.sort((a, b) => a.costPerPerson - b.costPerPerson);
+            }
+            renderRidesList(sorted);
+            applyFilters();
+        };
+
+        // Page Initialization
+        document.addEventListener('DOMContentLoaded', async () => {
+            const currentToken = localStorage.getItem('token');
+            if (!currentToken) {
+                alert('Please login to access commute pooling.');
+                window.location.href = 'auth.html';
+                return;
+            }
+            token = currentToken;
+            authConfig.headers.Authorization = `Bearer ${token}`;
+
+            // Load resources
+            await fetchMe();
+            await fetchRides();
+            await fetchRequests();
+
+            // Set up sorting listener
+            document.getElementById('sortRides').addEventListener('change', handleSortRides);
+
+            // Set up inputs search listeners
+            document.getElementById('search-input').addEventListener('input', applyFilters);
+            document.getElementById('gender-select').addEventListener('change', applyFilters);
+
+            // Bind forms
+            document.getElementById('rideRequestForm').addEventListener('submit', handleOfferRide);
+            document.getElementById('postRequestForm').addEventListener('submit', handleRequestRide);
+
+            // Init listeners
+            initFilterListeners();
         });
-    }
-});
-</script>
+    </script>
 </body>
 </html>

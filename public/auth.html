@@ -2,70 +2,507 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
-    <title>UniLink | Signup & Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniLink | Campus Notice Board</title>
+    <!-- Tailwind CSS v3 CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Bricolage Grotesque (Playful Display), Plus Jakarta Sans (Sleek UI), and Handwriting/Marker fonts -->
+    <link rel="preconnect" href="https://fonts.preconnect">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Caveat:wght@400..700&family=Kalam:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    
+    <!-- Inline theme checker to prevent flashing -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <!-- Tailwind Config for Design Tokens -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#09090E',
+                        darkCard: '#13131F',
+                        violetAccent: '#8B5CF6',
+                        pinkAccent: '#EC4899',
+                        greenAccent: '#10B981',
+                        blueAccent: '#06B6D4',
+                        redAccent: '#EF4444',
+                        yellowAccent: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f7fc; 
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
-        .card {
-           background: rgba(255, 255, 255, 0.85);
-           backdrop-filter: blur(10px);
-           border-radius: 1.5rem;
-           box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-           border: 1px solid rgba(255, 255, 255, 0.2);
-           overflow: hidden;
+
+        .font-display {
+            font-family: 'Bricolage Grotesque', sans-serif;
         }
-        .main-button-gradient {
-            background-image: linear-gradient(to right, #4f46e5, #7c3aed, #a855f7);
+
+        /* Grid pattern background overlay */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        html.dark .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+        }
+
+        /* Notice Board Felt background */
+        .notice-board-felt {
+            background-color: #1a1a24;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 0),
+                radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 0);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            box-shadow: inset 0 8px 24px rgba(0,0,0,0.5);
+        }
+        html:not(.dark) .notice-board-felt {
+            background-color: #e6dfd5;
+            background-image: 
+                radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 0),
+                radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 0);
+            background-size: 8px 8px;
+            background-position: 0 0, 4px 4px;
+            box-shadow: inset 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        /* Push pins styling */
+        .pushpin {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 10;
+            transition: transform 0.2s ease;
+        }
+        .pushpin::after {
+            content: '';
+            position: absolute;
+            top: 14px;
+            left: 6px;
+            width: 2px;
+            height: 8px;
+            background: #94a3b8;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .pushpin-red { background: radial-gradient(circle at 4px 4px, #f43f5e, #be123c); }
+        .pushpin-blue { background: radial-gradient(circle at 4px 4px, #3b82f6, #1d4ed8); }
+        .pushpin-green { background: radial-gradient(circle at 4px 4px, #10b981, #047857); }
+        .pushpin-yellow { background: radial-gradient(circle at 4px 4px, #eab308, #a16207); }
+        .pushpin-silver { background: radial-gradient(circle at 4px 4px, #cbd5e1, #64748b); }
+
+        .notice-card:hover .pushpin {
+            transform: translateX(-50%) rotate(10deg) scale(1.1);
+        }
+
+        /* Torn paper clipping and styling */
+        .torn-paper-bottom {
+            clip-path: polygon(
+                0% 0%, 100% 0%, 100% 95%, 
+                97% 97%, 94% 94%, 91% 96%, 88% 94%, 85% 97%, 82% 94%, 79% 96%, 76% 94%, 73% 97%, 70% 94%, 67% 96%, 64% 94%, 61% 97%, 58% 94%, 55% 96%, 52% 94%, 49% 97%, 46% 94%, 43% 96%, 40% 94%, 37% 97%, 34% 94%, 31% 96%, 28% 94%, 25% 97%, 22% 94%, 19% 96%, 16% 94%, 13% 97%, 10% 94%, 7% 96%, 4% 94%, 2% 97%, 0% 94%
+            );
+        }
+        .torn-paper-scrap {
+            clip-path: polygon(
+                0.5% 1%, 99% 0.5%, 98.5% 99%, 1.2% 98%
+            );
+        }
+        .notebook-lines {
+            background-image: linear-gradient(rgba(59, 130, 246, 0.12) 1px, transparent 1px);
+            background-size: 100% 1.5rem;
+            line-height: 1.5rem;
+        }
+        .notebook-margin {
+            border-left: 1.5px solid rgba(239, 68, 68, 0.2);
+            margin-left: 1rem;
+            padding-left: 0.5rem;
+        }
+        .grid-paper {
+            background-size: 15px 15px;
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+        }
+        html.dark .grid-paper {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        }
+
+        /* Highlighter & Ink stamps */
+        .highlight-yellow {
+            background: linear-gradient(104deg, rgba(253,224,71,0.45) 0%, rgba(253,224,71,0.7) 100%);
+            border-radius: 0.2em;
+            padding: 0.1em 0.25em;
+        }
+        .highlight-pink {
+            background: linear-gradient(104deg, rgba(244,114,182,0.35) 0%, rgba(244,114,182,0.6) 100%);
+            border-radius: 0.2em;
+            padding: 0.1em 0.25em;
+        }
+        .highlight-green {
+            background: linear-gradient(104deg, rgba(134,239,172,0.35) 0%, rgba(134,239,172,0.6) 100%);
+            border-radius: 0.2em;
+            padding: 0.1em 0.25em;
+        }
+        .stamp {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1.5px dashed currentColor;
+            padding: 1px 4px;
+            border-radius: 3px;
+            display: inline-block;
+            transform: rotate(-8deg);
+            opacity: 0.85;
+            user-select: none;
+        }
+
+        /* Handwritten Fonts and elements */
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
+        }
+        .font-kalam {
+            font-family: 'Kalam', cursive;
+        }
+        .font-marker {
+            font-family: 'Permanent Marker', sans-serif;
+        }
+        .coffee-ring {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px double rgba(139, 90, 43, 0.1);
+            position: absolute;
+            pointer-events: none;
+        }
+        html.dark .coffee-ring {
+            border-color: rgba(239, 168, 96, 0.06);
+        }
+
+        /* Notices Layout Interactivity */
+        .notice-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+        }
+        .notice-card:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 40 !important;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+        }
+        html:not(.dark) .notice-card:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .notice-card .scribble-reply {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
             transition: all 0.3s ease;
+        }
+        .notice-card:hover .scribble-reply,
+        .notice-card.active .scribble-reply {
+            max-height: 80px;
+            opacity: 1;
+            margin-top: 8px;
+        }
+
+        /* Form styling overrides */
+        .input-field {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #1e293b;
+            border-radius: 1rem;
+            padding: 0.9rem 1.2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+        }
+        html.dark .input-field {
+            background-color: #1b1b2f;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+        html.dark .input-field:focus {
+            background-color: #121222;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25);
+        }
+
+        .main-button-gradient {
+            background-image: linear-gradient(to right, #8b5cf6, #ec4899);
+            transition: all 0.4s ease;
             background-size: 200% auto;
         }
         .main-button-gradient:hover {
             background-position: right center;
+            transform: scale(1.01);
         }
+
         .secondary-button {
-            background-color: #eef2ff;
-            color: #4f46e5;
-            border: 1px solid #c7d2fe;
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        html.dark .secondary-button {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .secondary-button:hover {
-            background-color: #e0e7ff;
+            background-color: #e2e8f0;
+            color: #1e293b;
         }
-        .input-field {
-            background-color: #f3f4f6;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.75rem;
-            padding: 0.9rem 1rem;
-            transition: all 0.2s;
+        html.dark .secondary-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
-        .input-field:focus {
-            outline: none;
-            border-color: #6366f1;
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
+
         .link-purple {
-            color: #6d28d9;
+            color: #8b5cf6;
             font-weight: 600;
+            transition: color 0.2s;
         }
         .link-purple:hover {
+            color: #a78bfa;
             text-decoration: underline;
         }
-        /* Alert/Message Styles */
+
+        /* Alert Notifications */
         .alert-error { background-color: #ef4444; }
-        .alert-success { background-color: #22c55e; }
-        .alert-info { background-color: #3b82f6; }
+        .alert-success { background-color: #10b981; }
+        .alert-info { background-color: #06b6d4; }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-100 min-h-screen flex items-center justify-center p-4 md:p-8 transition-colors duration-300 relative overflow-hidden font-sans">
+    
+    <!-- Theme Switcher floating at top right -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="theme-toggle" class="p-3 bg-white/80 dark:bg-darkCard/80 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all focus:outline-none">
+            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-sun hidden dark:inline"></i>
+        </button>
+    </div>
 
-    <div id="app-container">
+    <!-- Grid lines background -->
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+
+    <!-- Campus Notice Board Container -->
+    <div class="w-full max-w-7xl bg-white/80 dark:bg-darkCard/80 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-3xl p-5 md:p-8 shadow-2xl relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch overflow-hidden">
+        
+        <!-- Left Side: The Interactive Campus Notice Board -->
+        <div class="hidden lg:flex lg:col-span-7 flex-col justify-between rounded-2xl notice-board-felt p-6 border border-amber-900/10 dark:border-slate-800 relative shadow-inner select-none max-h-[760px] overflow-y-auto scrollbar-none">
+            <!-- Background Coffee stains & doodles -->
+            <div class="coffee-ring" style="top: 25%; left: 45%;"></div>
+            <div class="coffee-ring" style="bottom: 12%; left: 8%;"></div>
+            <div class="absolute top-[65%] right-[20%] text-[48px] opacity-[0.03] dark:opacity-[0.015] font-marker pointer-events-none select-none">IIITA</div>
+            <div class="absolute top-[40%] left-[8%] text-[36px] opacity-[0.03] dark:opacity-[0.015] font-marker pointer-events-none select-none">SAC</div>
+            
+            <div>
+                <!-- Board Header -->
+                <div class="flex justify-between items-center mb-5 border-b border-dashed border-amber-900/10 dark:border-white/5 pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-violetAccent to-pinkAccent flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-link text-white text-xs"></i>
+                        </div>
+                        <div>
+                            <span class="font-display text-lg font-black tracking-tight text-slate-900 dark:text-white">UniLink Board</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500 font-bold block -mt-1">SAC Outdoor Notice Board</span>
+                        </div>
+                    </div>
+                    <div class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest bg-slate-200/50 dark:bg-white/5 px-2.5 py-1 rounded">
+                        IIIT Allahabad
+                    </div>
+                </div>
+
+                <!-- Notices Collage Grid -->
+                <div class="grid grid-cols-2 gap-4 pb-4">
+                    
+                    <!-- 1. LOST Earbuds -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-[#e0f2fe] text-sky-950 p-4 rounded-md shadow-md rotate-[-1.5deg]">
+                        <div class="pushpin pushpin-red"></div>
+                        <div class="font-marker text-[10px] text-rose-600 mb-1 tracking-wider">LOST</div>
+                        <p class="font-handwritten text-lg leading-tight">
+                            Black earbuds near <span class="highlight-yellow">CC3</span>. Left on bench near vending machine. Please return! Need for late night coding.
+                        </p>
+                        <div class="scribble-reply font-kalam text-xs text-blue-700/80 border-t border-sky-300/40 pt-1">
+                            💡 Scribble: Checked CC3 guard desk? I saw a pair there this morning!
+                        </div>
+                    </div>
+
+                    <!-- 2. Need O+ Donor -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-[#fffbf0] text-amber-950 p-4 rounded-sm shadow-md rotate-[2deg] torn-paper-bottom border-l-[3px] border-red-500/30 notebook-lines">
+                        <div class="pushpin pushpin-blue"></div>
+                        <div class="notebook-margin">
+                            <div class="stamp text-red-600 border-red-600/80 font-bold mb-1 absolute right-2 top-2">URGENT</div>
+                            <p class="font-handwritten text-lg leading-tight font-bold pt-2">
+                                Need <span class="text-rose-600">O+ donor</span> urgently at Tej Bahadur hospital. Contact: 98765xxxxx
+                            </p>
+                            <div class="scribble-reply font-kalam text-xs text-red-800/80 border-t border-amber-200/50 pt-1 mt-1">
+                                ❤️ Scribble: Donor matched and helping out! Thanks UniLink.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Civil Lines Ride -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-[#fef08a] text-yellow-950 p-4 rounded-md shadow-md rotate-[1.5deg]">
+                        <div class="pushpin pushpin-green"></div>
+                        <div class="font-marker text-[10px] text-amber-700 mb-1 tracking-wider">POOLING</div>
+                        <p class="font-handwritten text-lg leading-tight">
+                            Civil Lines ride leaving at <span class="highlight-pink">5 PM today</span>. 🛵 2 seats left. Sharing expenses. Split fare.
+                        </p>
+                        <div class="scribble-reply font-kalam text-xs text-emerald-800/80 border-t border-yellow-300/40 pt-1">
+                            🛵 Scribble: PM'd you! Save one seat for BH-3.
+                        </div>
+                    </div>
+
+                    <!-- 4. Milton bottle reunited -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-white text-slate-800 p-4 rounded-md shadow-md rotate-[-2deg] torn-paper-scrap border border-slate-200 dark:border-slate-800">
+                        <div class="pushpin pushpin-silver"></div>
+                        <div class="stamp text-emerald-600 border-emerald-600/80 font-bold mb-1 absolute right-2 top-2">REUNITED 🎉</div>
+                        <p class="font-sans text-[9px] font-semibold uppercase tracking-wider text-slate-400 mb-0.5">Found Report</p>
+                        <p class="font-kalam text-sm leading-tight text-slate-700 pt-1">
+                            Blue Milton water bottle found in CC-2. Update: Owner found! Thanks a lot!
+                        </p>
+                        <div class="scribble-reply font-handwritten text-sm text-emerald-700/80 pt-1">
+                            Scribble: Reunited with IIT2023023. Restored faith!
+                        </div>
+                    </div>
+
+                    <!-- 5. Selling DSA textbook -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-[#fed7aa] text-amber-950 p-4 rounded-md shadow-md rotate-[3deg]">
+                        <div class="pushpin pushpin-yellow"></div>
+                        <div class="font-marker text-[10px] text-amber-800 mb-1 tracking-wider">FOR SALE</div>
+                        <p class="font-handwritten text-lg leading-tight">
+                            Selling CLRS / DSA textbook. Half price. Good condition (only slightly cried on during exams). BH-1 Room 420.
+                        </p>
+                        <div class="scribble-reply font-kalam text-xs text-amber-900/80 border-t border-amber-300/40 pt-1">
+                            📚 Scribble: Still got it? I'll pick it up tonight!
+                        </div>
+                    </div>
+
+                    <!-- 6. Prayagraj Junction -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-[#fce7f3] text-pink-950 p-4 rounded-md shadow-md rotate-[-1deg]">
+                        <div class="pushpin pushpin-red"></div>
+                        <div class="font-marker text-[10px] text-pink-700 mb-1 tracking-wider">TRAVEL</div>
+                        <p class="font-handwritten text-lg leading-tight">
+                            Anyone going to Prayagraj Junction Friday afternoon? Sharing an auto. 🛺 Leaving gates at 3:00 PM.
+                        </p>
+                        <div class="scribble-reply font-kalam text-xs text-fuchsia-800/80 border-t border-pink-300/40 pt-1">
+                            🛺 Scribble: I'm in! Let's book. Train is at 4:40 PM.
+                        </div>
+                    </div>
+
+                    <!-- 7. Need lab partner -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-slate-50 text-slate-800 p-4 rounded-md shadow-md rotate-[2.5deg] grid-paper border border-slate-200 dark:border-slate-800">
+                        <div class="pushpin pushpin-green"></div>
+                        <div class="font-marker text-[10px] text-emerald-700 mb-1 tracking-wider">HELP</div>
+                        <p class="font-kalam text-xs leading-normal">
+                            Need lab partner for DAA. Must know how to debug seg faults and not sleep during lab hours.
+                        </p>
+                        <div class="scribble-reply font-handwritten text-sm text-violet-700/80 border-t border-slate-200/50 pt-1">
+                            Scribble: Count me in. I actually like graphs.
+                        </div>
+                    </div>
+
+                    <!-- 8. Weekend Sangam plans? -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-gradient-to-br from-indigo-50 to-purple-100 text-indigo-950 p-4 rounded-lg shadow-md rotate-[-1.5deg] border border-indigo-200/50">
+                        <div class="pushpin pushpin-blue"></div>
+                        <div class="font-marker text-[10px] text-indigo-600 mb-1 tracking-wider">EXPLORE</div>
+                        <p class="font-handwritten text-lg leading-tight">
+                            Weekend Sangam plans? Planning a sunset boat ride. DM if interested! 🌅
+                        </p>
+                        <div class="scribble-reply font-kalam text-xs text-indigo-800/80 border-t border-indigo-200/50 pt-1">
+                            🌅 Scribble: 8 of us joined. Booking a boat!
+                        </div>
+                    </div>
+
+                    <!-- 9. Placement prep group forming -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-2 cursor-pointer bg-white text-slate-800 p-4 rounded-md shadow-md rotate-[0.5deg] border border-slate-200 dark:border-slate-800">
+                        <div class="pushpin pushpin-silver" style="left: 25%;"></div>
+                        <div class="pushpin pushpin-silver" style="left: 75%;"></div>
+                        <div class="text-center border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-1.5">
+                            <span class="font-display font-black text-[9px] tracking-widest text-slate-400 uppercase">STUDY INITIATIVE</span>
+                        </div>
+                        <p class="font-sans text-[11px] font-bold text-slate-700 mb-1">📢 Placement prep group forming.</p>
+                        <p class="font-sans text-[10px] text-slate-500 leading-normal">
+                            Daily LeetCode discussions & Mock interviews. CC3 Room 102, 9 PM onwards. Let's practice DP & System Design.
+                        </p>
+                        <div class="scribble-reply font-handwritten text-sm text-blue-700/80 pt-1">
+                            Scribble: Today's agenda: DP patterns & memory systems. Join!
+                        </div>
+                    </div>
+
+                    <!-- 10. Student ID found near library -->
+                    <div onclick="toggleNote(this)" class="notice-card col-span-1 cursor-pointer bg-[#fef3c7] text-amber-950 p-4 rounded-md shadow-md rotate-[-2deg]">
+                        <div class="pushpin pushpin-red"></div>
+                        <div class="font-marker text-[10px] text-amber-700 mb-1 tracking-wider">FOUND</div>
+                        <p class="font-handwritten text-lg leading-tight">
+                            Student ID found near library lawns. Kept at CC2 security desk. Roll: IIT2025...
+                        </p>
+                        <div class="scribble-reply font-kalam text-xs text-amber-900/80 border-t border-amber-200/50 pt-1">
+                            🎉 Scribble: Claimed! Rohan bought me tea as a thank you.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer: Board Motto -->
+            <div class="mt-4 pt-3 border-t border-dashed border-amber-900/10 dark:border-white/5 flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">
+                <span>💡 Click/hover cards to inspect replies</span>
+                <span class="italic">"Everything happening on campus eventually ends up here."</span>
+            </div>
         </div>
+
+        <!-- Right Side: Auth Forms (Login / Register / Recover views render inside here) -->
+        <div class="col-span-12 lg:col-span-5 flex flex-col justify-center pl-0 lg:pl-6">
+            <div id="app-container" class="w-full">
+                <!-- Renders dynamically -->
+            </div>
+        </div>
+    </div>
 
     <script>
         // =======================================
@@ -86,13 +523,9 @@
             const alertClass = type === 'error' ? 'alert-error' : type === 'success' ? 'alert-success' : 'alert-info';
             const messageElement = document.createElement('div');
             
-            // 
-            // --- THIS WAS THE SYNTAX ERROR ---
-            // The line below was missing backticks (`)
-            //
-            messageElement.className = `fixed top-4 right-4 z-50 p-3 text-white rounded-lg shadow-xl transition-all duration-300 ${alertClass}`;
-            
+            messageElement.className = `fixed top-4 right-4 z-50 p-4 text-white rounded-2xl shadow-xl transition-all duration-300 font-bold ${alertClass}`;
             messageElement.textContent = message;
+            
             document.body.appendChild(messageElement);
             setTimeout(() => {
                 messageElement.remove();
@@ -143,14 +576,12 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    // Use the error message from the server (e.g., "Invalid credentials")
                     throw new Error(data.msg || data.message || 'An error occurred');
                 }
                 return data;
 
             } catch (err) {
                 console.error('API Fetch Error:', err);
-                // Re-throw the error so the calling function can handle it
                 throw err; 
             }
         };
@@ -169,21 +600,17 @@
             submitButton.textContent = 'Logging in...';
 
             try {
-                // This corresponds to your authController.js `login` function
                 const data = await apiFetch('/api/auth/login', 'POST', { email, password });
                 
-                // Success!
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userData', JSON.stringify(data.user));
                 showMessage('Login successful! Redirecting...', 'success');
                 
                 setTimeout(() => {
-                    // Redirect to the main page
                     window.location.href = 'main.html';
                 }, 1000);
 
             } catch (err) {
-                // This 'err.message' comes from the apiFetch helper
                 showMessage(err.message, 'error');
                 submitButton.disabled = false;
                 submitButton.textContent = 'Login';
@@ -205,6 +632,23 @@
                 passwordConfirm: document.getElementById('passwordConfirm').value
             };
 
+            // Smart validations
+            if (!formData.studentId || !/^[a-z0-9]+$/.test(formData.studentId)) {
+                return showMessage('Enrollment Number must be alphanumeric and contain no spaces.', 'error');
+            }
+
+            if (!formData.email.endsWith('@iiita.ac.in')) {
+                return showMessage('Only official IIIT Allahabad email addresses (@iiita.ac.in) are allowed.', 'error');
+            }
+
+            if (!formData.department) {
+                return showMessage('Programme is required.', 'error');
+            }
+
+            if (!formData.year) {
+                return showMessage('Graduation Year is required.', 'error');
+            }
+
             if (formData.password !== formData.passwordConfirm) {
                 return showMessage('Passwords do not match', 'error');
             }
@@ -213,16 +657,224 @@
             submitButton.textContent = 'Registering...';
 
             try {
-                // This corresponds to your authController.js `register` function
                 const data = await apiFetch('/api/auth/register', 'POST', formData);
                 
                 showMessage('Registration successful! Please log in.', 'success');
-                setView('login'); // Switch to the login view
+                setView('login');
 
             } catch (err) {
                 showMessage(err.message, 'error');
                 submitButton.disabled = false;
                 submitButton.textContent = 'Create Account';
+            }
+        };
+
+        /** Sets up real-time sync and validation for registration page */
+        const setupRegisterListeners = () => {
+            const nameInput = document.getElementById('name');
+            const studentIdInput = document.getElementById('studentId');
+            const emailInput = document.getElementById('email');
+            const departmentSelect = document.getElementById('department');
+            const passwordInput = document.getElementById('password');
+            const passwordConfirmInput = document.getElementById('passwordConfirm');
+
+            if (!studentIdInput || !emailInput) return;
+
+            // 1. Enrollment Number input handling
+            studentIdInput.addEventListener('input', () => {
+                let val = studentIdInput.value.toLowerCase().replace(/[^a-z0-9]/g, '');
+                studentIdInput.value = val;
+                
+                // Auto-generate email
+                if (val) {
+                    emailInput.value = val + '@iiita.ac.in';
+                } else {
+                    emailInput.value = '';
+                }
+                validateRegisterFields();
+            });
+
+            // 2. Email input handling
+            emailInput.addEventListener('input', () => {
+                let emailVal = emailInput.value.trim().toLowerCase();
+                
+                // Try to extract the enrollment part (before the @ symbol)
+                if (emailVal.includes('@')) {
+                    const parts = emailVal.split('@');
+                    const enrollmentPart = parts[0].replace(/[^a-z0-9]/g, '');
+                    studentIdInput.value = enrollmentPart;
+                } else {
+                    const cleanedVal = emailVal.replace(/[^a-z0-9]/g, '');
+                    studentIdInput.value = cleanedVal;
+                }
+                validateRegisterFields();
+            });
+
+            // 3. Year Wheel Scroll Picker Handler
+            const yearWheel = document.getElementById('year-wheel');
+            const yearItems = document.querySelectorAll('.year-wheel-item');
+            const yearInput = document.getElementById('year');
+
+            const handleWheelScroll = () => {
+                if (!yearWheel) return;
+                const containerRect = yearWheel.getBoundingClientRect();
+                const containerCenter = containerRect.top + containerRect.height / 2;
+
+                let closestItem = null;
+                let minDistance = Infinity;
+
+                yearItems.forEach(item => {
+                    const itemRect = item.getBoundingClientRect();
+                    const itemCenter = itemRect.top + itemRect.height / 2;
+                    const distance = Math.abs(containerCenter - itemCenter);
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestItem = item;
+                    }
+                });
+
+                if (closestItem) {
+                    yearItems.forEach(item => {
+                        if (item === closestItem) {
+                            // Highlight Center Item
+                            item.classList.remove('text-slate-400', 'dark:text-slate-500', 'text-sm', 'opacity-40');
+                            item.classList.add('text-violetAccent', 'text-lg', 'font-extrabold', 'opacity-100', 'scale-110');
+                            yearInput.value = item.getAttribute('data-year');
+                        } else {
+                            // Fade Outer Items
+                            item.classList.remove('text-violetAccent', 'text-lg', 'font-extrabold', 'opacity-100', 'scale-110');
+                            item.classList.add('text-slate-400', 'dark:text-slate-500', 'text-sm', 'opacity-40');
+                        }
+                    });
+                    validateRegisterFields();
+                }
+            };
+
+            if (yearWheel) {
+                yearWheel.addEventListener('scroll', handleWheelScroll);
+
+                // Allow clicking a year item to snap scroll to it
+                yearItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    });
+                });
+
+                // Click and drag to scroll for Desktop
+                let isDown = false;
+                let startY;
+                let scrollTop;
+
+                yearWheel.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    yearWheel.classList.add('cursor-grabbing');
+                    startY = e.pageY - yearWheel.offsetTop;
+                    scrollTop = yearWheel.scrollTop;
+                });
+
+                yearWheel.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    yearWheel.classList.remove('cursor-grabbing');
+                });
+
+                yearWheel.addEventListener('mouseup', () => {
+                    isDown = false;
+                    yearWheel.classList.remove('cursor-grabbing');
+                });
+
+                yearWheel.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const y = e.pageY - yearWheel.offsetTop;
+                    const walk = (y - startY) * 1.5;
+                    yearWheel.scrollTop = scrollTop - walk;
+                });
+
+                // Scroll to middle index year initially
+                setTimeout(() => {
+                    const defaultYearIndex = Math.floor(yearItems.length / 2);
+                    if (yearItems[defaultYearIndex]) {
+                        yearItems[defaultYearIndex].scrollIntoView({ block: 'center' });
+                    }
+                    handleWheelScroll();
+                }, 100);
+            }
+
+            // 4. Other inputs real-time validation triggers
+            if (nameInput) nameInput.addEventListener('input', validateRegisterFields);
+            if (departmentSelect) departmentSelect.addEventListener('change', validateRegisterFields);
+            if (passwordInput) passwordInput.addEventListener('input', validateRegisterFields);
+            if (passwordConfirmInput) passwordConfirmInput.addEventListener('input', validateRegisterFields);
+
+            // Run initial validation
+            validateRegisterFields();
+        };
+
+        /** Performs real-time field validation and sets success/error styles */
+        const validateRegisterFields = () => {
+            const nameInput = document.getElementById('name');
+            const studentIdInput = document.getElementById('studentId');
+            const emailInput = document.getElementById('email');
+            const departmentSelect = document.getElementById('department');
+            const yearInput = document.getElementById('year');
+            const yearScrollContainer = document.getElementById('year-scroll-container');
+            const passwordInput = document.getElementById('password');
+            const passwordConfirmInput = document.getElementById('passwordConfirm');
+
+            const markValid = (el, isValid) => {
+                if (!el) return;
+                if (isValid) {
+                    el.classList.remove('border-slate-200', 'dark:border-white/10', 'border-red-500', 'dark:border-red-500/50');
+                    el.classList.add('border-emerald-500', 'dark:border-emerald-500/50');
+                } else {
+                    el.classList.remove('border-emerald-500', 'dark:border-emerald-500/50', 'border-red-500', 'dark:border-red-500/50');
+                    el.classList.add('border-slate-200', 'dark:border-white/10');
+                }
+            };
+
+            const markInvalid = (el) => {
+                if (!el) return;
+                el.classList.remove('border-slate-200', 'dark:border-white/10', 'border-emerald-500', 'dark:border-emerald-500/50');
+                el.classList.add('border-red-500', 'dark:border-red-500/50');
+            };
+
+            if (nameInput) {
+                markValid(nameInput, nameInput.value.trim().length > 0);
+            }
+
+            let isEnrollmentValid = false;
+            if (studentIdInput) {
+                const val = studentIdInput.value;
+                isEnrollmentValid = val.length > 0 && /^[a-z0-9]+$/.test(val);
+                markValid(studentIdInput, isEnrollmentValid);
+            }
+
+            if (emailInput && studentIdInput) {
+                const val = emailInput.value.trim();
+                const isValidEmail = val.length > 0 && val.endsWith('@iiita.ac.in') && val.split('@')[0] === studentIdInput.value;
+                if (val.length > 0 && !val.endsWith('@iiita.ac.in')) {
+                    markInvalid(emailInput);
+                } else {
+                    markValid(emailInput, isValidEmail);
+                }
+            }
+
+            if (departmentSelect) {
+                markValid(departmentSelect, departmentSelect.value !== "");
+            }
+
+            if (yearInput && yearScrollContainer) {
+                markValid(yearScrollContainer, yearInput.value !== "");
+            }
+
+            if (passwordInput) {
+                markValid(passwordInput, passwordInput.value.length >= 6);
+            }
+
+            if (passwordConfirmInput && passwordInput) {
+                const passwordsMatch = passwordConfirmInput.value.length > 0 && passwordConfirmInput.value === passwordInput.value;
+                markValid(passwordConfirmInput, passwordsMatch);
             }
         };
 
@@ -236,7 +888,7 @@
 
             try {
                 const data = await apiFetch('/api/auth/forgotpassword', 'POST', { email });
-                showMessage(data.msg, 'success'); // Show the "If email exists..." message
+                showMessage(data.msg, 'success');
                 submitButton.disabled = false;
                 submitButton.textContent = 'Send Reset Link';
             } catch (err) {
@@ -258,20 +910,22 @@
             }
 
             submitButton.disabled = true;
-            submitButton.textContent = 'Resetting...';
+            submitButton.textContent = 'Updating...';
 
             try {
                 const endpoint = `/api/auth/resetpassword/${appState.token}`;
                 const data = await apiFetch(endpoint, 'PUT', { password });
                 
-                showMessage('Password reset successful! Please log in.', 'success');
-                appState.token = null; // Clear the token
-                setView('login'); // Send them to login
+                showMessage('Password updated successfully.', 'success');
+                appState.token = null; 
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 2000);
 
             } catch (err) {
                 showMessage(err.message, 'error');
                 submitButton.disabled = false;
-                submitButton.textContent = 'Reset Password';
+                submitButton.textContent = 'Update Password';
             }
         };
 
@@ -279,15 +933,51 @@
         // UI RENDERING FUNCTIONS
         // =======================================
 
-        /** Renders the main form layout (card, title) */
+        /** Renders the main form layout (headers, container) */
         const renderFormLayout = (title, formContent) => {
-            return `
-                <div class="card w-full max-w-lg p-6 sm:p-8 md:p-10">
-                    <div class="text-center mb-8">
-                        <h1 class="text-3xl font-bold text-gray-900">${title}</h1>
-                        <p class="text-gray-600 mt-2">UniLink IIIT Allahabad</p>
+            let heading = title;
+            let subtext = "UniLink IIIT Allahabad";
+
+            if (appState.view === 'login') {
+                heading = "Welcome back.";
+                subtext = `
+                    <div class="mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+                        Campus life never stops.<br>
+                        Log in to see what's happening.
                     </div>
-                    ${formContent}
+                `;
+            } else if (appState.view === 'register') {
+                heading = "Join the campus.";
+                subtext = `
+                    <div class="mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+                        Create your account to stay connected.
+                    </div>
+                `;
+            } else if (appState.view === 'forgotpassword') {
+                heading = "Lost your keys?";
+                subtext = `
+                    <div class="mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+                        No worries, let's recover your UniLink access.
+                    </div>
+                `;
+            } else if (appState.view === 'resetpassword') {
+                heading = "Forging new keys.";
+                subtext = `
+                    <div class="mt-2 text-slate-500 dark:text-slate-400 text-sm font-medium">
+                        Set a strong new password for your account.
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="w-full max-w-md mx-auto">
+                    <div class="mb-8">
+                        <h1 class="font-display text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">${heading}</h1>
+                        ${subtext}
+                    </div>
+                    <div class="mt-6">
+                        ${formContent}
+                    </div>
                 </div>
             `;
         };
@@ -305,19 +995,19 @@
                     <div class="text-right">
                         <a href="#" onclick="setView('forgotpassword')" class="text-sm link-purple">Forgot Password?</a>
                     </div>
-                    <button type="submit" class="w-full main-button-gradient text-white py-3 rounded-xl transition duration-150 font-semibold shadow-lg">
-                        Login
+                    <button type="submit" class="w-full main-button-gradient text-white py-3.5 rounded-2xl transition duration-150 font-bold shadow-lg shadow-violetAccent/20">
+                        Enter UniLink
                     </button>
                 </form>
                 
-                <p class="mt-6 text-sm text-center text-gray-600">New student? 
-                    <a href="#" onclick="setView('register')" class="link-purple">Register New Account</a>
+                <p class="mt-6 text-sm text-center text-slate-500 dark:text-slate-400">New here? 
+                    <a href="#" onclick="setView('register')" class="link-purple">Create your account.</a>
                 </p>
-                <a href="main.html" class="block w-full text-center mt-4 secondary-button py-3 rounded-xl transition duration-150 font-semibold shadow-lg">
-                    Cancel and Go Back to Main
+                <a href="main.html" class="block w-full text-center mt-4 secondary-button py-3.5 rounded-2xl font-bold shadow-sm">
+                    Back to Campus Map
                 </a>
             `;
-            return renderFormLayout("Welcome Back & Log In", content);
+            return renderFormLayout("Welcome back.", content);
         };
         
         /** Renders the HTML for the Registration Form */
@@ -325,35 +1015,58 @@
             const content = `
                 <form id="register-form" class="space-y-4" onsubmit="handleRegister(event)">
                     <input type="text" id="name" class="input-field w-full" placeholder="Full Name" required>
+                    <input type="text" id="studentId" class="input-field w-full" placeholder="Enrollment Number (e.g., iit2024137)" required>
                     <input type="email" id="email" class="input-field w-full" placeholder="IIITA Email" required>
-                    <input type="text" id="studentId" class="input-field w-full" placeholder="Student ID (e.g., lit2021001)" required>
-                    <div class="grid grid-cols-2 gap-4">
-                        <select id="department" class="input-field w-full" required>
-                            <option value="">Department</option>
-                            <option value="IT">Information Technology</option>
-                            <option value="ECE">Electronics (ECE)</option>
-                        </select>
-                        <select id="year" class="input-field w-full" required>
-                            <option value="">Year</option>
-                            <option value="1">1st Year</option>
-                            <option value="2">2nd Year</option>
-                            <option value="3">3rd Year</option>
-                            <option value="4">4th Year</option>
-                        </select>
+                    <select id="department" class="input-field w-full text-xs md:text-sm" required>
+                        <option value="">Programme</option>
+                        <optgroup label="Undergraduate">
+                            <option value="B.Tech IT">B.Tech IT</option>
+                            <option value="B.Tech ECE">B.Tech ECE</option>
+                            <option value="B.Tech IT-BI">B.Tech IT-BI</option>
+                        </optgroup>
+                        <optgroup label="Postgraduate">
+                            <option value="M.Tech IT">M.Tech IT</option>
+                            <option value="M.Tech ECE">M.Tech ECE</option>
+                            <option value="M.Tech BI">M.Tech BI</option>
+                        </optgroup>
+                        <optgroup label="Management">
+                            <option value="MBA">MBA</option>
+                        </optgroup>
+                        <optgroup label="Doctoral">
+                            <option value="Ph.D.">Ph.D.</option>
+                        </optgroup>
+                    </select>
+                    <div class="flex flex-col gap-1.5 w-full">
+                        <span class="text-[10px] font-bold text-slate-400 dark:text-slate-500 pl-1 uppercase tracking-wider">Graduation Year</span>
+                        <div class="relative w-full h-[120px] bg-slate-100/50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden" id="year-scroll-container">
+                            <!-- Visual Center Highlight Overlay -->
+                            <div class="absolute left-0 right-0 top-[44px] bottom-[44px] border-y border-violetAccent/30 pointer-events-none bg-violetAccent/5 rounded-lg"></div>
+                            
+                            <!-- Scroll Wheel -->
+                            <div class="h-full overflow-y-auto snap-y snap-mandatory scrollbar-none flex flex-col items-center gap-0 select-none cursor-grab active:cursor-grabbing" id="year-wheel" style="padding-top: 44px; padding-bottom: 44px; -ms-overflow-style: none; scrollbar-width: none;">
+                                <div data-year="2027" class="snap-center shrink-0 h-8 flex items-center justify-center font-bold text-slate-400 dark:text-slate-500 text-sm opacity-40 transition-all duration-150 year-wheel-item w-full text-center">2027</div>
+                                <div data-year="2028" class="snap-center shrink-0 h-8 flex items-center justify-center font-bold text-slate-400 dark:text-slate-500 text-sm opacity-40 transition-all duration-150 year-wheel-item w-full text-center">2028</div>
+                                <div data-year="2029" class="snap-center shrink-0 h-8 flex items-center justify-center font-bold text-slate-400 dark:text-slate-500 text-sm opacity-40 transition-all duration-150 year-wheel-item w-full text-center">2029</div>
+                                <div data-year="2030" class="snap-center shrink-0 h-8 flex items-center justify-center font-bold text-slate-400 dark:text-slate-500 text-sm opacity-40 transition-all duration-150 year-wheel-item w-full text-center">2030</div>
+                                <div data-year="2031" class="snap-center shrink-0 h-8 flex items-center justify-center font-bold text-slate-400 dark:text-slate-500 text-sm opacity-40 transition-all duration-150 year-wheel-item w-full text-center">2031</div>
+                                <div data-year="2032" class="snap-center shrink-0 h-8 flex items-center justify-center font-bold text-slate-400 dark:text-slate-500 text-sm opacity-40 transition-all duration-150 year-wheel-item w-full text-center">2032</div>
+                            </div>
+                            <input type="hidden" id="year" required>
+                        </div>
                     </div>
                     <input type="password" id="password" class="input-field w-full" placeholder="Create Password" required>
                     <input type="password" id="passwordConfirm" class="input-field w-full" placeholder="Confirm Password" required>
                     
-                    <button type="submit" class="w-full main-button-gradient text-white py-3 rounded-xl transition duration-150 font-semibold shadow-lg">
+                    <button type="submit" class="w-full main-button-gradient text-white py-3.5 rounded-2xl transition duration-150 font-bold shadow-lg shadow-violetAccent/20">
                         Create Account
                     </button>
                 </form>
                 
-                <p class="mt-6 text-sm text-center text-gray-600">Already have an account? 
+                <p class="mt-6 text-sm text-center text-slate-500 dark:text-slate-400">Already registered? 
                     <a href="#" onclick="setView('login')" class="link-purple">Log In</a>
-                </S>
-                <a href="main.html" class="block w-full text-center mt-4 secondary-button py-3 rounded-xl transition duration-150 font-semibold shadow-lg">
-                    Cancel and Go Back
+                </p>
+                <a href="main.html" class="block w-full text-center mt-4 secondary-button py-3.5 rounded-2xl font-bold shadow-sm">
+                    Cancel and Back
                 </a>
             `;
             return renderFormLayout("Create New Account", content);
@@ -363,16 +1076,16 @@
         const renderForgotPassword = () => {
             const content = `
                 <form id="forgot-form" class="space-y-5" onsubmit="handleForgotPassword(event)">
-                    <p class="text-sm text-gray-600 text-center">Enter your email and we'll send you a link to reset your password.</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Enter your email and we'll send you a link to reset your password.</p>
                     <div>
                         <input type="email" id="email" class="input-field w-full" placeholder="Your IIITA Email" required>
                     </div>
-                    <button type="submit" class="w-full main-button-gradient text-white py-3 rounded-xl transition duration-150 font-semibold shadow-lg">
+                    <button type="submit" class="w-full main-button-gradient text-white py-3.5 rounded-2xl transition duration-150 font-bold shadow-lg shadow-violetAccent/20">
                         Send Reset Link
                     </button>
                 </form>
                 
-                <p class="mt-6 text-sm text-center text-gray-600">Remembered it? 
+                <p class="mt-6 text-sm text-center text-slate-500 dark:text-slate-400">Remembered it? 
                     <a href="#" onclick="setView('login')" class="link-purple">Back to Login</a>
                 </p>
             `;
@@ -382,24 +1095,24 @@
         /** Renders the HTML for the Reset Password Form */
         const renderResetPassword = () => {
             if (!appState.token) {
-                return renderFormLayout("Error", "<p class='text-center text-red-600'>Invalid or missing reset token. Please try the 'Forgot Password' process again.</p>");
+                return renderFormLayout("Error", "<p class='text-center text-red-600 font-bold'>Invalid or missing reset token. Please try the 'Forgot Password' process again.</p>");
             }
             
             const content = `
                 <form id="reset-form" class="space-y-5" onsubmit="handleResetPassword(event)">
-                    <p class="text-sm text-gray-600 text-center">Enter your new password below.</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 text-center">Enter your new password below.</p>
                     <div>
                         <input type="password" id="password" class="input-field w-full" placeholder="New Password" required>
                     </div>
                     <div>
-                        <input type="password" id="passwordConfirm" class="input-field w-full" placeholder="Confirm New Password" required>
+                        <input type="password" id="passwordConfirm" class="input-field w-full" placeholder="Confirm Password" required>
                     </div>
-                    <button type="submit" class="w-full main-button-gradient text-white py-3 rounded-xl transition duration-150 font-semibold shadow-lg">
-                        Reset Password
+                    <button type="submit" class="w-full main-button-gradient text-white py-3.5 rounded-2xl transition duration-150 font-bold shadow-lg shadow-violetAccent/20">
+                        Update Password
                     </button>
                 </form>
             `;
-            return renderFormLayout("Reset Your Password", content);
+            return renderFormLayout("Create New Password", content);
         };
 
         /** Main rendering function */
@@ -422,6 +1135,9 @@
                     html = renderLogin(); 
             }
             appContainer.innerHTML = html;
+            if (appState.view === 'register') {
+                setupRegisterListeners();
+            }
         };
 
         // =======================================
@@ -434,6 +1150,28 @@
         };
         
         initializeApp();
+
+        // Theme switcher logic
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+
+        // Toggle card active state for touch screens
+        window.toggleNote = (card) => {
+            document.querySelectorAll('.notice-card').forEach(c => {
+                if (c !== card) c.classList.remove('active');
+            });
+            card.classList.toggle('active');
+        };
     </script>
 </body>
 </html>

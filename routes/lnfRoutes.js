@@ -8,7 +8,7 @@ const {
     getMyItems, 
     updateItemStatus, 
     searchItems,
-    visualSearch
+    uploadImage
 } = require('../controllers/lnfController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -23,6 +23,9 @@ router.route('/search').get(searchItems);
 
 // --- PRIVATE ROUTES ---
 // (User must be logged in to access these)
+
+// POST /api/lnf/upload - Upload an image to Cloudinary
+router.route('/upload').post(protect, upload, uploadImage);
 
 // POST /api/lnf - Create a new item
 router.route('/').post(protect, createItem);

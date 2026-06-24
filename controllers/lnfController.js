@@ -7,7 +7,7 @@ const cloudinary = require('cloudinary').v2; // This is still needed for CREATIN
 // @access  Public
 const getItems = async (req, res) => {
     try {
-        const items = await LostFoundItem.find({ status: 'open' }) // Only show 'open' items
+        const items = await LostFoundItem.find({ status: { $in: ['open', 'claimed'] } }) // Show both open and claimed items
             .populate('user', 'name studentId') // Get the item's owner and their name/ID
             .sort({ date: -1 }); // Show newest items first
 
@@ -103,7 +103,7 @@ const searchItems = async (req, res) => {
     // Find items using the text index
     const items = await LostFoundItem.find({
       $text: { $search: query },
-      status: 'open' // Only search for 'open' items
+      status: { $in: ['open', 'claimed'] } // Search both open and claimed items
     }).populate('user', 'name studentId');
     
     res.status(200).json({ success: true, items: items });
@@ -115,12 +115,53 @@ const searchItems = async (req, res) => {
 };
 
 
+// @desc    Upload an item photo to Cloudinary
+// @route   POST /api/lnf/upload
+// @access  Private
+const uploadImage = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No file uploaded' });
+        }
+
+        // Initialize cloudinary config
+        cloudinary.config({
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET
+        });
+
+        // Upload to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'unilink_lnf'
+        });
+
+        // Remove the local file from uploads/
+        const fs = require('fs');
+        if (fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+
+        res.status(200).json({
+            success: true,
+            url: result.secure_url
+        });
+    } catch (err) {
+        console.error('Cloudinary Upload Error:', err);
+        const fs = require('fs');
+        if (req.file && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        res.status(500).json({ success: false, message: 'Upload failed: ' + err.message });
+    }
+};
+
 // --- EXPORT ALL FUNCTIONS ---
 module.exports = {
     getItems,
     createItem,
     getMyItems,
     updateItemStatus,
-    searchItems
-    // visualSearch has been removed
+    searchItems,
+    uploadImage
 };

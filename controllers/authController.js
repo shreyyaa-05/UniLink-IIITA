@@ -182,22 +182,42 @@ exports.forgotPassword = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       console.log(`Password reset requested for non-existent email: ${req.body.email}`);
-      return res.status(200).json({ msg: 'If an account with that email exists, a reset link has been sent.' });
+      return res.status(200).json({ msg: 'If an account exists, a reset email has been sent.' });
     }
 
     const resetToken = user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `${process.env.APP_BASE_URL}/auth.html?view=resetpassword&token=${resetToken}`;
-    const message = `You requested a password reset for UniLink. Please click this link (expires in 10 minutes):\n\n${resetUrl}\n\nIf you did not request this, please ignore this email.`;
+    const resetUrl = `${process.env.FRONTEND_URL}/auth.html?view=resetpassword&token=${resetToken}`;
+    
+    // Custom formatted HTML email body
+    const htmlMessage = `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #edf2f7; border-radius: 12px; background-color: #ffffff;">
+        <h2 style="color: #4f46e5; text-align: center; margin-bottom: 24px;">🔐 Reset Your UniLink Password</h2>
+        <p style="font-size: 16px; color: #4a5568; line-height: 1.5;">Hello,</p>
+        <p style="font-size: 16px; color: #4a5568; line-height: 1.5;">We received a request to reset your UniLink password.</p>
+        <p style="font-size: 16px; color: #4a5568; line-height: 1.5;">Click the button below to create a new password:</p>
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${resetUrl}" style="background-color: #7c3aed; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.2), 0 2px 4px -1px rgba(124, 58, 237, 0.06);">Reset Password</a>
+        </div>
+        <p style="font-size: 14px; color: #718096; line-height: 1.5;">This link expires in 15 minutes.</p>
+        <p style="font-size: 14px; color: #718096; line-height: 1.5; margin-bottom: 24px;">If you did not request a password reset, ignore this email.</p>
+        <hr style="border: 0; border-top: 1px solid #edf2f7; margin-bottom: 16px;" />
+        <p style="font-size: 14px; color: #a0aec0; text-align: center; margin: 0;">— UniLink Team</p>
+      </div>
+    `;
+
+    // Plain text fallback
+    const textMessage = `Hello,\n\nWe received a request to reset your UniLink password.\n\nClick the link below to create a new password:\n\n${resetUrl}\n\nThis link expires in 15 minutes.\n\nIf you did not request a password reset, ignore this email.\n\n— UniLink Team`;
 
     await sendEmail({
       email: user.email,
-      subject: 'UniLink Password Reset Request',
-      message: message,
+      subject: '🔐 Reset Your UniLink Password',
+      message: textMessage,
+      html: htmlMessage,
     });
 
-    res.status(200).json({ msg: 'If an account with that email exists, a reset link has been sent.' });
+    res.status(200).json({ msg: 'If an account exists, a reset email has been sent.' });
 
   } catch (error) {
     console.error('Forgot Password Error:', error);
@@ -205,7 +225,7 @@ exports.forgotPassword = async (req, res) => {
         const userWithError = await User.findOne({ email: req.body.email });
         if (userWithError && userWithError.resetPasswordToken) {
             userWithError.resetPasswordToken = undefined;
-            userWithError.resetPasswordExpire = undefined;
+            userWithError.resetPasswordExpires = undefined;
             await userWithError.save({ validateBeforeSave: false });
         }
     } catch (cleanupError) {
@@ -227,20 +247,20 @@ exports.resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() },
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return res.status(400).json({ msg: 'Invalid or expired token' });
+      return res.status(400).json({ msg: 'This reset link is invalid or has expired.' });
     }
 
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    user.resetPasswordExpires = undefined;
 
     await user.save();
 
-    res.status(200).json({ msg: 'Password reset successful' });
+    res.status(200).json({ msg: 'Password updated successfully.' });
 
   } catch (error) {
     console.error('Reset Password Error:', error);

@@ -3,393 +3,930 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ - UniLink</title>
+    <title>Things Students Usually Ask — UniLink</title>
+    <!-- Google Fonts: Playfair Display for headings, Inter for body, Caveat for handwritten notes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300..900&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Enforce Login Script (Immediate execution to block unauthenticated flash) -->
+    <script>
+        function isLoggedIn() {
+            return localStorage.getItem('token') !== null && localStorage.getItem('userData') !== null;
+        }
+
+        function enforceLogin() {
+            if (!isLoggedIn()) {
+                alert('You must be logged in to view the FAQ page.');
+                window.location.href = 'main.html';
+            }
+        }
+        
+        enforceLogin();
+    </script>
+    
     <style>
+        :root {
+            --bg-color: #F5F7FB; /* Soft blue-tinted paper background */
+            --card-color: #FFFFFF;
+            --text-primary: #2F3A4A; /* Deep slate */
+            --text-secondary: #6B7280; /* Cool grey */
+            --border-color: rgba(53, 80, 112, 0.08);
+            --border-input: rgba(53, 80, 112, 0.12);
+            --shadow-soft: 0 2px 8px rgba(53, 80, 112, 0.04); /* Reduced flat print shadow */
+            
+            /* Cool-toned FAQ Palette */
+            --color-muted-navy: #355070;
+            --color-slate-blue: #5C6B8A;
+            --color-dusty-gold: #C9A44C;
+            --color-cool-grey: #6B7280;
+            --color-soft-teal: #6F8E8A;
+            --color-accent-light: rgba(53, 80, 112, 0.08);
+            
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-handwritten: 'Caveat', cursive;
+            
+            /* Section Accents */
+            --accent-getting-started: #355070; /* Muted Navy */
+            --accent-lost-found: #E76F51;      /* Coral */
+            --accent-blood: #7F1D1D;           /* Deep Maroon */
+            --accent-ride: #D68A1F;            /* Amber */
+            --accent-rental: #2F6B52;          /* Forest Green */
+            --accent-accounts: #5C6B8A;        /* Slate Blue */
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: url('faq1.png') ;
-            background-size: cover;
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Navigation Bar */
         .navbar {
-            background-color: #9370db;
-            padding: 15px 0;
-            box-shadow: 0 4px 12px rgba(147, 112, 219, 0.2);
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 100;
+            width: 100%;
         }
 
         .nav-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 28px;
+            font-family: var(--font-sans);
+            font-size: 20px;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             text-decoration: none;
+            letter-spacing: -0.025em;
+            transition: color 0.2s ease;
+        }
+
+        .logo:hover {
+            color: var(--color-muted-navy);
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 28px;
+            align-items: center;
         }
 
-        .nav-links a {
-            color: white;
+        .nav-link {
+            color: var(--text-secondary);
             text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 20px 0;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            color: var(--color-muted-navy);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-muted-navy);
+        }
+
+        .logout-btn-nav {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
             font-weight: 500;
             padding: 8px 16px;
-            border-radius: 20px;
-            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            background-color: rgba(255, 255, 255, 0.2);
+        .logout-btn-nav:hover {
+            color: var(--color-muted-navy);
+            background-color: var(--color-accent-light);
+            border-color: rgba(53, 80, 112, 0.2);
         }
 
-        /* Header Section */
-        .header {
-            text-align: center;
-            padding: 60px 0 40px;
-        }
-
-        .header h1 {
-            font-size: 42px;
-            margin-bottom: 15px;
-            color: #6a0dad;
-        }
-
-        .header p {
-            font-size: 18px;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.6;
-            color: #663399;
-        }
-
-        /* FAQ Section */
-        .faq-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 60px;
-        }
-
-        .faq-column {
-            background-color: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .faq-column:hover {
-            transform: translateY(-5px);
-        }
-
-        .faq-question {
-            font-weight: 600;
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: #6a0dad;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e6e6fa;
-        }
-
-        .faq-answer {
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 20px;
-        }
-
-        /* Messages Section */
-        .messages-section {
-            background-color: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.1);
-        }
-
-        .messages-section h3 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #6a0dad;
-        }
-
-        .message-item {
-            padding: 15px;
-            border-left: 4px solid #9370db;
-            background-color: #f9f7ff;
-            margin-bottom: 15px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .message-text {
-            font-style: italic;
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .message-author {
-            margin-top: 10px;
-            font-weight: 500;
-            color: #6a0dad;
-            text-align: right;
-        }
-
-        
-        .logout-button {
-            background: transparent;
-            border: 2px solid #ef4444;
-            color: #ef4444;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
+        /* Mobile Menu */
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .logout-button:hover {
-            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--text-primary);
+            padding: 8px;
         }
 
-        /* Footer */
-        footer {
+        .mobile-menu {
+            display: none;
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mobile-nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+        }
+
+        .mobile-nav-link.active {
+            color: var(--color-muted-navy);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        /* SECTION 1: Hero Section */
+        .hero-section {
+            padding: 80px 0 56px;
             text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e6e6fa;
-            color: #9370db;
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        /* Responsive Design */
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 550;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .hero-copy {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        /* Handwritten notes formatting */
+        .handwritten-note {
+            font-family: var(--font-handwritten);
+            font-size: 19px;
+            color: var(--color-slate-blue); /* Blue ink annotations */
+            transform: rotate(-1deg);
+            display: inline-block;
+            user-select: none;
+            opacity: 0.85;
+        }
+
+        .hero-handwritten-wrapper {
+            position: absolute;
+            right: -100px;
+            bottom: 30px;
+            transform: rotate(3deg);
+            width: 160px;
+            text-align: left;
+        }
+
+        @media (max-width: 992px) {
+            .hero-handwritten-wrapper {
+                position: static;
+                margin-top: 12px;
+                text-align: center;
+                transform: rotate(-1deg);
+                width: auto;
+            }
+        }
+
+        /* SECTION 2: Accordion-based FAQs grouped by chapters */
+        .faq-container {
+            max-width: 720px;
+            margin: 0 auto 64px;
+            position: relative;
+        }
+
+        .faq-group {
+            margin-bottom: 64px;
+            position: relative;
+        }
+
+        .faq-group-header {
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(53, 80, 112, 0.1);
+            padding-bottom: 12px;
+            position: relative;
+        }
+
+        .faq-chapter-num {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--color-slate-blue);
+            letter-spacing: 0.1em;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .faq-group-label {
+            font-size: 13px;
+            font-style: italic;
+            font-weight: 550;
+            display: block;
+            margin-top: 4px;
+            color: var(--text-secondary);
+        }
+
+        .faq-group-title {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 2px;
+        }
+
+        /* Question lists as clean items, not cards */
+        .accordion-item {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(53, 80, 112, 0.08);
+            border-radius: 0;
+            margin-bottom: 0;
+            overflow: hidden;
+            box-shadow: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: rgba(53, 80, 112, 0.16);
+        }
+
+        .accordion-item.open {
+            border-color: rgba(53, 80, 112, 0.16);
+            box-shadow: none;
+        }
+
+        .accordion-header {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 18px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            text-align: left;
+            outline: none;
+        }
+
+        .accordion-question {
+            font-family: var(--font-sans);
+            font-size: 15.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+            padding-right: 24px;
+            transition: color 0.2s ease;
+        }
+
+        .accordion-item.open .accordion-question {
+            color: var(--color-muted-navy);
+        }
+
+        .accordion-icon {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-slate-blue);
+            user-select: none;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+        }
+
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.25s ease-out;
+        }
+
+        .accordion-item.open .accordion-content {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-content-inner {
+            overflow: hidden;
+        }
+
+        /* Highlighted expanded answer style aligned under the question */
+        .accordion-answer {
+            background-color: rgba(237, 243, 250, 0.7);
+            border-left: 3px solid var(--color-muted-navy);
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            border-radius: 0 6px 6px 0;
+            font-size: 14.5px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Handwritten notes in margins */
+        .section-note-wrapper {
+            position: absolute;
+            left: 100%;
+            top: 20px;
+            width: 180px;
+            margin-left: 40px;
+            text-align: left;
+            z-index: 5;
+        }
+
+        @media (max-width: 1140px) {
+            .section-note-wrapper {
+                position: static;
+                width: 100%;
+                margin: 12px 0 20px 0;
+                text-align: right;
+                padding-right: 16px;
+            }
+        }
+
+        /* SECTION 3: Didn't Find Your Answer? */
+        .cta-section {
+            padding: 64px 24px;
+            border-top: 1px dashed rgba(53, 80, 112, 0.12);
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 32px;
+        }
+
+        .cta-title {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .cta-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background-color: var(--color-muted-navy);
+            color: var(--card-color);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-soft);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .cta-btn:hover {
+            background-color: #233850;
+            transform: translateY(-1px);
+        }
+
+        /* SECTION 4: Footer */
+        .footer-section {
+            padding: 40px 0 56px;
+            text-align: center;
+            border-top: 1px solid rgba(53, 80, 112, 0.04);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Responsive Breakpoints */
         @media (max-width: 768px) {
-            .faq-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .contact-form {
-                grid-template-columns: 1fr;
-            }
-            
             .nav-links {
-                gap: 15px;
+                display: none;
             }
-            
-            .header h1 {
-                font-size: 32px;
+
+            .menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 38px;
+            }
+
+            .hero-section {
+                padding: 56px 0 40px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+
+    <!-- Navbar -->
     <nav class="navbar">
-        <div class="container nav-container">
-            <a href="home.html" class="logo">UniLink</a>
+        <div class="nav-container">
+            <a href="main.html" class="logo">UniLink</a>
             <div class="nav-links">
-                <a href="main.html">Home</a>
-                <a href="contactus.html">Contact</a>
-                <a href="faq.html" class="active">FAQ</a>
-                <a href="profile.html">Profile</a>
-                <a href="#" onclick="logout(); return false;">Logout</a>
-                
+                <a href="main.html" class="nav-link">Home</a>
+                <a href="contactus.html" class="nav-link">Contact</a>
+                <a href="faq.html" class="nav-link active">FAQ</a>
+                <a href="profile.html" id="nav-profile" class="nav-link" style="display: none;">Profile</a>
+                <a href="auth.html?view=login" id="nav-login" class="nav-link" style="display: none;">Login</a>
+                <a href="#" id="nav-logout" onclick="logout(); return false;" class="logout-btn-nav" style="display: none;">Logout</a>
+            </div>
+            <button class="menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- Header Section -->
-    <div class="container">
-        <div class="header">
-            <h1>Frequently Asked Questions</h1>
-            <p>Find answers to common questions about UniLink's features including Blood Donation, Car Rental, Commute Pooling, and Lost & Found services.</p>
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-nav-links">
+            <a href="main.html" class="mobile-nav-link">Home</a>
+            <a href="contactus.html" class="mobile-nav-link">Contact</a>
+            <a href="faq.html" class="mobile-nav-link active">FAQ</a>
+            <a href="profile.html" id="mobile-nav-profile" class="mobile-nav-link" style="display: none;">Profile</a>
+            <a href="auth.html?view=login" id="mobile-nav-login" class="mobile-nav-link" style="display: none;">Login</a>
+            <a href="#" id="mobile-nav-logout" onclick="logout(); return false;" class="mobile-nav-link" style="color: var(--color-muted-navy); display: none;">Logout</a>
         </div>
+    </div>
 
-        <!-- FAQ Section -->
-        <div class="faq-section">
-            <div class="faq-column">
-                <div class="faq-question">What is UniLink and how does it work?</div>
-                <p class="faq-answer">UniLink is a comprehensive campus platform that connects students through various services. After creating an account, you can access modules for blood donation requests, car rentals, commute pooling, and lost & found items.</p>
-                
-                <div class="faq-question">How do I request blood donation through UniLink?</div>
-                <p class="faq-answer">Navigate to the Blood Donation module, fill out the request form with required details like blood type, urgency, and location. The system will notify potential donors in your area who can respond to your request.</p>
-                
-                <div class="faq-question">Can I rent a car through UniLink as a student?</div>
-                <p class="faq-answer">Yes! The Car Rental module allows students to rent vehicles from other students or authorized campus partners. You can browse available cars, check rental terms, and book directly through the platform.</p>
-                
-                <div class="faq-question">How does the commute pooling feature work?</div>
-                <p class="faq-answer">Commute Pooling helps you find travel companions for your daily commute. You can either offer a ride or request one by specifying your route, timing, and number of available seats.</p>
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <h1 class="hero-title">Before you ask in the hostel group chat...</h1>
+            <p class="hero-subtitle">Here are the questions we've heard more than once.</p>
+            <p class="hero-copy">Answers gathered from situations IIITA students run into every semester.</p>
+            <div class="hero-handwritten-wrapper">
+                <span class="handwritten-note">"Trust us, we've heard all of them."</span>
             </div>
+        </header>
+
+
+        <!-- Accordions grouped by scenarios -->
+        <section class="faq-container">
             
-            <div class="faq-column">
-                <div class="faq-question">What should I do if I lose something on campus?</div>
-                <p class="faq-answer">Use the Lost & Found module to report lost items or browse found items. Provide a detailed description and photos if possible. The system will notify you if a matching item is reported as found.</p>
+            <!-- Section 1: Getting Started -->
+            <div id="getting-started" class="faq-group" style="--group-color: var(--accent-getting-started);">
+                <div class="faq-group-header">
+                    <div class="faq-chapter-num">CHAPTER 01</div>
+                    <h2 class="faq-group-title">Getting Started</h2>
+                    <span class="faq-group-label" style="color: var(--accent-getting-started);">"First-week questions."</span>
+                </div>
                 
-                <div class="faq-question">Is there a verification process for users?</div>
-                <p class="faq-answer">Yes, all users are verified through their university email addresses. Additional verification may be required for certain features like car rental to ensure safety and reliability.</p>
+                <!-- Q1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Do I need an IIITA email?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Yes. UniLink is built exclusively for the IIIT Allahabad community.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">I'm a first year. Can I use everything?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Absolutely. Most of us started using UniLink while still figuring out where the lecture halls were.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Lost & Found -->
+            <div id="lost-found" class="faq-group" style="--group-color: var(--accent-lost-found);">
+                <div class="faq-group-header">
+                    <div class="faq-chapter-num">CHAPTER 02</div>
+                    <h2 class="faq-group-title">Lost & Found</h2>
+                    <span class="faq-group-label" style="color: var(--accent-lost-found);">"The things people somehow manage to lose."</span>
+                </div>
                 
-                <div class="faq-question">Are there any fees for using UniLink services?</div>
-                <p class="faq-answer">Basic features like blood donation requests and lost & found are free. Car rentals and premium commute pooling options may involve fees, which are clearly displayed before confirmation.</p>
+                <!-- Q1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">I lost my ID near CC3. What should I do?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Report it immediately with as many details as possible. The sooner it's posted, the easier it is for someone to recognize it.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Can I upload photos?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Yes. Photos make it much easier for others to identify items.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">What if multiple people claim the same item?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Moderators may ask for additional proof before marking an item as returned.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Handwritten note -->
+                <div class="section-note-wrapper">
+                    <span class="handwritten-note">"Someone once lost an entire ECE lab textbook."</span>
+                </div>
+            </div>
+
+            <!-- Section 3: Blood Donation -->
+            <div id="blood-donation" class="faq-group" style="--group-color: var(--accent-blood);">
+                <div class="faq-group-header">
+                    <div class="faq-chapter-num">CHAPTER 03</div>
+                    <h2 class="faq-group-title">Blood Donation</h2>
+                    <span class="faq-group-label" style="color: var(--accent-blood);">"When showing up matters."</span>
+                </div>
                 
-                <div class="faq-question">How do I update my profile information?</div>
-                <p class="faq-answer">Visit your Profile page where you can edit personal details, preferences, and notification settings. Keeping your profile updated ensures you get the most relevant matches for services.</p>
+                <!-- Q1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Will everyone know I requested blood?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Only verified UniLink users can access donor information.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">How quickly do requests get responses?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">It depends on urgency and availability, but classmates often step forward faster than you'd expect.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Can I volunteer as a donor?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Yes. You can update your availability whenever you're comfortable.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-    <script>  
-    // Function to check login status
-    function isLoggedIn() {
-        // Check for the presence of a token or relevant user data
-        return localStorage.getItem('token') !== null && localStorage.getItem('userData') !== null;
-    }
+            <!-- Section 4: Ride Sharing -->
+            <div id="ride-sharing" class="faq-group" style="--group-color: var(--accent-ride);">
+                <div class="faq-group-header">
+                    <div class="faq-chapter-num">CHAPTER 04</div>
+                    <h2 class="faq-group-title">Ride Sharing</h2>
+                    <span class="faq-group-label" style="color: var(--accent-ride);">"The group chat became a feature."</span>
+                </div>
+                
+                <!-- Q1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Is this basically Uber?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Not really. UniLink helps students already making similar trips connect with each other.</p>
+                        </div>
+                    </div>
+                </div>
 
-    // Function to enforce login status on the page
-    function enforceLogin() {
-        if (!isLoggedIn()) {
-            // Alert the user (optional, good for debugging/UX)
-            alert('You must be logged in to view the FAQ page.');
-            
-            // Redirect the user to the login page or the main entry point
-            window.location.href = 'main.html'; // Assuming 'main.html' is the home or login page
-        }
-    }
-    
-    // IMPORTANT: Run the check immediately when the script executes (page loads)
-    enforceLogin(); 
+                <!-- Q2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">What trips are common?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Civil Lines, Prayagraj Junction, airport runs, coaching centres, and spontaneous food plans.</p>
+                        </div>
+                    </div>
+                </div>
 
-    // --- Existing functions remain below ---
+                <!-- Q3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">What if plans change?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">You can update or cancel your ride details anytime. Campus schedules are rarely predictable.</p>
+                        </div>
+                    </div>
+                </div>
 
-    // Handle logout - CLEARS LOCAL STORAGE AND ALERTS USER
-    function logout() {
-        // Clear authentication tokens and user data
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        
-        // This is a placeholder function to update the navigation bar/buttons
-        updateAuthUI(); 
-        
-        // Alert the user and redirect them to the home/login page
-        alert('You have been logged out.');
-        window.location.href = 'main.html'; // Redirect to home/login after logout
-    }
-
-    // This is a minimal definition for updateAuthUI, as the original script was incomplete for its use case.
-    function updateAuthUI() {
-        // In a real application, this function would hide 'Profile', show 'Login/Signup', etc.
-        console.log("UI update logic executed.");
-    }
-    // Handle logout
-    function logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        updateAuthUI();
-        alert('You have been logged out.');
-    }
-    // Handle logout
-    function logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        updateAuthUI();
-        alert('You have been logged out.');
-    }
-    // Update UI based on login status
-    function updateAuthUI() {
-        const isLoggedInUser = isLoggedIn();
-        const authButtonsHero = document.getElementById('auth-buttons-hero');
-        const navLoggedOut = document.getElementById('nav-logged-out');
-        const navLoggedIn = document.getElementById('nav-logged-in');
-        const mobileNavLoggedOut = document.getElementById('mobile-nav-logged-out');
-        const mobileNavLoggedIn = document.getElementById('mobile-nav-logged-in');
-        const profileLink = document.getElementById('profile-link');
-        const logoutButton = document.getElementById('logout-button');
-
-        if (isLoggedInUser) {
-            // User is logged in - show logout button, hide signup/login
-                    // User is not logged in - show signup/login buttons
-            authButtonsHero.innerHTML = `
-                <a href="auth.html?view=register" class="main-button-gradient text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <div class="w-2 h-2 rounded-full border-2 border-white mr-2"></div>
-                    SIGN UP NOW
-                </a>
-
-                <a href="auth.html?view=login" class="login-button-outline px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <svg class="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                    </svg>
-                    LOGIN
-                </a>
-            `;
-            navLoggedOut.classList.add('hidden');
-            navLoggedIn.classList.remove('hidden');
-            mobileNavLoggedOut.classList.add('hidden');
-            mobileNavLoggedIn.classList.remove('hidden');
-
-        } else {
-            // User is not logged in - show signup/login buttons
-            authButtonsHero.innerHTML = `
-                <a href="auth.html?view=register" class="main-button-gradient text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <div class="w-2 h-2 rounded-full border-2 border-white mr-2"></div>
-                    SIGN UP NOW
-                </a>
-
-                <a href="auth.html?view=login" class="login-button-outline px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold w-full md:w-max transition duration-150 shadow-lg flex items-center justify-center auth-button">
-                    <svg class="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3v-7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-                    </svg>
-                    LOGIN
-                </a>
-            `;
-
-            navLoggedOut.classList.remove('hidden');
-            navLoggedIn.classList.add('hidden');
-            mobileNavLoggedOut.classList.remove('hidden');
-            mobileNavLoggedIn.classList.add('hidden');
-        }
-    }
-
-    </script>  
-
-        <!-- Messages Section -->
-        <div class="messages-section">
-            <h3>What Our Users Say</h3>
-            <div class="message-item">
-                <p class="message-text">"UniLink helped me find a blood donor for my friend within hours. The platform is intuitive and the community is incredibly supportive."</p>
-                <div class="message-author">- Ritesh</div>
+                <!-- Handwritten note -->
+                <div class="section-note-wrapper">
+                    <span class="handwritten-note">"Half these rides started with 'Anyone going?'"</span>
+                </div>
             </div>
-            <div class="message-item">
-                <p class="message-text">"The commute pooling feature saved me so much on transportation costs. I've met amazing people while sharing rides to campus."</p>
-                <div class="message-author">- Sarah </div>
+
+            <!-- Section 5: Vehicle Sharing -->
+            <div id="vehicle-sharing" class="faq-group" style="--group-color: var(--accent-rental);">
+                <div class="faq-group-header">
+                    <div class="faq-chapter-num">CHAPTER 05</div>
+                    <h2 class="faq-group-title">Vehicle Sharing</h2>
+                    <span class="faq-group-label" style="color: var(--accent-rental);">"Borrowed wheels and weekend plans."</span>
+                </div>
+                
+                <!-- Q1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Can I borrow vehicles from other students?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Only verified listings approved through UniLink are shown.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">What do people usually use this for?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Station runs, Sangam sunsets, airport drops, city outings, and the occasional chai mission.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">What happens if there's a dispute?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">UniLink moderators help both parties resolve issues fairly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Handwritten note -->
+                <div class="section-note-wrapper">
+                    <span class="handwritten-note">"Please return the scooter with fuel."</span>
+                </div>
             </div>
-            <div class="message-item">
-                <p class="message-text">"I recovered my lost laptop thanks to UniLink's Lost & Found module."</p>
-                <div class="message-author">- Mohan</div>
+
+            <!-- Section 6: Accounts & Privacy -->
+            <div id="accounts-privacy" class="faq-group" style="--group-color: var(--accent-accounts);">
+                <div class="faq-group-header">
+                    <div class="faq-chapter-num">CHAPTER 06</div>
+                    <h2 class="faq-group-title">Accounts & Privacy</h2>
+                    <span class="faq-group-label" style="color: var(--accent-accounts);">"The practical stuff."</span>
+                </div>
+                
+                <!-- Q1 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Why do you verify emails?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Trust matters. Verification helps keep the community safe.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span class="accordion-question">Can I delete my account?</span>
+                        <span class="accordion-icon">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            <p class="accordion-answer">Yes. Your information remains under your control.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        
+
+        </section>
+
+        <!-- Bottom section CTA -->
+        <section class="cta-section">
+            <h3 class="cta-title">Didn't find what you were looking for?</h3>
+            <p class="cta-text">Ask us anyway. Every semester brings a new question.</p>
+            <a href="contactus.html" class="cta-btn">Talk to Us</a>
+        </section>
+
 
         <!-- Footer -->
-        <footer>
-            <p>Copyright © UniLink Campus Services</p>
+        <footer class="footer-section">
+            <p class="footer-text">Built at IIIT Allahabad, one small campus emergency at a time.</p>
         </footer>
+
     </div>
+
+    <!-- Scripts -->
+    <script>
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            alert('You have been logged out.');
+            window.location.href = 'main.html';
+        }
+
+        function updateAuthUI() {
+            const loggedIn = isLoggedIn();
+            
+            const navProfile = document.getElementById('nav-profile');
+            const navLogout = document.getElementById('nav-logout');
+            const navLogin = document.getElementById('nav-login');
+            
+            const mobileNavProfile = document.getElementById('mobile-nav-profile');
+            const mobileNavLogout = document.getElementById('mobile-nav-logout');
+            const mobileNavLogin = document.getElementById('mobile-nav-login');
+
+            if (loggedIn) {
+                if (navProfile) navProfile.style.display = 'inline-block';
+                if (navLogout) navLogout.style.display = 'inline-block';
+                if (navLogin) navLogin.style.display = 'none';
+
+                if (mobileNavProfile) mobileNavProfile.style.display = 'block';
+                if (mobileNavLogout) mobileNavLogout.style.display = 'block';
+                if (mobileNavLogin) mobileNavLogin.style.display = 'none';
+            } else {
+                if (navProfile) navProfile.style.display = 'none';
+                if (navLogout) navLogout.style.display = 'none';
+                if (navLogin) navLogin.style.display = 'inline-block';
+
+                if (mobileNavProfile) mobileNavProfile.style.display = 'none';
+                if (mobileNavLogout) mobileNavLogout.style.display = 'none';
+                if (mobileNavLogin) mobileNavLogin.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Initialize Lucide Icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // 2. Setup Accordion expand/collapse behavior
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const currentItem = header.parentElement;
+                    const isOpen = currentItem.classList.contains('open');
+                    
+                    // Close all other accordions
+                    document.querySelectorAll('.accordion-item').forEach(item => {
+                        item.classList.remove('open');
+                        const icon = item.querySelector('.accordion-icon');
+                        if (icon) icon.textContent = '+';
+                    });
+                    
+                    // Toggle current accordion
+                    if (!isOpen) {
+                        currentItem.classList.add('open');
+                        const icon = currentItem.querySelector('.accordion-icon');
+                        if (icon) icon.textContent = '−';
+                    }
+                });
+            });
+
+            // 3. Setup Mobile Menu Click
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    const isOpen = mobileMenu.classList.toggle('open');
+                    
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        if (isOpen) {
+                            icon.setAttribute('data-lucide', 'x');
+                        } else {
+                            icon.setAttribute('data-lucide', 'menu');
+                        }
+                        if (window.lucide) {
+                            lucide.createIcons();
+                        }
+                    }
+                });
+            }
+
+            // 4. Update Navbar dynamic triggers
+            updateAuthUI();
+        });
+    </script>
 </body>
 </html>

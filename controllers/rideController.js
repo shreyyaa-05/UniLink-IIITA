@@ -146,12 +146,51 @@ const getRides = asyncHandler(async (req, res) => {
     });
 });
 
-// You'll add getRides, getRideById, etc. here later.
+// @desc    Delete a Ride Offer
+// @route   DELETE /api/rides/:id
+// @access  Private
+const deleteRideOffer = asyncHandler(async (req, res) => {
+    const ride = await Ride.findById(req.params.id);
+
+    if (!ride) {
+        res.status(404);
+        throw new Error('Ride offer not found');
+    }
+
+    if (ride.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error('User not authorized');
+    }
+
+    await ride.deleteOne();
+    res.status(200).json({ success: true, message: 'Ride offer deleted' });
+});
+
+// @desc    Delete a Ride Request
+// @route   DELETE /api/rides/requests/:id
+// @access  Private
+const deleteRideRequest = asyncHandler(async (req, res) => {
+    const request = await RideRequest.findById(req.params.id);
+
+    if (!request) {
+        res.status(404);
+        throw new Error('Ride request not found');
+    }
+
+    if (request.user.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error('User not authorized');
+    }
+
+    await request.deleteOne();
+    res.status(200).json({ success: true, message: 'Ride request deleted' });
+});
 
 module.exports = {
     createRideOffer,
     getRides,
     createRideRequest,
-    getRideRequests
-    // Add other functions here later (e.g., getRides)
+    getRideRequests,
+    deleteRideOffer,
+    deleteRideRequest
 };

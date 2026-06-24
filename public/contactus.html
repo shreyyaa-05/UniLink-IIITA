@@ -3,389 +3,839 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Talk to the people behind UniLink</title>
+    <!-- Google Fonts: Playfair Display for editorial headings, Inter for clean UI, Caveat for handwritten notes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300..900&family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
+        :root {
+            --bg-color: #F7F2E8; /* Warm recycled-paper tone */
+            --card-color: #FFFFFF;
+            --text-primary: #1F2937; /* Deep ink */
+            --text-secondary: #374151; /* Soft Charcoal */
+            --border-color: rgba(31, 41, 55, 0.08);
+            --border-input: rgba(31, 41, 55, 0.10);
+            --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.05);
+            
+            /* Contact Palette */
+            --deep-ink: #1F2937;
+            --warm-ochre: #C28B36;
+            --muted-sage: #7B8B7A;
+            --terracotta: #B35C44;
+            --dusty-navy: #4E5D78;
+            --soft-charcoal: #374151;
+            
+            --accent-color: var(--terracotta);
+            --accent-hover: #9c4c36; /* slightly darker terracotta */
+            --accent-focus-shadow: rgba(179, 92, 68, 0.08);
+            --soft-paper: #FAF7F2;
+            
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-handwritten: 'Caveat', cursive;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #b698cb, #72588a, #9370db);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        
-        .container {
-            display: flex;
-            max-width: 1000px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .background-image {
-            flex: 1;
-            background: url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80') center/cover no-repeat;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .background-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(141, 122, 154, 0.7);
-        }
-        
-        .box {
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .box-inner {
-            width: 120px;
-            height: 120px;
-            background: url('logonew.png') center/cover no-repeat;
-            border-radius: 10px;
-        }
-        
-        .form-section {
-            flex: 1;
-            padding: 40px;
-            color: white;
-        }
-        
-        h2 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: #fff;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .contact-info {
-            margin-bottom: 30px;
-        }
-        
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .info-item i {
-            width: 30px;
-            font-size: 18px;
-            color: #e6d5ff;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            flex: 1;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #e6d5ff;
-        }
-        
-        input, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        input:focus, textarea:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 0 0 2px rgba(230, 213, 255, 0.5);
-        }
-        
-        input::placeholder, textarea::placeholder {
-            color: #d0b8ff;
-        }
-        
-        textarea {
-            height: 120px;
-            resize: none;
-        }
-        
-        .submit-btn {
-            background: #804cb1;
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-            margin-top: 10px;
-        }
-        
-        .submit-btn:hover {
-            background: #6a0dad;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
-        }
-        
-        .description {
-            margin-top: 25px;
-            font-size: 14px;
-            color: #e6d5ff;
-            line-height: 1.5;
-        }
-                /* Navigation Bar */
+
+        /* Navigation Bar */
         .navbar {
-            background: linear-gradient(135deg, #6d5584, #72588a);
-            padding: 8px 0;
-            box-shadow: 0 4px 20px rgba(147, 112, 219, 0.3);
-            position: fixed;
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
+            z-index: 100;
+            width: 100%;
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
+            height: 64px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 28px;
+            font-family: var(--font-sans);
+            font-size: 20px;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             text-decoration: none;
-            padding: 6px 14px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
+            letter-spacing: -0.025em;
+            transition: color 0.2s ease;
         }
 
         .logo:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+            color: var(--accent-color);
         }
 
         .nav-links {
             display: flex;
-            gap: 8px;
+            gap: 28px;
             align-items: center;
         }
 
         .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: white;
+            color: var(--text-secondary);
             text-decoration: none;
+            font-size: 14px;
             font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid transparent;
+            padding: 20px 0;
+            position: relative;
+            transition: color 0.2s ease;
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--text-primary);
         }
 
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.4);
+            color: var(--accent-color);
         }
 
-        .nav-icon {
-            font-size: 16px;
-            transition: transform 0.3s ease;
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-color);
         }
 
-        .nav-link:hover .nav-icon {
-            transform: scale(1.2);
+        .logout-btn-nav {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
-        .logout-btn {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid rgba(239, 68, 68, 0.4);
+        .logout-btn-nav:hover {
+            color: var(--accent-color);
+            background-color: var(--accent-focus-shadow);
+            border-color: rgba(179, 92, 68, 0.2);
         }
 
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.3);
-            border-color: rgba(239, 68, 68, 0.6);
+        /* Mobile Menu */
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 8px;
+        }
+
+        .mobile-menu {
+            display: none;
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mobile-nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 8px 0;
+        }
+
+        .mobile-nav-link.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* SECTION 1: Hero Section */
+        .hero-section {
+            padding: 80px 0 48px;
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .hero-copy {
+            font-size: 15px;
+            color: var(--muted-sage);
+            font-weight: 550;
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
+        }
+
+        .hero-handwritten-wrapper {
+            margin-top: 8px;
+        }
+
+        .handwritten-note {
+            font-family: var(--font-handwritten);
+            font-size: 20px;
+            color: var(--terracotta);
+            transform: rotate(-1.5deg);
+            display: inline-block;
+            user-select: none;
+        }
+
+        /* SECTION 2: Two-column layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            gap: 72px;
+            margin-bottom: 80px;
+            align-items: start;
+        }
+
+        /* Left Column */
+        .info-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-title {
+            font-family: var(--font-serif);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .info-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .note-card {
+            position: relative;
+            background-color: var(--card-color);
+            background-image: radial-gradient(rgba(31, 41, 55, 0.03) 1px, transparent 0);
+            background-size: 16px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 32px 24px 24px 24px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transform: rotate(var(--card-rotation, 0deg));
+            margin-top: var(--card-margin-top, 0px);
+            margin-left: var(--card-margin-left, 0px);
         }
         
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .background-image {
-                min-height: 250px;
-            }
-            
-            .form-section {
-                padding: 30px;
+        .note-card:hover {
+            transform: rotate(var(--card-rotation, 0deg)) translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Pinned board notes visual indicator */
+        .note-card::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background-color: var(--pin-color);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .note-card::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: calc(50% + 1px);
+            width: 2px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            z-index: 11;
+        }
+
+        .note-card-icon {
+            font-size: 24px;
+            line-height: 1;
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+
+        .note-card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .note-card-title {
+            font-size: 15px;
+            font-weight: 650;
+            color: var(--text-primary);
+        }
+
+        .note-card-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Right Column - Notebook Styling */
+        .form-card {
+            background-color: var(--card-color);
+            background-image: linear-gradient(rgba(31, 41, 55, 0.03) 1px, transparent 1px);
+            background-size: 100% 32px;
+            border: 1px solid rgba(31, 41, 55, 0.06);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+        }
+
+        /* Red margin line for notebook aesthetic */
+        .form-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 28px;
+            width: 1px;
+            background-color: rgba(179, 92, 68, 0.15);
+            pointer-events: none;
+        }
+
+        .form-title {
+            font-family: var(--font-serif);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 650;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            background-color: var(--soft-paper);
+            border: 1px solid var(--border-input);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23374151' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .form-textarea {
+            height: 140px;
+            resize: none;
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: #9CA3AF;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--terracotta);
+            box-shadow: 0 0 0 4px rgba(179, 92, 68, 0.08);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background-color: var(--warm-ochre);
+            color: var(--deep-ink);
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            font-family: var(--font-sans);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(194, 139, 54, 0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            background-color: #b58030;
+            box-shadow: 0 6px 16px rgba(194, 139, 54, 0.25);
+        }
+
+        /* Success Card */
+        .success-card {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 48px 40px;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 380px;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: var(--muted-sage);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .success-title {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        /* Community Wall */
+        .community-wall {
+            margin-top: 32px;
+            padding: 24px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 1px dashed rgba(31, 41, 55, 0.12);
+            border-radius: 12px;
+        }
+
+        .community-wall-title {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted-sage);
+            margin-bottom: 16px;
+        }
+
+        .community-snippets {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .snippet-bubble {
+            background-color: #FFFFFF;
+            border: 1px solid rgba(31, 41, 55, 0.04);
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+        }
+
+        .snippet-text {
+            font-family: var(--font-sans);
+            font-size: 13.5px;
+            color: var(--soft-charcoal);
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        /* SECTION 4: Footer */
+        .footer-section {
+            padding: 40px 0 56px;
+            text-align: center;
+            border-top: 1px solid rgba(31, 41, 55, 0.04);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
             }
         }
 
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 38px;
+            }
+
+            .hero-section {
+                padding: 56px 0 40px;
+            }
+        }
     </style>
 </head>
 <body>
-     <nav class="navbar">
+
+    <!-- Navbar -->
+    <nav class="navbar">
         <div class="nav-container">
-            <a href="home.html" class="logo">UniLink</a>
+            <a href="main.html" class="logo">UniLink</a>
             <div class="nav-links">
-                <a href="main.html" class="nav-link">
-                    <span class="nav-text">Home</span>
-                </a>
-                <a href="contactus.html" class="nav-link active">
-                    <span class="nav-text">Contact</span>
-                </a>
-                <a href="faq.html" class="nav-link">
-                    <span class="nav-text">FAQ</span>
-                </a>
-                <a href="profile.html" class="nav-link">
-                    <span class="nav-icon">👤</span>
-                    <span class="nav-text">Profile</span>
-                </a>
-                <a href="#" onclick="logout(); return false;" class="nav-link logout-btn">
-                    <span class="nav-text">Logout</span>
-                </a>
+                <a href="main.html" class="nav-link">Home</a>
+                <a href="contactus.html" class="nav-link active">Contact</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="profile.html" id="nav-profile" class="nav-link" style="display: none;">Profile</a>
+                <a href="auth.html?view=login" id="nav-login" class="nav-link" style="display: none;">Login</a>
+                <a href="#" id="nav-logout" onclick="logout(); return false;" class="logout-btn-nav" style="display: none;">Logout</a>
             </div>
+            <button class="menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
     </nav>
-    
-    <div class="container">
-        <div class="background-image">
-            <div class="box">
-                <div class="box-inner"></div>
-            </div>
-        </div>
-        
-        <div class="form-section">
-            <h2>Contact Us</h2>
-            
-            <div class="contact-info">
-                <div class="info-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>IIIT Allahabad,Prayagraj</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>unilink.iiita@gmail.com</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-phone"></i>
-                    <span>+978983545455</span>
-                </div>
-            </div>
-            
-            <form action="https://formsubmit.co/unilink.iiita@gmail.com" method="POST">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="first-name" placeholder="First Name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="last-name" placeholder="Last Name" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="email" placeholder="E-mail" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="message">Message</label>
-                    <textarea id="message" name="message" placeholder="Message" required></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">SUBMIT</button>
-                
-                <p class="description">
-                    If you need help regarding any feature of UniLink you can use the following information to contact us.<br><br>
-                    E-mail responses are answered within 24 hours.
-                </p>
-            </form>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-nav-links">
+            <a href="main.html" class="mobile-nav-link">Home</a>
+            <a href="contactus.html" class="mobile-nav-link active">Contact</a>
+            <a href="faq.html" class="mobile-nav-link">FAQ</a>
+            <a href="profile.html" id="mobile-nav-profile" class="mobile-nav-link" style="display: none;">Profile</a>
+            <a href="auth.html?view=login" id="mobile-nav-login" class="mobile-nav-link" style="display: none;">Login</a>
+            <a href="#" id="mobile-nav-logout" onclick="logout(); return false;" class="mobile-nav-link" style="color: var(--accent-color); display: none;">Logout</a>
         </div>
     </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <h1 class="hero-title">Talk to the people behind UniLink.</h1>
+            <p class="hero-subtitle">
+                Found a bug? Have an idea? Need help? Want to complain about mess food? We're listening.
+            </p>
+            <p class="hero-copy">Built by students. Improved by conversations.</p>
+            <div class="hero-handwritten-wrapper">
+                <span class="handwritten-note">"Yes, we actually read these."</span>
+            </div>
+        </header>
+
+        <!-- Two-column grid layout -->
+        <section class="content-grid">
+            
+            <!-- Left Column: Before You Hit Send -->
+            <div class="info-column">
+                <h2 class="info-title">Before You Hit Send</h2>
+                <div class="info-cards">
+                    
+                    <!-- Card 1 -->
+                    <div class="note-card" style="--pin-color: var(--terracotta); --card-rotation: -1deg; --card-margin-top: 4px; --card-margin-left: -2px;">
+                        <span class="note-card-icon">📍</span>
+                        <div class="note-card-content">
+                            <span class="note-card-title">IIIT Allahabad, Prayagraj</span>
+                            <span class="note-card-text">Built on campus, for campus.</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="note-card" style="--pin-color: var(--warm-ochre); --card-rotation: 1deg; --card-margin-top: 8px; --card-margin-left: 3px;">
+                        <span class="note-card-icon">💡</span>
+                        <div class="note-card-content">
+                            <span class="note-card-title">Feature Ideas Welcome</span>
+                            <span class="note-card-text">Some of our best ideas started as student messages.</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3 -->
+                    <div class="note-card" style="--pin-color: var(--muted-sage); --card-rotation: -0.5deg; --card-margin-top: 6px; --card-margin-left: -4px;">
+                        <span class="note-card-icon">⏳</span>
+                        <div class="note-card-content">
+                            <span class="note-card-title">Response Time</span>
+                            <span class="note-card-text">Usually within a day. Occasionally after midsems.</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 4 -->
+                    <div class="note-card" style="--pin-color: var(--dusty-navy); --card-rotation: 0.5deg; --card-margin-top: 10px; --card-margin-left: 2px;">
+                        <span class="note-card-icon">🐛</span>
+                        <div class="note-card-content">
+                            <span class="note-card-title">Found a Bug?</span>
+                            <span class="note-card-text">Tell us what happened. Screenshots help.</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Left Column Delight Note -->
+                <div class="delight-note-left" style="margin-top: 32px; text-align: center; transform: rotate(-1deg);">
+                    <span class="handwritten-note" style="color: var(--muted-sage); font-size: 18px;">"Someone once emailed us about a missing tiffin. We helped."</span>
+                </div>
+            </div>
+
+            <!-- Right Column: Form or Success Card -->
+            <div class="form-column">
+                
+                <!-- Form Card -->
+                <div class="form-card" id="form-card-container">
+                    <div style="position: relative; z-index: 1;">
+                        <h2 class="form-title">Send Us a Message</h2>
+                        <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;">
+                            <p class="form-subtitle" style="margin-bottom: 0;">We'd genuinely love to hear from you.</p>
+                            <span style="font-family: var(--font-handwritten); font-size: 16px; color: var(--terracotta); transform: rotate(-1.5deg); display: inline-block; user-select: none; margin-left: 2px;">"Long messages are welcome."</span>
+                        </div>
+                    </div>
+                    
+                    <form action="https://formsubmit.co/unlink.app.iiita@gmail.com" method="POST">
+                        <!-- Redirection parameter back to ourselves with success flag -->
+                        <input type="hidden" name="_next" id="form-redirect-url" value="">
+                        
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" id="fullName" name="name" class="form-input" placeholder="Your full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">IIITA Email Address</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="username@iiita.ac.in" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="topic" class="form-label">Topic</label>
+                            <select id="topic" name="topic" class="form-select" required>
+                                <option value="" disabled selected>Select a topic</option>
+                                <option value="Bug Report">Bug Report</option>
+                                <option value="Feature Suggestion">Feature Suggestion</option>
+                                <option value="Account Help">Account Help</option>
+                                <option value="Club Collaboration">Club Collaboration</option>
+                                <option value="Feedback">Feedback</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea id="message" name="message" class="form-textarea" placeholder="Tell us how we can help..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+
+                <!-- Success Card -->
+                <div class="success-card" id="success-card-container" style="display: none;">
+                    <span class="success-icon">✓</span>
+                    <h3 class="success-title">Thanks. We'll get back to you soon.</h3>
+                </div>
+
+                <!-- Community Wall Section -->
+                <div class="community-wall">
+                    <h3 class="community-wall-title">Things students have actually asked us</h3>
+                    <div class="community-snippets">
+                        <div class="snippet-bubble">
+                            <p class="snippet-text">"Can UniLink help track missing tiffins?"</p>
+                        </div>
+                        <div class="snippet-bubble">
+                            <p class="snippet-text">"Can clubs use this for equipment sharing?"</p>
+                        </div>
+                        <div class="snippet-bubble">
+                            <p class="snippet-text">"Please add a filter for late-night rides."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column Delight Note -->
+                <div class="delight-note-right" style="margin-top: 24px; text-align: center; transform: rotate(1deg);">
+                    <span class="handwritten-note" style="font-size: 18px; color: var(--muted-sage);">"Good ideas have a habit of becoming features."</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Footer Delight Note -->
+        <div class="delight-note-footer" style="margin-top: 8px; margin-bottom: 24px; text-align: center; transform: rotate(-0.5deg);">
+            <span class="handwritten-note" style="font-size: 18px; color: var(--muted-sage);">"Most fixes begin with: 'This might be silly, but...'"</span>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-section">
+            <p class="footer-text">Built at IIIT Allahabad, one small campus emergency at a time.</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Authentication helpers
+        function isLoggedIn() {
+            return localStorage.getItem('token') !== null && localStorage.getItem('userData') !== null;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            alert('You have been logged out.');
+            window.location.href = 'main.html';
+        }
+
+        function updateAuthUI() {
+            const loggedIn = isLoggedIn();
+            
+            const navProfile = document.getElementById('nav-profile');
+            const navLogout = document.getElementById('nav-logout');
+            const navLogin = document.getElementById('nav-login');
+            
+            const mobileNavProfile = document.getElementById('mobile-nav-profile');
+            const mobileNavLogout = document.getElementById('mobile-nav-logout');
+            const mobileNavLogin = document.getElementById('mobile-nav-login');
+
+            if (loggedIn) {
+                if (navProfile) navProfile.style.display = 'inline-block';
+                if (navLogout) navLogout.style.display = 'inline-block';
+                if (navLogin) navLogin.style.display = 'none';
+
+                if (mobileNavProfile) mobileNavProfile.style.display = 'block';
+                if (mobileNavLogout) mobileNavLogout.style.display = 'block';
+                if (mobileNavLogin) mobileNavLogin.style.display = 'none';
+            } else {
+                if (navProfile) navProfile.style.display = 'none';
+                if (navLogout) navLogout.style.display = 'none';
+                if (navLogin) navLogin.style.display = 'inline-block';
+
+                if (mobileNavProfile) mobileNavProfile.style.display = 'none';
+                if (mobileNavLogout) mobileNavLogout.style.display = 'none';
+                if (mobileNavLogin) mobileNavLogin.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Initialize Lucide Icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // 2. Setup Mobile Menu Click
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    const isOpen = mobileMenu.classList.toggle('open');
+                    
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        if (isOpen) {
+                            icon.setAttribute('data-lucide', 'x');
+                        } else {
+                            icon.setAttribute('data-lucide', 'menu');
+                        }
+                        if (window.lucide) {
+                            lucide.createIcons();
+                        }
+                    }
+                });
+            }
+
+            // 3. Set redirect URL dynamically for formsubmit.co
+            const redirectInput = document.getElementById('form-redirect-url');
+            if (redirectInput) {
+                redirectInput.value = window.location.origin + window.location.pathname + '?success=true';
+            }
+
+            // 4. Check query params for success state
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('success') === 'true') {
+                const formCard = document.getElementById('form-card-container');
+                const successCard = document.getElementById('success-card-container');
+                if (formCard && successCard) {
+                    formCard.style.display = 'none';
+                    successCard.style.display = 'flex';
+                }
+            }
+
+            // 5. Update Authentication UI elements
+            updateAuthUI();
+        });
+    </script>
 </body>
-<script>
-     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Setup Listeners
-        setupModuleClicks();
-        setupMobileMenu();
-        setupChatWidget();
-
-        // 2. Add Logout Listeners (for both desktop and mobile)
-        const logoutButton = document.getElementById('logout-button');
-        const mobileLogoutButton = document.getElementById('mobile-logout-button');
-        
-        if (logoutButton) {
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent link default behavior
-                logout();
-            });
-        }
-        if (mobileLogoutButton) {
-            mobileLogoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent link default behavior
-                logout();
-            });
-        }
-        
-        // 3. Update the UI based on auth state
-        updateAuthUI();
-    });
-
-    
-</script>
 </html>

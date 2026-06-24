@@ -1,654 +1,1708 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Donation - UniLink</title>
+    <title>IIITA Blood Network - UniLink</title>
+    <!-- Tailwind CSS v3 CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Socket.IO Client -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Google Fonts: Bricolage Grotesque and Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                    },
+                    colors: {
+                        creamBg: '#FAF6F0',
+                        charcoalText: '#2D2D35',
+                        burgundyAccent: '#6B1D2F',
+                        roseAccent: '#C88A8C',
+                        roseLight: '#F5EBE6',
+                        emeraldAccent: '#4D8060',
+                        darkBg: '#130D0E',
+                        darkCard: '#1F1517',
+                        darkText: '#F5EBE6'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700;800;900&display=swap');
-        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
         }
-        
+
+        .font-display {
+            font-family: 'Bricolage Grotesque', sans-serif;
+        }
+
         .nav-glass {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(250, 246, 240, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(107, 29, 47, 0.05);
         }
-        
-        .main-button-gradient {
-            background: linear-gradient(90deg, #f59e0b 0%, #fcd34d 100%);
-        }
-
-        .main-button-gradient:hover {
-            background: linear-gradient(90deg, #d97706 0%, #fbbf24 100%); 
-        }
-        
-        .login-button-outline {
-            border: 2px solid #fcd34d;
-            color: #fcd34d;
-            background-color: transparent;
-            transition: background-color 0.3s ease, color 0.3s ease;
+        html.dark .nav-glass {
+            background: rgba(19, 13, 14, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .login-button-outline:hover {
-            background-color: rgba(252, 211, 77, 0.1);
-            color: #f59e0b;
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(107, 29, 47, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(107, 29, 47, 0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-            transition: all 0.3s ease;
+        html.dark .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
         }
-        
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-        
+
         .tab-active {
-            background-color: rgba(239, 68, 68, 0.2);
-            color: #f87171;
-            border-bottom: 2px solid #f87171;
+            background-color: rgba(107, 29, 47, 0.05);
+            color: #6B1D2F;
+            border-color: #6B1D2F;
         }
-        
-        .search-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        html.dark .tab-active {
+            background-color: rgba(200, 138, 140, 0.1);
+            color: #C88A8C;
+            border-color: #C88A8C;
         }
-        
-        .donor-card, .request-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
-        
-        .donor-card:hover, .request-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-        }
-        
-        .blood-type {
-            background-color: rgba(239, 68, 68, 0.2);
-            color: #f87171;
-        }
-        
-        /* Specific for request card */
-        .request-card .blood-group-lg {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: #f87171;
+        .breathe-dot {
+            animation: breathe 2.5s infinite;
         }
     </style>
 </head>
-<body class="min-h-screen">
-    <nav class="nav-glass fixed w-full z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<body class="bg-creamBg text-charcoalText dark:bg-darkBg dark:text-darkText transition-colors duration-300 min-h-screen relative">
+
+    <div class="fixed inset-0 grid-bg pointer-events-none z-0"></div>
+
+    <!-- Navigation Header -->
+    <nav class="nav-glass fixed w-full z-40 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <a href="main.html" class="text-white text-2xl font-bold tracking-tight">UniLink</a>
+                <div class="flex items-center gap-3">
+                    <a href="main.html" class="flex items-center gap-2 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-burgundyAccent to-roseAccent flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <i class="fa-solid fa-link text-white text-lg"></i>
+                        </div>
+                        <span class="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-burgundyAccent dark:group-hover:text-roseAccent transition-colors duration-300">UniLink</span>
+                    </a>
                 </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="main.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="contactus.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
-                        <a href="faq.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
-                        <a href="profile.html" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
-                       <a href="#" class="text-white hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium" onclick="logout(); return false;">Logout</a>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="main.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Home</a>
+                    <a href="contactus.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Contact</a>
+                    <a href="faq.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">FAQ</a>
+                    <a href="profile.html" class="text-sm font-semibold text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">Profile</a>
+                    
+                    <!-- Notifications Button -->
+                    <div class="relative">
+                        <button id="notif-toggle-btn" class="relative text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-xl hover:bg-slate-200/40 dark:hover:bg-white/5 transition-all focus:outline-none">
+                            <i class="fa-solid fa-bell text-lg"></i>
+                            <span id="notif-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-rose-600 rounded-full border border-white dark:border-darkBg"></span>
+                        </button>
+                        
+                        <!-- Notifications Dropdown -->
+                        <div id="notif-dropdown" class="hidden absolute right-0 top-14 w-80 p-4 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 shadow-xl z-50 max-h-96 overflow-y-auto">
+                            <h4 class="font-display font-bold text-slate-800 dark:text-white text-sm mb-3">Emergency Notifications</h4>
+                            <div id="notif-list" class="space-y-3">
+                                <!-- Dynamic notifications -->
+                                <p class="text-xs text-slate-400 dark:text-slate-500 text-center py-4">No new notifications.</p>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Settings Gear -->
+                    <div class="relative">
+                        <button id="settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2.5 rounded-xl hover:bg-slate-200/40 dark:hover:bg-white/5 transition-all focus:outline-none">
+                            <i class="fa-solid fa-gear text-lg"></i>
+                        </button>
+                        
+                        <div id="settings-dropdown" class="hidden absolute right-0 top-14 w-56 p-4 rounded-2xl bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 shadow-xl z-50">
+                            <h4 class="font-display font-bold text-slate-800 dark:text-white text-sm mb-3">Settings</h4>
+                            <div class="flex items-center justify-between border-t border-slate-100 dark:border-white/5 pt-3">
+                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400">Dark Theme</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="dark-theme-toggle" class="sr-only peer">
+                                    <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-burgundyAccent dark:peer-checked:bg-roseAccent"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-4 border-l border-slate-200 dark:border-white/10 pl-6">
+                        <a href="#" onclick="logout(); return false;" class="text-sm font-semibold text-rose-700 hover:bg-rose-50 dark:text-roseAccent dark:hover:bg-white/5 border border-rose-200 dark:border-roseAccent/25 py-2 px-4 rounded-full transition-all">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Buttons -->
+                <div class="md:hidden flex items-center gap-2">
+                    <button id="mobile-notif-toggle-btn" class="relative text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span id="mobile-notif-badge" class="hidden absolute top-1 right-1 w-2 h-2 bg-rose-600 rounded-full"></span>
+                    </button>
+                    <button id="mobile-settings-toggle-btn" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-gear text-lg"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Panels -->
+        <div id="mobile-notif-panel" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-creamBg/95 dark:bg-darkBg/95 p-4 max-h-60 overflow-y-auto">
+            <h4 class="font-display font-bold text-sm mb-2 text-slate-800 dark:text-white">Notifications</h4>
+            <div id="mobile-notif-list" class="space-y-2">
+                <p class="text-xs text-slate-400 text-center py-2">No new notifications.</p>
+            </div>
+        </div>
+
+        <div id="mobile-settings-panel" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-creamBg/95 dark:bg-darkBg/95 p-4 flex justify-between items-center">
+            <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">Dark Theme</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="mobile-dark-theme-toggle" class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-slate-600 peer-checked:bg-burgundyAccent dark:peer-checked:bg-roseAccent"></div>
+            </label>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/50 dark:border-white/5 bg-creamBg/95 dark:bg-darkBg/95">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="main.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Home</a>
+                <a href="contactus.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Contact</a>
+                <a href="faq.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">FAQ</a>
+                <a href="profile.html" class="block px-4 py-2.5 rounded-xl text-base font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition-all">Profile</a>
+                <div class="pt-4 border-t border-slate-200/50 dark:border-white/5 mt-4">
+                    <a href="#" onclick="logout(); return false;" class="block text-center w-full px-4 py-2.5 rounded-xl text-base font-semibold text-rose-700 dark:text-roseAccent border border-rose-250 dark:border-roseAccent/20 hover:bg-rose-50 dark:hover:bg-white/5 transition-all">
+                        Logout
+                    </a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="pt-16 min-h-screen">
-        <div class="relative bg-gradient-to-r from-red-900 to-red-700 py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Blood Donation</h1>
-                    <p class="text-xl text-red-100 max-w-2xl mx-auto">Find donors or post a request. Save a life in our community.</p>
+    <!-- Main Container -->
+    <div class="pt-16 min-h-screen relative z-10">
+        
+        <header class="max-w-4xl mx-auto px-6 py-16 md:py-20 text-center space-y-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-burgundyAccent/5 dark:bg-roseAccent/10 border border-burgundyAccent/10 dark:border-roseAccent/20 text-xs font-bold tracking-wider text-burgundyAccent dark:text-roseAccent uppercase select-none">
+                <i class="fa-solid fa-heart-pulse text-[10px] text-burgundyAccent dark:text-roseAccent"></i>
+                IIITA Health Centre support network
+            </div>
+            
+            <h1 class="font-display font-bold text-4xl sm:text-5xl md:text-6xl tracking-tight leading-tight text-slate-900 dark:text-white">
+                Need blood? <span class="text-burgundyAccent dark:text-roseAccent">We're here.</span>
+            </h1>
+            
+            <h2 class="text-lg sm:text-xl font-display font-medium text-slate-600 dark:text-roseAccent/85 max-w-lg mx-auto">
+                Classmates helping classmates.
+            </h2>
+            
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-medium max-w-xl mx-auto leading-relaxed">
+                A verified emergency support network built for the IIIT Allahabad community. Restoring privacy, matching compatibility, and maintaining campus safety.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4 pt-2">
+                <button onclick="scrollToTabs('find-donors-tab')" class="px-6 py-3.5 bg-burgundyAccent dark:bg-roseAccent text-white dark:text-darkBg font-bold rounded-2xl hover:opacity-90 shadow-md transition-all text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Live Donor Match
+                </button>
+                <button onclick="scrollToTabs('post-request-tab')" class="px-6 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 dark:bg-darkCard dark:border-white/10 dark:text-white dark:hover:bg-white/5 font-bold rounded-2xl transition-all text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-[10px] text-slate-400"></i> Request Blood
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+                Join <span id="trust-donors-count" class="font-bold text-burgundyAccent dark:text-roseAccent">--</span> verified volunteers registered in this student-to-student network.
+            </p>
+        </header>
+
+        <!-- CONTENT & TABS -->
+        <main class="max-w-7xl mx-auto px-6 pb-24">
+            
+            <!-- Category Tabs Navigation -->
+            <div class="flex justify-center border-b border-slate-200 dark:border-white/10 mb-8 overflow-x-auto whitespace-nowrap scrollbar-none">
+                <div class="flex gap-4 sm:gap-6">
+                    <button id="find-donors-tab" class="tab-active py-3 px-4 sm:px-6 font-semibold transition-all border-b-2 border-transparent hover:text-slate-900 dark:hover:text-white flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-users text-xs"></i> Matches & Directory
+                    </button>
+                    <button id="active-requests-tab" class="py-3 px-4 sm:px-6 font-semibold text-slate-400 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-all border-b-2 border-transparent flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-clock-rotate-left text-xs"></i> Active Requests
+                    </button>
+                    <button id="post-request-tab" class="py-3 px-4 sm:px-6 font-semibold text-slate-400 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-all border-b-2 border-transparent flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-notes-medical text-xs"></i> Post Request
+                    </button>
+                    <button id="my-profile-tab" class="py-3 px-4 sm:px-6 font-semibold text-slate-400 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-all border-b-2 border-transparent flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-user-gear text-xs"></i> My Profile
+                    </button>
+                    <button id="analytics-tab" class="py-3 px-4 sm:px-6 font-semibold text-slate-400 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-all border-b-2 border-transparent flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-chart-line text-xs"></i> Analytics
+                    </button>
+                    <button id="stories-tab" class="py-3 px-4 sm:px-6 font-semibold text-slate-400 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-all border-b-2 border-transparent flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-quote-left text-xs"></i> Gratitude Wall
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="flex border-b border-gray-700 mb-8">
-                <button id="find-donors-tab" class="tab-active py-3 px-6 font-medium text-white rounded-t-lg">
-                    Find Donors
-                </button>
-                <button id="active-requests-tab" class="py-3 px-6 font-medium text-gray-400 hover:text-white transition-colors">
-                    Active Requests
-                </button>
-                <button id="post-request-tab" class="py-3 px-6 font-medium text-gray-400 hover:text-white transition-colors">
-                    Post Request
-                </button>
-                <button id="my-profile-tab" class="py-3 px-6 font-medium text-gray-400 hover:text-white transition-colors">
-                    My Profile
-                </button>
-            </div>
-
+            <!-- Tab Panels Container -->
             <div id="tab-panels-container">
 
-                <div id="find-donors-panel">
-                    <div class="mb-8">
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <div class="flex-1">
-                                <div class="relative">
-                                    <input id="search-input" type="text" placeholder="Search by name or Student ID" class="w-full py-3 px-4 pr-10 rounded-lg search-box text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500">
-                                    <div class="absolute right-3 top-3 text-gray-400">
-                                        <i class="fas fa-search"></i>
-                                    </div>
-                                </div>
+                <!-- PANEL A: LIVE DONORS DIRECTORY & SEARCH -->
+                <section id="find-donors-panel" class="space-y-6">
+                    <!-- Dynamic Matches Header (If user has active requests) -->
+                    <div id="request-selector-container" class="hidden bg-[#FAF6F0] dark:bg-darkCard p-4 rounded-2xl border border-burgundyAccent/10 dark:border-roseAccent/15">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <div>
+                                <h4 class="text-sm font-bold text-burgundyAccent dark:text-roseAccent">🎯 Match Finder Dashboard</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Select your active request to find ranked compatible donors instantly.</p>
                             </div>
-                            <div class="flex gap-4">
-                                <select id="blood-filter-select" class="py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
-                                    <option value="" class="bg-gray-800">Filter by Blood Type</option>
-                                    <option value="A+" class="bg-gray-800">A+</option>
-                                    <option value="A-" class="bg-gray-800">A-</option>
-                                    <option value="B+" class="bg-gray-800">B+</option>
-                                    <option value="B-" class="bg-gray-800">B-</option>
-                                    <option value="AB+" class="bg-gray-800">AB+</option>
-                                    <option value="AB-" class="bg-gray-800">AB-</option>
-                                    <option value="O+" class="bg-gray-800">O+</option>
-                                    <option value="O-" class="bg-gray-800">O-</option>
-                                </select>
-                            </div>
+                            <select id="user-active-requests-select" class="py-2 px-3 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-xs font-semibold">
+                                <option value="">Select an Active Request...</option>
+                            </select>
                         </div>
                     </div>
-                    <div id="donors-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Quiet Search & Filter Grid -->
+                    <div class="flex flex-col md:flex-row gap-4 bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 p-4 rounded-2xl">
+                        <div class="flex-1 relative">
+                            <input id="search-input" type="text" placeholder="Search by name, department, or hostel..." class="w-full py-3 pl-10 pr-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all">
+                            <div class="absolute left-3.5 top-3.5 text-slate-400">
+                                <i class="fa-solid fa-search text-xs"></i>
+                            </div>
                         </div>
-                    <div class="flex justify-center mt-12">
-                        <button id="load-more-donors-btn" class="main-button-gradient text-gray-900 px-8 py-3 rounded-lg font-semibold transition duration-150 shadow-lg flex items-center">
-                            <i class="fas fa-redo mr-2"></i>
-                            Load More
+                        <div class="flex gap-4">
+                            <select id="blood-filter-select" class="py-3 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all">
+                                <option value="">All Blood Groups</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Donors Directory Grid -->
+                    <div id="donors-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dynamic student donor profile cards -->
+                    </div>
+
+                    <!-- Load More Button -->
+                    <div class="flex justify-center pt-8">
+                        <button id="load-more-donors-btn" class="px-6 py-2.5 bg-white hover:bg-slate-50 text-slate-700 dark:bg-darkCard dark:border-white/10 dark:text-slate-300 dark:hover:bg-white/5 font-semibold rounded-xl border border-slate-200 transition-all flex items-center gap-2 text-xs">
+                            <i class="fa-solid fa-arrows-rotate"></i> Load More Donors
                         </button>
                     </div>
-                </div>
+                </section>
 
-                <div id="active-requests-panel" class="hidden">
-                    <h2 class="text-2xl font-bold text-white mb-6">Urgent Blood Requests</h2>
+                <!-- PANEL B: ACTIVE REQUESTS -->
+                <section id="active-requests-panel" class="hidden space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-2">
+                        <h3 class="font-display text-lg font-bold text-slate-800 dark:text-white">Active Blood Requests</h3>
+                        <span class="text-xs text-slate-400 font-semibold bg-burgundyAccent/5 dark:bg-roseAccent/5 px-3 py-1 rounded-full border border-burgundyAccent/5 dark:border-roseAccent/5">Updated in real-time</span>
+                    </div>
+
                     <div id="requests-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        </div>
-                </div>
+                        <!-- Dynamic active request cards -->
+                    </div>
+                </section>
 
-                <div id="post-request-panel" class="hidden">
-                    <div class="max-w-xl mx-auto glass-card p-8">
-                        <h2 class="text-2xl font-bold text-white mb-4">Post an Emergency Request</h2>
-                        <p class="text-gray-300 mb-6">This request will be visible to all registered donors. Please post only in case of genuine emergencies.</p>
-                        
-                        <form id="post-request-form">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- PANEL C: POST REQUEST -->
+                <section id="post-request-panel" class="hidden">
+                    <div class="max-w-xl mx-auto bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 p-6 md:p-8 rounded-3xl space-y-6 shadow-sm">
+                        <div>
+                            <h3 class="text-xl font-display font-bold text-slate-850 dark:text-white mb-2">Request Blood Assistance</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Fill out the patient details below. Eligible verified volunteers will be matched based on ABO compatibility rules.</p>
+                        </div>
+
+                        <form id="post-request-form" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="patientName" class="block text-sm font-medium text-gray-300 mb-2">Patient's Name</label>
-                                    <input type="text" id="patientName" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    <label for="patientName" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Patient's Name</label>
+                                    <input type="text" id="patientName" required class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all" placeholder="Patient full name">
                                 </div>
                                 <div>
-                                    <label for="request-blood-group" class="block text-sm font-medium text-gray-300 mb-2">Required Blood Group</label>
-                                    <select id="request-blood-group" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
-                                        <option value="" class="bg-gray-800">Select Group</option>
-                                        <option value="A+" class="bg-gray-800">A+</option>
-                                        <option value="A-" class="bg-gray-800">A-</option>
-                                        <option value="B+" class="bg-gray-800">B+</option>
-                                        <option value="B-" class="bg-gray-800">B-</option>
-                                        <option value="AB+" class="bg-gray-800">AB+</option>
-                                        <option value="AB-" class="bg-gray-800">AB-</option>
-                                        <option value="O+" class="bg-gray-800">O+</option>
-                                        <option value="O-" class="bg-gray-800">O-</option>
+                                    <label for="request-blood-group" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Required Blood Group</label>
+                                    <select id="request-blood-group" required class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all">
+                                        <option value="">Select Blood Group</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
                                     </select>
                                 </div>
                             </div>
-                            
-                            <div class="mt-4">
-                                <label for="contactPhone" class="block text-sm font-medium text-gray-300 mb-2">Contact Phone</label>
-                                <input type="tel" id="contactPhone" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
-                            </div>
-                            <div class="mt-4">
-    <label for="location" class="block text-sm font-medium text-gray-300 mb-2">Location (e.g., Hospital)</label>
-    <input type="text" id="location" required class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="e.g., SRN Hospital, Prayagraj">
-</div>
-                            <div class="mt-4">
-                                <label for="note" class="block text-sm font-medium text-gray-300 mb-2">Note (Optional)</label>
-                                <textarea id="note" rows="3" class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="e.g., Urgent requirement by 5 PM"></textarea>
-                            </div>
-                            <button type="submit" class="w-full main-button-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold transition duration-150 shadow-lg flex items-center justify-center mt-6">
-                                <i class="fas fa-paper-plane mr-2"></i>
-                                Submit Request
-                            </button>
-                        </form>
-                    </div>
-                </div>
 
-                <div id="my-profile-panel" class="hidden">
-                    <div class="max-w-xl mx-auto glass-card p-8">
-                        <h2 class="text-2xl font-bold text-white mb-4">Update Your Donor Profile</h2>
-                        <p class="text-gray-300 mb-6">Let the community know your blood type. This information will be visible to other students to contact you in an emergency.</p>
-                        
-                        <form id="update-blood-form">
-                            <label for="my-blood-group" class="block text-sm font-medium text-gray-300 mb-2">My Blood Group</label>
-                            <select id="my-blood-group" name="bloodGroup" class="w-full py-3 px-4 rounded-lg search-box text-white focus:outline-none focus:ring-2 focus:ring-red-500">
-                                <option value="" class="bg-gray-800">Select Blood Group</option>
-                                <option value="A+" class="bg-gray-800">A+</option>
-                                <option value="A-" class="bg-gray-800">A-</option>
-                                <option value="B+" class="bg-gray-800">B+</option>
-                                <option value="B-" class="bg-gray-800">B-</option>
-                                <option value="AB+" class="bg-gray-800">AB+</option>
-                                <option value="AB-" class="bg-gray-800">AB-</option>
-                                <option value="O+" class="bg-gray-800">O+</option>
-                                <option value="O-" class="bg-gray-800">O-</option>
-                            </select>
-                            <button type="submit" class="w-full main-button-gradient text-gray-900 px-6 py-3 rounded-lg font-semibold transition duration-150 shadow-lg flex items-center justify-center mt-6">
-                                <i class="fas fa-save mr-2"></i>
-                                Save My Blood Group
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="contactPhone" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Contact Phone</label>
+                                    <input type="tel" id="contactPhone" required class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all" placeholder="Active phone number">
+                                </div>
+                                <div>
+                                    <label for="urgency" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Urgency Level</label>
+                                    <select id="urgency" required class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all">
+                                        <option value="normal">Normal</option>
+                                        <option value="urgent">Urgent (matches alerted)</option>
+                                        <option value="critical">Critical (escalation window starts)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="location" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Location (e.g. Health Centre IIITA, SRN Hospital)</label>
+                                <input type="text" id="location" required class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all" placeholder="Hospital or Health Centre name">
+                            </div>
+
+                            <div>
+                                <label for="note" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Additional Details</label>
+                                <textarea id="note" rows="3" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all" placeholder="Any specific requirements..."></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-3 bg-burgundyAccent hover:opacity-95 text-white dark:bg-roseAccent dark:text-darkBg font-bold rounded-xl transition-all flex items-center justify-center gap-2 mt-4 text-xs shadow-md">
+                                <i class="fa-solid fa-paper-plane text-[10px]"></i> Submit Request
                             </button>
                         </form>
                     </div>
-                </div>
+                </section>
+
+                <!-- PANEL D: MY PROFILE & OTP VERIFICATION -->
+                <section id="my-profile-tab-panel" class="hidden space-y-6">
+                    <div class="max-w-xl mx-auto bg-white dark:bg-darkCard border border-slate-200 dark:border-white/10 p-6 md:p-8 rounded-3xl space-y-6 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-display font-bold text-slate-850 dark:text-white mb-2">Update Your Volunteer Profile</h3>
+                                <p class="text-xs text-slate-550 dark:text-slate-400 leading-relaxed">Fill your credentials. To appear in search listings, verify your `@iiita.ac.in` email.</p>
+                            </div>
+                            <span id="donor-status-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold">Checking...</span>
+                        </div>
+
+                        <!-- OTP Verification Panel -->
+                        <div id="otp-verification-container" class="hidden bg-rose-50/50 dark:bg-white/[0.02] border border-rose-200/50 dark:border-white/10 p-5 rounded-2xl space-y-4">
+                            <h4 class="text-xs font-bold text-burgundyAccent dark:text-roseAccent flex items-center gap-1.5">
+                                <i class="fa-solid fa-shield-halved"></i> Verify Your Email Status
+                            </h4>
+                            <p class="text-[11px] text-slate-550 dark:text-slate-400">Your volunteer status is currently pending. Request an OTP verification to activate donor search listing.</p>
+                            
+                            <div class="flex gap-3">
+                                <button id="send-otp-btn" class="px-4 py-2 bg-burgundyAccent dark:bg-roseAccent text-white dark:text-darkBg text-xs font-bold rounded-xl transition-all">Send Code</button>
+                                <div class="flex-1 flex gap-2">
+                                    <input type="text" id="verification-otp-input" placeholder="6-digit OTP" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 text-xs text-center font-bold tracking-widest">
+                                    <button id="verify-otp-btn" class="px-4 py-2 bg-emeraldAccent text-white text-xs font-bold rounded-xl transition-all">Verify</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="update-blood-form" class="space-y-4">
+                            <div>
+                                <label for="my-blood-group" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">My Blood Group</label>
+                                <select id="my-blood-group" name="bloodGroup" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all">
+                                    <option value="">Select Blood Group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="my-availability" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Availability Status</label>
+                                    <select id="my-availability" name="availabilityStatus" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-755 dark:text-slate-350 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all">
+                                        <option value="Available Today">Available Today</option>
+                                        <option value="Busy">Busy (Unavailable)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="my-hostel" class="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Hostel Name</label>
+                                    <input type="text" id="my-hostel" name="hostel" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-burgundyAccent dark:focus:border-roseAccent text-xs transition-all" placeholder="e.g. BH-3, GH-2">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full py-3 bg-burgundyAccent hover:opacity-95 text-white dark:bg-roseAccent dark:text-darkBg font-bold rounded-xl transition-all flex items-center justify-center gap-2 mt-4 text-xs shadow-md">
+                                <i class="fa-solid fa-save text-[10px]"></i> Save Profile Details
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- PANEL E: ANALYTICS DASHBOARD -->
+                <section id="analytics-panel" class="hidden space-y-8">
+                    <!-- Global Counters -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-burgundyAccent/5 dark:bg-roseAccent/15 flex items-center justify-center text-burgundyAccent dark:text-roseAccent text-xl shrink-0">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs text-slate-400 font-bold uppercase tracking-wider">Registered Volunteers</h4>
+                                <p id="stats-total-volunteers" class="font-display text-2xl font-black text-slate-800 dark:text-white mt-1">--</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-xl shrink-0">
+                                <i class="fa-solid fa-house-medical-circle-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs text-slate-400 font-bold uppercase tracking-wider">Available Volunteers</h4>
+                                <p id="stats-available-volunteers" class="font-display text-2xl font-black text-slate-850 dark:text-white mt-1">--</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 text-xl shrink-0">
+                                <i class="fa-solid fa-check-double"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs text-slate-400 font-bold uppercase tracking-wider">Successful matches</h4>
+                                <p id="stats-successful-matches" class="font-display text-2xl font-black text-slate-800 dark:text-white mt-1">--</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Distribution Charts -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Distribution counts -->
+                        <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 space-y-4">
+                            <h4 class="font-display font-bold text-sm text-slate-800 dark:text-white">Active Blood Group Distribution</h4>
+                            <div id="stats-distribution-container" class="space-y-3">
+                                <!-- Dynamic distribution bars -->
+                            </div>
+                        </div>
+
+                        <!-- Impact Summary Card -->
+                        <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <h4 class="font-display font-bold text-sm text-slate-800 dark:text-white">Health Centre Impact</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-normal">
+                                    UniLink assists the IIIT Allahabad health centre by resolving volunteer search wait times from hours down to minutes. Through immediate, compatibility-ranked matches and automated escalations, we ensure no student is left stranded in times of emergency.
+                                </p>
+                            </div>
+                            <div class="bg-[#FAF6F0] dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/5 p-4 rounded-2xl mt-4">
+                                <h5 class="text-xs font-bold text-burgundyAccent dark:text-roseAccent">Average Match Resolution Time</h5>
+                                <p class="text-2xl font-display font-black text-slate-800 dark:text-white mt-1">~ 14 mins</p>
+                                <p class="text-[10px] text-slate-450 mt-0.5">Based on donor acceptances logs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANEL F: GRATITUDE WALL & ANONYMOUS STORIES -->
+                <section id="stories-panel" class="hidden space-y-6">
+                    <div class="max-w-3xl mx-auto space-y-8">
+                        <div>
+                            <h3 class="text-xl font-display font-bold text-slate-850 dark:text-white">Gratitude Wall</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Read notes of thanks from IIITA students helped by donors, or post your own anonymous story.</p>
+                        </div>
+
+                        <!-- Stories Grid -->
+                        <div id="stories-list-container" class="space-y-4">
+                            <!-- Dynamic stories -->
+                        </div>
+
+                        <!-- Add Story Form -->
+                        <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 p-6 rounded-3xl space-y-4">
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Submit Gratitude Note (Anonymous)</h4>
+                            <form id="add-story-form" class="space-y-3">
+                                <div class="flex gap-4">
+                                    <div class="flex-1">
+                                        <textarea id="story-text" required rows="3" placeholder="Thank your donor..." class="w-full py-2.5 px-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white text-xs focus:outline-none"></textarea>
+                                    </div>
+                                    <div class="w-32">
+                                        <select id="story-blood-group" required class="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-350 text-xs focus:outline-none">
+                                            <option value="">Blood...</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="px-5 py-2.5 bg-burgundyAccent dark:bg-roseAccent text-white dark:text-darkBg text-xs font-bold rounded-xl hover:opacity-95 transition-all">Submit Note</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Matches Selection Modal -->
+    <div id="matches-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-3xl w-full max-w-2xl mx-4 space-y-6 relative border border-slate-200 dark:border-white/10 shadow-xl max-h-[85vh] overflow-y-auto">
+            <button onclick="closeMatchesModal()" class="absolute right-4 top-4 text-slate-450 hover:text-slate-800 dark:hover:text-white transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div>
+                <h3 class="font-display text-xl font-bold text-slate-900 dark:text-white">Ranked Eligible Match List</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Compatible volunteers sorted by availability, compatibility weight, and hostel location.</p>
+            </div>
+            
+            <div id="matches-modal-list" class="space-y-3">
+                <!-- Matches load dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Logs Modal -->
+    <div id="audit-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white dark:bg-darkCard p-6 rounded-3xl w-full max-w-md mx-4 space-y-4 relative border border-slate-200 dark:border-white/10 shadow-xl max-h-[70vh] overflow-y-auto">
+            <button onclick="closeAuditModal()" class="absolute right-4 top-4 text-slate-450 hover:text-slate-850 dark:hover:text-white transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div>
+                <h3 class="font-display text-base font-bold text-slate-900 dark:text-white">Request Audit Trail</h3>
+                <p class="text-xs text-slate-400">Immutable lifecycle events recorded on-chain.</p>
+            </div>
+            <div id="audit-modal-list" class="space-y-3">
+                <!-- Audit logs load dynamically -->
             </div>
         </div>
     </div>
 
     <script>
-        // Handle logout
-    function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userData');
-    // Redirect to login page
-    window.location.href = 'auth.html';
-    }
-    // --- 1. CONFIG & GLOBAL STATE ---
-    const API_BASE_URL = '';
-    let allDonors = []; // Stores the master list of donors
-    let allRequests = []; // Stores the master list of requests
-    let currentUser = null; // Stores the logged-in user's data
-    let token = null; // Stores the auth token
+        const API_BASE_URL = '';
+        let allDonors = [];
+        let allRequests = [];
+        let currentUser = null;
+        let token = null;
+        let socket = null;
+        let socketConnected = false;
 
-    // --- 2. HELPER FUNCTIONS ---
-
-    const showMessage = (message, type = 'info') => {
-        const alertClass = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
-        const messageElement = document.createElement('div');
-        messageElement.className = `fixed top-20 right-4 z-50 p-3 text-white rounded-lg shadow-xl transition-all duration-300 ${alertClass}`;
-        messageElement.textContent = message;
-        document.body.appendChild(messageElement);
-        setTimeout(() => {
-            messageElement.remove();
-        }, 3000);
-    };
-
-    /**
-     * Renders the list of donor cards into the grid
-     */
-    const renderDonors = (donors) => {
-        const container = document.getElementById('donors-grid-container');
-        if (!container) return;
-        container.innerHTML = ''; 
-
-        if (donors.length === 0) {
-            container.innerHTML = '<p class="text-gray-400 col-span-3 text-center">No donors found matching your criteria.</p>';
-            return;
-        }
-
-        donors.forEach(donor => {
-            const card = document.createElement('div');
-            card.className = 'donor-card rounded-xl p-6';
-            const initials = donor.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            
-            card.innerHTML = `
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white font-bold mr-3">
-                            ${initials}
-                        </div>
-                        <div>
-                            <h3 class="text-white font-bold">${donor.name}</h3>
-                            <p class="text-gray-400 text-sm">${donor.department}, ${donor.year}</p>
-                        </div>
-                    </div>
-                    <span class="blood-type px-3 py-1 rounded-full text-sm font-semibold">${donor.bloodGroup}</span>
-                </div>
-                <div class="mb-4">
-                    <p class="text-gray-300 text-sm">Student ID: ${donor.studentId}</p>
-                </div>
-                <div class="flex justify-between">
-                    <button class="contact-btn text-red-400 hover:text-red-300 text-sm font-medium" data-name="${donor.name}">
-                        <i class="fas fa-comment-alt mr-2"></i> Contact
-                    </button>
-                    
-                </div>
-            `;
-            
-            card.querySelector('.contact-btn').addEventListener('click', (e) => {
-                alert(`Contact feature for ${e.target.dataset.name} is coming soon.`);
-            });
-            
-
-            container.appendChild(card);
-        });
-    };
-
-    /**
-     * Renders the list of active blood request cards
-     */
-    const renderActiveRequests = (requests) => {
-        const container = document.getElementById('requests-grid-container');
-        if (!container) return;
-        container.innerHTML = ''; 
-
-        if (requests.length === 0) {
-            container.innerHTML = '<p class="text-gray-400 col-span-3 text-center">No active blood requests. Great news!</p>';
-            return;
-        }
-
-        requests.forEach(req => {
-            if (!req.user) {
-            console.warn("Skipping orphaned request (user deleted):",req._id);
-            return; // This skips to the next request in the loop
-        }
-            const card = document.createElement('div');
-            card.className = 'request-card rounded-xl p-6 flex flex-col';
-            const postedAt = new Date(req.createdAt).toLocaleString('en-US', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
-
-            card.innerHTML = `
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs text-gray-400">Posted by ${req.user.name}</span>
-                    <span class="text-xs text-gray-400">${postedAt}</span>
-                </div>
-                <div class="text-center my-4">
-                    <div class="blood-group-lg">${req.bloodGroup}</div>
-                    <div class="text-white font-bold text-xl mt-1">${req.patientName}</div>
-                </div>
-                <div class="space-y-2 text-sm mb-5 flex-grow">
-                    
-                    <p class="text-gray-300"><i class="fas fa-phone-alt fa-fw text-red-400 mr-2"></i>${req.contactPhone}</p>
-                    ${req.note ? `<p class="text-gray-300"><i class="fas fa-info-circle fa-fw text-red-400 mr-2"></i>${req.note}</p>` : ''}
-                </div>
-                <div class="flex justify-between items-center">
-                    <button class="main-button-gradient text-gray-900 px-4 py-2 rounded-lg font-semibold text-sm">
-                        <i class="fas fa-phone-alt mr-1"></i> Call
-                    </button>
-                    ${currentUser._id === req.user._id ? `
-                    <button class="close-request-btn text-gray-400 hover:text-white text-sm font-medium" data-id="${req._id}">
-                        Mark as Closed <i class="fas fa-check-circle ml-1"></i>
-                    </button>` : ''}
-                </div>
-            `;
-            
-            // Add listener for the close button if it exists
-            const closeBtn = card.querySelector('.close-request-btn');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => handleCloseRequest(req._id));
+        // Soft notification toasts
+        const showNotification = (message, type = 'info') => {
+            const container = document.createElement('div');
+            let themeStyle = 'bg-white border-slate-200 text-charcoalText';
+            if (type === 'error') {
+                themeStyle = 'bg-rose-50 border-rose-200 text-rose-900 dark:bg-rose-950/20 dark:border-rose-900/50 dark:text-rose-200';
+            } else if (type === 'success') {
+                themeStyle = 'bg-[#FAF6F0] border-burgundyAccent/15 text-burgundyAccent dark:bg-darkCard dark:border-roseAccent/20 dark:text-roseAccent';
             }
             
-            container.appendChild(card);
+            container.className = `fixed bottom-6 right-6 z-50 p-4 border rounded-2xl shadow-lg flex items-center gap-3 transition-all duration-300 text-xs font-semibold max-w-sm ${themeStyle}`;
+            const icon = type === 'error' ? 'fa-circle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-circle-info';
+            
+            container.innerHTML = `<i class="fa-solid ${icon} text-sm"></i><span>${message}</span>`;
+            document.body.appendChild(container);
+            
+            setTimeout(() => {
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(8px)';
+                setTimeout(() => container.remove(), 300);
+            }, 3000);
+        };
+
+        const logout = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userData');
+            window.location.href = 'auth.html';
+        };
+
+        // Scroll helper
+        const scrollToTabs = (tabId) => {
+            const tabBtn = document.getElementById(tabId);
+            if (tabBtn) {
+                tabBtn.click();
+                tabBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
+
+        // UI navigation dropdowns
+        document.getElementById('settings-toggle-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('settings-dropdown').classList.toggle('hidden');
+            document.getElementById('notif-dropdown').classList.add('hidden');
         });
-    };
 
-    /**
-     * Filters and re-renders the donor list
-     */
-    const filterAndRenderDonors = () => {
-        const searchTerm = document.getElementById('search-input').value.toLowerCase();
-        const bloodType = document.getElementById('blood-filter-select').value;
-        let filteredDonors = [...allDonors];
+        document.getElementById('notif-toggle-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('notif-dropdown').classList.toggle('hidden');
+            document.getElementById('settings-dropdown').classList.add('hidden');
+            fetchNotifications();
+        });
 
-        if (searchTerm) {
-            filteredDonors = filteredDonors.filter(d => 
-                d.name.toLowerCase().includes(searchTerm) ||
-                d.studentId.toLowerCase().includes(searchTerm)
-            );
-        }
-        if (bloodType) {
-            filteredDonors = filteredDonors.filter(d => d.bloodGroup === bloodType);
-        }
-        renderDonors(filteredDonors);
-    };
+        document.getElementById('mobile-settings-toggle-btn').addEventListener('click', () => {
+            document.getElementById('mobile-settings-panel').classList.toggle('hidden');
+            document.getElementById('mobile-notif-panel').classList.add('hidden');
+        });
 
-    // --- 3. API FETCH FUNCTIONS ---
+        document.getElementById('mobile-notif-toggle-btn').addEventListener('click', () => {
+            document.getElementById('mobile-notif-panel').classList.toggle('hidden');
+            document.getElementById('mobile-settings-panel').classList.add('hidden');
+            fetchNotifications();
+        });
 
-    // THIS IS THE CORRECTED CODE
-const fetchDonors = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        
-        // The broken block is removed. We just fetch donors.
-        const res = await fetch(`${API_BASE_URL}/api/users/donors`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+        document.getElementById('mobile-menu-button').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('settings-dropdown').classList.add('hidden');
+            document.getElementById('notif-dropdown').classList.add('hidden');
+        });
+
+        // Theme toggle listeners
+        const darkThemeToggle = document.getElementById('dark-theme-toggle');
+        darkThemeToggle.checked = document.documentElement.classList.contains('dark');
+        darkThemeToggle.addEventListener('change', () => {
+            if (darkThemeToggle.checked) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        const mobileDarkThemeToggle = document.getElementById('mobile-dark-theme-toggle');
+        mobileDarkThemeToggle.checked = document.documentElement.classList.contains('dark');
+        mobileDarkThemeToggle.addEventListener('change', () => {
+            if (mobileDarkThemeToggle.checked) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Fetch User Me profile details
+        const fetchMe = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/users/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                currentUser = await res.json();
+                
+                // Set form defaults
+                if (currentUser.bloodGroup) {
+                    document.getElementById('my-blood-group').value = currentUser.bloodGroup;
                 }
-            });
+                if (currentUser.availabilityStatus) {
+                    document.getElementById('my-availability').value = currentUser.availabilityStatus;
+                }
+                if (currentUser.hostel) {
+                    document.getElementById('my-hostel').value = currentUser.hostel;
+                }
 
-        if (!res.ok) {
-            throw new Error('Failed to fetch donors');
-        }
-        
-        allDonors = await res.json(); // Save donors to the global array
-        renderDonors(allDonors); // Render them on the page
-    } catch (err) {
-        console.error(err);
-        showMessage('Could not load donors.', 'error');
-    }
-};
+                // Render verification container based on state
+                updateVerificationUI();
 
-    const fetchMe = async () => {
-        try {
-            // The global 'token' variable is already set by DOMContentLoaded
-            if (!token) {
-                console.warn('No token found. Redirecting to login.');
-                window.location.href = 'auth.html';
+            } catch (err) {
+                showNotification('Session expired. Please log in again.', 'error');
+                logout();
+            }
+        };
+
+        const updateVerificationUI = () => {
+            const badge = document.getElementById('donor-status-badge');
+            const otpContainer = document.getElementById('otp-verification-container');
+            
+            if (!currentUser.bloodGroup) {
+                badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-100 text-slate-400 dark:bg-white/5';
+                badge.textContent = 'Setup Required';
+                otpContainer.classList.add('hidden');
                 return;
             }
 
-            const res = await fetch(`${API_BASE_URL}/api/users/me`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            if (!res.ok) {
-                throw new Error('Invalid session. Please log in again.');
+            if (currentUser.isDonorVerified) {
+                badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400';
+                badge.textContent = '✓ Verified Donor';
+                otpContainer.classList.add('hidden');
+            } else {
+                badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400';
+                badge.textContent = 'Pending Verification';
+                otpContainer.classList.remove('hidden');
             }
-            
-            const data = await res.json();
-            
-           currentUser = data; // <-- THIS IS THE CRITICAL FIX
-
-            // Pre-fill the "My Profile" tab with the user's blood group
-            if (currentUser && currentUser.bloodGroup) {
-                document.getElementById('my-blood-group').value = currentUser.bloodGroup;
-            }
-
-        } catch (err) {
-            console.error(err);
-            showMessage('Could not load profile. Redirecting to login.', 'error');
-            localStorage.removeItem('token');
-            window.location.href = 'auth.html'; // Redirect on any error
-        }
-    };
-
-    const fetchActiveRequests = async () => {
-        
-        try {
-            const res = await fetch(`${API_BASE_URL}/api/blood-requests/active`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!res.ok) throw new Error('Failed to fetch requests');
-            allRequests = await res.json();
-            renderActiveRequests(allRequests);
-        } catch (err) {
-            console.error(err);
-            showMessage('Could not load active requests.', 'error');
-        }
-    };
-
-    // --- 4. API ACTION FUNCTIONS ---
-
-    const handleUpdateMyBloodGroup = async (e) => {
-        e.preventDefault();
-        const newBloodGroup = document.getElementById('my-blood-group').value;
-        if (!newBloodGroup) {
-            showMessage('Please select a blood group.', 'error');
-            return;
-        }
-
-        try {
-            const res = await fetch(`${API_BASE_URL}/api/users/me`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ bloodGroup: newBloodGroup })
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Failed to update');
-
-            showMessage('Blood group updated successfully!', 'success');
-            currentUser = data.user; 
-            await fetchDonors(); // Refresh donor list in case user just added themselves
-        } catch (err) {
-            showMessage(err.message, 'error');
-        }
-    };
-
-    const handlePostRequest = async (e) => {
-        e.preventDefault();
-        const body = {
-            patientName: document.getElementById('patientName').value,
-            bloodGroup: document.getElementById('request-blood-group').value,
-            
-            contactPhone: document.getElementById('contactPhone').value,
-            note: document.getElementById('note').value,
-            location: document.getElementById('location').value
         };
 
-        if (!body.patientName || !body.bloodGroup  || !body.contactPhone|| !body.location) {
-            showMessage('Please fill in all required fields.', 'error');
-            return;
-        }
-
-        try {
-            const res = await fetch(`${API_BASE_URL}/api/blood-requests`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(body)
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Failed to post request');
-
-            showMessage('Request posted successfully!', 'success');
-            document.getElementById('post-request-form').reset();
-            
-            // Switch to the active requests tab to show the new post
-            document.getElementById('active-requests-tab').click();
-
-        } catch (err) {
-            showMessage(err.message, 'error');
-        }
-    };
-
-    const handleCloseRequest = async (requestId) => {
-        if (!confirm('Are you sure you want to close this request?')) return;
-
-        try {
-            const res = await fetch(`${API_BASE_URL}/api/blood-requests/${requestId}/close`, {
-                method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.message || 'Failed to close request');
-
-            showMessage('Request closed.', 'success');
-            await fetchActiveRequests(); // Refresh the list
-        } catch (err) {
-            showMessage(err.message, 'error');
-        }
-    };
-
-
-    // --- 5. PAGE INITIALIZATION ---
-    document.addEventListener('DOMContentLoaded', async () => {
-        
-        const currentToken = localStorage.getItem('token');
-        if (!currentToken) {
-            // If no token, user cannot be here.
-            alert('Please log in to access this page.');
-            // Redirect to the login page
-            window.location.href = 'auth.html'; 
-            return; // Stop running any more code on this page
-        }
-        token = currentToken;
-        // --- B. Initial Data Fetching ---
-        await fetchMe(); // Get logged-in user's data (needed for button logic)
-        fetchDonors(); // Get the list of all donors
-
-        // --- C. Get Elements ---
-        const tabButtons = document.querySelectorAll('button[id$="-tab"]');
-        const panels = document.querySelectorAll('#tab-panels-container > div');
-        
-        const searchInput = document.getElementById('search-input');
-        const bloodFilterSelect = document.getElementById('blood-filter-select');
-        const updateBloodForm = document.getElementById('update-blood-form');
-        const postRequestForm = document.getElementById('post-request-form');
-
-        // --- D. Add Event Listeners ---
-
-        // 1. Tab Switching Logic
-        tabButtons.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Deactivate all
-                tabButtons.forEach(t => t.classList.remove('tab-active', 'text-white') & t.classList.add('text-gray-400'));
-                panels.forEach(p => p.classList.add('hidden'));
-
-                // Activate clicked
-                tab.classList.add('tab-active', 'text-white');
-                tab.classList.remove('text-gray-400');
-                
-                const panelId = tab.id.replace('-tab', '-panel');
-                document.getElementById(panelId).classList.remove('hidden');
-
-                // Load data just-in-time for requests tab
-                if (tab.id === 'active-requests-tab') {
-                    fetchActiveRequests();
-                }
-            });
+        // OTP operations
+        document.getElementById('send-otp-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('send-otp-btn');
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/verify-donor-email`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+                showNotification('OTP code sent to your official IIITA email address.', 'success');
+            } catch (err) {
+                showNotification(err.message || 'Failed to send OTP code.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Code';
+            }
         });
 
-        // 2. Search and Filter Listeners
-        searchInput.addEventListener('input', filterAndRenderDonors);
-        bloodFilterSelect.addEventListener('change', filterAndRenderDonors);
+        document.getElementById('verify-otp-btn').addEventListener('click', async () => {
+            const otpVal = document.getElementById('verification-otp-input').value.trim();
+            if (!otpVal) {
+                showNotification('Please enter the 6-digit OTP code.', 'error');
+                return;
+            }
 
-        // 3. Form Submissions
-        updateBloodForm.addEventListener('submit', handleUpdateMyBloodGroup);
-        postRequestForm.addEventListener('submit', handlePostRequest);
-    });
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/verify-donor-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ otp: otpVal })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
 
-    const logoutButton = document.getElementById('logout-button');
-        const mobileLogoutButton = document.getElementById('mobile-logout-button');
-        
-        if (logoutButton) {
-            logoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent link default behavior
-                logout();
+                showNotification('Your donor volunteer status has been verified!', 'success');
+                currentUser = data.user;
+                updateVerificationUI();
+                await fetchDonors();
+            } catch (err) {
+                showNotification(err.message || 'OTP verification failed.', 'error');
+            }
+        });
+
+        // Submit profile update
+        document.getElementById('update-blood-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                bloodGroup: document.getElementById('my-blood-group').value || null,
+                availabilityStatus: document.getElementById('my-availability').value,
+                hostel: document.getElementById('my-hostel').value.trim()
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/users/me`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Profile details updated successfully.', 'success');
+                currentUser = data.user;
+                updateVerificationUI();
+                await fetchDonors();
+            } catch (err) {
+                showNotification(err.message || 'Failed to save changes.', 'error');
+            }
+        });
+
+        // Fetch Donors
+        const fetchDonors = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/users/donors`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                allDonors = await res.json();
+                filterAndRenderDonors();
+                
+                // Update stats total number
+                document.getElementById('trust-donors-count').textContent = allDonors.filter(d => d.isDonorVerified).length || allDonors.length;
+            } catch (err) {
+                console.error(err);
+                showNotification('Could not load donors list.', 'error');
+            }
+        };
+
+        // Render Volunteers directory
+        const renderDonors = (donors) => {
+            const container = document.getElementById('donors-grid-container');
+            container.innerHTML = '';
+
+            if (donors.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-16 text-center space-y-4">
+                        <div class="w-12 h-12 bg-[#F5EBE6] dark:bg-white/5 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                            <i class="fa-solid fa-user-slash text-sm"></i>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">No registered volunteers found matching your query.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            donors.forEach(donor => {
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-darkCard border border-slate-200 dark:border-white/5 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all duration-300 relative';
+                
+                const initials = donor.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                const isAvailable = donor.availabilityStatus === 'Available Today';
+                
+                const availabilityPill = isAvailable 
+                    ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 breathe-dot"></span>Available</span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-550 dark:bg-white/5 dark:text-slate-450"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Busy</span>`;
+
+                const hostelPill = donor.hostel ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-550 dark:bg-white/5 dark:text-slate-450"><i class="fa-solid fa-hotel text-[8px] mr-0.5"></i>${donor.hostel}</span>` : '';
+                
+                const verifiedPill = donor.isDonorVerified 
+                    ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[8px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">Verified</span>`
+                    : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[8px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">Pending</span>`;
+
+                const groupBadgeStyle = 'border-roseAccent/30 bg-roseAccent/5 text-burgundyAccent dark:text-roseAccent';
+                const gradYear = (new Date().getFullYear() + (4 - parseInt(donor.year || 1))).toString();
+
+                // Check if user is requester and status is completed or accepted to exchange details
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-roseAccent/15 text-burgundyAccent dark:text-roseAccent flex items-center justify-center font-bold tracking-wider text-sm select-none">
+                                    ${initials}
+                                </div>
+                                <div>
+                                    <h4 class="text-slate-900 dark:text-white font-bold text-sm leading-tight">${donor.name}</h4>
+                                    <p class="text-slate-500 dark:text-slate-450 text-[10px] font-semibold mt-0.5">${donor.department} • Class of ${gradYear}</p>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-full border flex flex-col items-center justify-center select-none font-display ${groupBadgeStyle}">
+                                <span class="text-[9px] uppercase font-bold opacity-60 leading-none">Type</span>
+                                <span class="font-display text-sm font-black leading-none pt-0.5">${donor.bloodGroup}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                            ${availabilityPill}
+                            ${hostelPill}
+                            ${verifiedPill}
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 dark:border-white/5 mt-5 flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-550 font-bold uppercase tracking-wider">IIITA Volunteer</span>
+                        <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 italic">Contact Locked</span>
+                    </div>
+                `;
+
+                container.appendChild(card);
             });
-        }
-        if (mobileLogoutButton) {
-            mobileLogoutButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent link default behavior
-                logout();
+        };
+
+        const filterAndRenderDonors = () => {
+            const term = document.getElementById('search-input').value.toLowerCase();
+            const group = document.getElementById('blood-filter-select').value;
+            let list = [...allDonors];
+
+            if (term) {
+                list = list.filter(d => 
+                    d.name.toLowerCase().includes(term) ||
+                    d.studentId.toLowerCase().includes(term) ||
+                    d.department.toLowerCase().includes(term) ||
+                    (d.hostel && d.hostel.toLowerCase().includes(term))
+                );
+            }
+            if (group) {
+                list = list.filter(d => d.bloodGroup === group);
+            }
+            renderDonors(list);
+        };
+
+        // Post Request Form
+        document.getElementById('post-request-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                patientName: document.getElementById('patientName').value.trim(),
+                bloodGroup: document.getElementById('request-blood-group').value,
+                contactPhone: document.getElementById('contactPhone').value.trim(),
+                urgency: document.getElementById('urgency').value,
+                location: document.getElementById('location').value.trim(),
+                note: document.getElementById('note').value.trim()
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Blood request posted successfully!', 'success');
+                document.getElementById('post-request-form').reset();
+                document.getElementById('active-requests-tab').click();
+            } catch (err) {
+                showNotification(err.message || 'Failed to submit request.', 'error');
+            }
+        });
+
+        // Fetch Active Requests
+        const fetchActiveRequests = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/active`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                allRequests = await res.json();
+                renderRequests(allRequests);
+                populateActiveRequestsSelector();
+            } catch (err) {
+                console.error(err);
+                showNotification('Could not load active requests.', 'error');
+            }
+        };
+
+        // Populates selector on search directory
+        const populateActiveRequestsSelector = () => {
+            const container = document.getElementById('request-selector-container');
+            const select = document.getElementById('user-active-requests-select');
+            
+            const myActiveRequests = allRequests.filter(r => r.user._id === currentUser._id && r.status === 'active');
+            
+            if (myActiveRequests.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+            select.innerHTML = '<option value="">Select your active request to find matches...</option>';
+            myActiveRequests.forEach(r => {
+                select.innerHTML += `<option value="${r._id}">For ${r.patientName} (${r.bloodGroup})</option>`;
             });
-        }
-        
+        };
+
+        document.getElementById('user-active-requests-select').addEventListener('change', async (e) => {
+            const reqId = e.target.value;
+            if (!reqId) {
+                fetchDonors();
+                return;
+            }
+            // Fetch ranked donors compatible for this specific request
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/matches`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const matches = await res.json();
+                renderRankedMatches(matches, reqId);
+            } catch (err) {
+                showNotification('Failed to fetch ranked matching donors.', 'error');
+            }
+        });
+
+        const renderRankedMatches = (matches, reqId) => {
+            const container = document.getElementById('donors-grid-container');
+            container.innerHTML = '';
+
+            if (matches.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-16 text-center space-y-4">
+                        <div class="w-12 h-12 bg-rose-50 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto text-rose-500">
+                            <i class="fa-solid fa-heart-crack"></i>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">No compatible volunteers are currently eligible (on cooldown or unavailable).</p>
+                    </div>
+                `;
+                return;
+            }
+
+            matches.forEach(donor => {
+                const card = document.createElement('div');
+                card.className = 'bg-white dark:bg-darkCard border-2 border-burgundyAccent/15 dark:border-roseAccent/25 rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all duration-300 relative';
+                
+                const initials = donor.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                const hostelPill = donor.hostel ? `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-450"><i class="fa-solid fa-hotel text-[8px] mr-0.5"></i>${donor.hostel}</span>` : '';
+                
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-roseAccent/15 text-burgundyAccent dark:text-roseAccent flex items-center justify-center font-bold tracking-wider text-sm select-none">
+                                    ${initials}
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-1.5">
+                                        <h4 class="text-slate-900 dark:text-white font-bold text-sm leading-tight">${donor.name}</h4>
+                                        <span class="px-1.5 py-0.5 rounded text-[8px] font-extrabold uppercase bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">${donor.matchType}</span>
+                                    </div>
+                                    <p class="text-slate-500 dark:text-slate-450 text-[10px] font-semibold mt-0.5">${donor.department} • Proximity: ${donor.hostelProximity}</p>
+                                </div>
+                            </div>
+                            <div class="w-10 h-10 rounded-full border border-burgundyAccent/20 flex items-center justify-center select-none font-display font-black text-burgundyAccent dark:text-roseAccent">
+                                ${donor.bloodGroup}
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-700 dark:text-indigo-400">Match score: ${donor.matchScore} pts</span>
+                            ${hostelPill}
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 dark:border-white/5 mt-5 flex justify-between items-center">
+                        <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ranked Eligible match</span>
+                        <button class="invite-btn px-3 py-1 bg-burgundyAccent dark:bg-roseAccent text-white dark:text-darkBg text-xs font-bold rounded-xl hover:opacity-90 transition-all" data-donor-id="${donor._id}">
+                            Invite Volunteer
+                        </button>
+                    </div>
+                `;
+
+                card.querySelector('.invite-btn').addEventListener('click', async () => {
+                    try {
+                        const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/request-donor/${donor._id}`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.message);
+
+                        showNotification('Invitation sent successfully to volunteer.', 'success');
+                        document.getElementById('user-active-requests-select').value = '';
+                        fetchDonors();
+                        fetchActiveRequests();
+                    } catch (err) {
+                        showNotification(err.message || 'Failed to send matching invite.', 'error');
+                    }
+                });
+
+                container.appendChild(card);
+            });
+        };
+
+        // Render Request Cards with full lifecycle options
+        const renderRequests = (requests) => {
+            const container = document.getElementById('requests-grid-container');
+            container.innerHTML = '';
+
+            if (requests.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-16 text-center space-y-4">
+                        <div class="w-12 h-12 bg-[#F5EBE6] dark:bg-white/5 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                            <i class="fa-solid fa-heart-circle-check text-sm text-burgundyAccent dark:text-roseAccent"></i>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">No active blood requests at this time.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            requests.forEach(req => {
+                const isCreator = req.user._id === currentUser._id;
+                const isInvitedDonor = req.assignedDonor && req.assignedDonor._id === currentUser._id;
+                const isUrgent = req.urgency === 'urgent' || req.urgency === 'critical';
+                const isEscalated = req.escalated;
+
+                const card = document.createElement('div');
+                
+                let borderStyle = 'border-slate-200 dark:border-white/5 border-l-4 border-l-slate-400';
+                let urgencyBadge = '<span class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase bg-slate-100 text-slate-550 dark:bg-white/5 dark:text-slate-400">Normal</span>';
+                
+                if (isUrgent) {
+                    borderStyle = 'border-slate-200 dark:border-roseAccent/20 border-l-4 border-l-roseAccent';
+                    urgencyBadge = `<span class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase bg-rose-50 border border-rose-200 text-rose-900 dark:bg-roseAccent/10 dark:text-roseAccent">${req.urgency}</span>`;
+                }
+
+                if (isEscalated) {
+                    borderStyle = 'border-rose-500 dark:border-rose-500/50 border-l-4 border-l-rose-500';
+                    urgencyBadge = '<span class="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase bg-rose-500 text-white animate-pulse">⚠️ Escalated</span>';
+                }
+
+                const postedAt = new Date(req.createdAt).toLocaleString('en-US', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    hour: 'numeric', 
+                    minute: '2-digit' 
+                });
+
+                card.className = `bg-white dark:bg-darkCard border rounded-3xl p-6 flex flex-col justify-between hover:shadow-md transition-all ${borderStyle}`;
+                
+                // Contact Details swap logic (privacy-first)
+                let contactInfoSection = '';
+                if (req.status === 'accepted' || req.status === 'completed') {
+                    if (isCreator && req.assignedDonor) {
+                        contactInfoSection = `
+                            <div class="mt-4 p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl space-y-1.5 text-[11px]">
+                                <h5 class="font-bold text-emerald-700 dark:text-emerald-450"><i class="fa-solid fa-address-book"></i> Matched Donor Contacts</h5>
+                                <p><strong>Name:</strong> ${req.assignedDonor.name}</p>
+                                <p><strong>Hostel:</strong> ${req.assignedDonor.hostel || 'Not specified'}</p>
+                                <p><strong>Email:</strong> ${req.assignedDonor.email}</p>
+                                <p><strong>Phone:</strong> ${req.contactPhone}</p>
+                            </div>
+                        `;
+                    } else if (isInvitedDonor) {
+                        contactInfoSection = `
+                            <div class="mt-4 p-3 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl space-y-1.5 text-[11px]">
+                                <h5 class="font-bold text-emerald-700 dark:text-emerald-450"><i class="fa-solid fa-address-book"></i> Requester Contacts</h5>
+                                <p><strong>Name:</strong> ${req.user.name}</p>
+                                <p><strong>Email:</strong> ${req.user.email}</p>
+                                <p><strong>Phone:</strong> ${req.contactPhone}</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Show action buttons based on relation
+                let actionArea = '';
+                if (isCreator) {
+                    if (req.status === 'active') {
+                        actionArea = `
+                            <button onclick="openMatchesDrawer('${req._id}')" class="px-3.5 py-1.5 bg-burgundyAccent dark:bg-roseAccent text-white dark:text-darkBg text-[11px] font-bold rounded-xl hover:opacity-90">Find Matches</button>
+                        `;
+                    } else if (req.status === 'matched') {
+                        actionArea = `
+                            <span class="text-[11px] text-slate-400 font-semibold italic">Awaiting Volunteer acceptance...</span>
+                        `;
+                    } else if (req.status === 'accepted') {
+                        actionArea = `
+                            <button onclick="markComplete('${req._id}')" class="px-3 py-1.5 bg-emeraldAccent text-white text-[11px] font-bold rounded-xl">Confirm Donation</button>
+                        `;
+                    }
+                } else if (isInvitedDonor && req.status === 'matched') {
+                    actionArea = `
+                        <div class="flex gap-2">
+                            <button onclick="acceptInvite('${req._id}')" class="px-3 py-1.5 bg-emeraldAccent text-white text-[11px] font-bold rounded-xl">Accept</button>
+                            <button onclick="declineInvite('${req._id}')" class="px-3 py-1.5 bg-rose-600 text-white text-[11px] font-bold rounded-xl">Decline</button>
+                        </div>
+                    `;
+                }
+
+                // Close manual button for creator
+                const closeManualBtn = isCreator && req.status !== 'completed' && req.status !== 'closed'
+                    ? `<button onclick="closeRequest('${req._id}')" class="text-rose-600 dark:text-roseAccent hover:underline text-[10px] font-bold">Cancel Request</button>`
+                    : '';
+
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400">
+                            <div class="flex items-center gap-1">
+                                <i class="fa-solid fa-user-circle text-[11px]"></i>
+                                <span>${req.user.name}</span>
+                            </div>
+                            <span>${postedAt}</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 py-1">
+                            <div class="w-14 h-14 rounded-full border border-roseAccent/35 bg-roseAccent/5 text-roseAccent flex flex-col items-center justify-center shrink-0 select-none">
+                                <span class="text-[9px] uppercase font-bold opacity-60 leading-none">Need</span>
+                                <span class="font-display text-base font-black leading-none pt-0.5">${req.bloodGroup}</span>
+                            </div>
+                            
+                            <div class="space-y-0.5">
+                                <h4 class="text-slate-900 dark:text-white font-bold text-sm leading-tight">${req.patientName}</h4>
+                                <div class="flex items-center gap-1 text-slate-400 text-xs">
+                                    <i class="fa-solid fa-location-dot text-[9px] text-burgundyAccent dark:text-roseAccent"></i>
+                                    <span class="text-[10px]">${req.location}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${req.note ? `<p class="text-slate-600 dark:text-slate-350 text-xs italic bg-slate-50 dark:bg-white/[0.01] p-3 rounded-xl border border-slate-100 dark:border-white/5">"${req.note}"</p>` : ''}
+                        
+                        ${contactInfoSection}
+                        
+                        <div class="flex items-center justify-between text-[10px]">
+                            <button onclick="openAuditTrail('${req._id}')" class="text-slate-400 hover:text-slate-700 dark:hover:text-white font-bold underline"><i class="fa-solid fa-clock-rotate-left"></i> View Audit Log</button>
+                            <span class="font-extrabold uppercase tracking-widest text-[9px] text-burgundyAccent dark:text-roseAccent">Status: ${req.status}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 dark:border-white/5 mt-5 flex justify-between items-center gap-2">
+                        <div>
+                            ${urgencyBadge}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            ${closeManualBtn}
+                            ${actionArea}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        };
+
+        // Match modal drawers
+        const openMatchesDrawer = async (reqId) => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/matches`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const matches = await res.json();
+                
+                const list = document.getElementById('matches-modal-list');
+                list.innerHTML = '';
+                
+                if (matches.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No eligible matching donors available at this moment.</p>`;
+                } else {
+                    matches.forEach(m => {
+                        list.innerHTML += `
+                            <div class="flex justify-between items-center bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/5 p-4 rounded-2xl text-xs">
+                                <div>
+                                    <p class="font-bold text-slate-900 dark:text-white">${m.name} (${m.bloodGroup})</p>
+                                    <p class="text-slate-500 text-[10px] mt-0.5">${m.department} • Hostel: ${m.hostel || 'Not Specified'} • Match: ${m.matchScore} pts</p>
+                                </div>
+                                <button onclick="inviteVolunteer('${reqId}', '${m._id}')" class="px-3.5 py-2 bg-burgundyAccent dark:bg-roseAccent text-white dark:text-darkBg font-bold rounded-xl text-xs">Invite</button>
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('matches-modal').classList.remove('hidden');
+            } catch (err) {
+                showNotification('Failed to fetch ranked matching list.', 'error');
+            }
+        };
+
+        const closeMatchesModal = () => {
+            document.getElementById('matches-modal').classList.add('hidden');
+        };
+
+        const inviteVolunteer = async (reqId, volunteerId) => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/request-donor/${volunteerId}`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Volunteer matching invitation sent.', 'success');
+                closeMatchesModal();
+                fetchActiveRequests();
+            } catch (err) {
+                showNotification(err.message || 'Invitation failed.', 'error');
+            }
+        };
+
+        // Actions handlers
+        const acceptInvite = async (reqId) => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/accept`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Invitation accepted! Coordinates unlocked.', 'success');
+                fetchActiveRequests();
+            } catch (err) {
+                showNotification(err.message, 'error');
+            }
+        };
+
+        const declineInvite = async (reqId) => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/decline`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Invitation declined.', 'success');
+                fetchActiveRequests();
+            } catch (err) {
+                showNotification(err.message, 'error');
+            }
+        };
+
+        const markComplete = async (reqId) => {
+            if (!confirm('Are you sure you want to mark this request as completed? Cooldown will apply to donor.')) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/complete`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Request marked completed. Donation successful.', 'success');
+                fetchActiveRequests();
+            } catch (err) {
+                showNotification(err.message, 'error');
+            }
+        };
+
+        const closeRequest = async (reqId) => {
+            if (!confirm('Are you sure you want to cancel this request?')) return;
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/${reqId}/close`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message);
+
+                showNotification('Request closed.', 'success');
+                fetchActiveRequests();
+            } catch (err) {
+                showNotification(err.message, 'error');
+            }
+        };
+
+        // Audit Trail Modal
+        const openAuditTrail = async (reqId) => {
+            const req = allRequests.find(r => r._id === reqId);
+            if (!req) return;
+            
+            const list = document.getElementById('audit-modal-list');
+            list.innerHTML = '';
+            
+            if (!req.auditLogs || req.auditLogs.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">No audit logs recorded.</p>`;
+            } else {
+                req.auditLogs.forEach(log => {
+                    const time = new Date(log.timestamp).toLocaleString();
+                    list.innerHTML += `
+                        <div class="border-l-2 border-burgundyAccent pl-3 py-1 space-y-1 text-xs">
+                            <p class="font-bold text-slate-900 dark:text-white">${log.action.toUpperCase()}</p>
+                            <p class="text-slate-500 dark:text-slate-400 text-[10px]">${log.details || 'No details available'}</p>
+                            <p class="text-slate-400 text-[9px]">${time}</p>
+                        </div>
+                    `;
+                });
+            }
+            
+            document.getElementById('audit-modal').classList.remove('hidden');
+        };
+
+        const closeAuditModal = () => {
+            document.getElementById('audit-modal').classList.add('hidden');
+        };
+
+        // Fetch Notifications
+        const fetchNotifications = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/notifications`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const notifs = await res.json();
+                renderNotifications(notifs);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        const renderNotifications = (notifs) => {
+            const notifList = document.getElementById('notif-list');
+            const mobileNotifList = document.getElementById('mobile-notif-list');
+            const badge = document.getElementById('notif-badge');
+            const mobileBadge = document.getElementById('mobile-notif-badge');
+
+            notifList.innerHTML = '';
+            mobileNotifList.innerHTML = '';
+
+            const unread = notifs.filter(n => !n.read);
+            if (unread.length > 0) {
+                badge.classList.remove('hidden');
+                mobileBadge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+                mobileBadge.classList.add('hidden');
+            }
+
+            if (notifs.length === 0) {
+                notifList.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">No new notifications.</p>`;
+                mobileNotifList.innerHTML = `<p class="text-xs text-slate-400 text-center py-2">No new notifications.</p>`;
+                return;
+            }
+
+            notifs.forEach(n => {
+                const element = document.createElement('div');
+                element.className = `p-3 rounded-xl border text-[11px] space-y-1.5 transition-all ${n.read ? 'bg-slate-50/50 dark:bg-white/[0.01] border-slate-100 dark:border-white/5' : 'bg-rose-50/30 border-rose-200/50 dark:bg-roseAccent/5 dark:border-roseAccent/20'}`;
+                
+                const time = new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                element.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold text-slate-900 dark:text-white">${n.title}</span>
+                        <span class="text-[9px] text-slate-400">${time}</span>
+                    </div>
+                    <p class="text-slate-550 dark:text-slate-400 leading-normal">${n.message}</p>
+                    ${!n.read ? `<button onclick="readNotification(event, '${n._id}')" class="text-[9px] text-burgundyAccent dark:text-roseAccent font-bold underline">Mark Read</button>` : ''}
+                `;
+
+                notifList.appendChild(element.cloneNode(true));
+                mobileNotifList.appendChild(element);
+            });
+        };
+
+        const readNotification = async (e, id) => {
+            e.stopPropagation();
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/notifications/${id}/read`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    fetchNotifications();
+                    fetchActiveRequests();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        // Fetch Analytics stats count
+        const fetchAnalytics = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/stats`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const stats = await res.json();
+
+                document.getElementById('stats-total-volunteers').textContent = stats.registeredDonors;
+                document.getElementById('stats-available-volunteers').textContent = stats.availableToday;
+                document.getElementById('stats-successful-matches').textContent = stats.successfulMatches;
+
+                // Render group counts distribution bars
+                const container = document.getElementById('stats-distribution-container');
+                container.innerHTML = '';
+                
+                const maxCount = Math.max(...Object.values(stats.groupCounts), 1);
+                
+                Object.keys(stats.groupCounts).forEach(g => {
+                    const count = stats.groupCounts[g];
+                    const percent = (count / maxCount) * 100;
+                    
+                    container.innerHTML += `
+                        <div class="space-y-1.5 text-xs">
+                            <div class="flex justify-between items-center text-[11px] font-semibold text-slate-550">
+                                <span>Group ${g}</span>
+                                <span class="font-bold text-slate-800 dark:text-white">${count} donors</span>
+                            </div>
+                            <div class="w-full bg-slate-100 dark:bg-white/5 h-2 rounded-full overflow-hidden">
+                                <div class="bg-burgundyAccent dark:bg-roseAccent h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        // Fetch gratitude stories
+        const fetchStories = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/stories`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) throw new Error();
+                const stories = await res.json();
+                
+                const container = document.getElementById('stories-list-container');
+                container.innerHTML = '';
+                
+                if (stories.length === 0) {
+                    container.innerHTML = `
+                        <div class="py-12 text-center text-xs text-slate-400 dark:text-slate-500">
+                            No stories posted yet. Show gratitude to your volunteer!
+                        </div>
+                    `;
+                    return;
+                }
+
+                stories.forEach(s => {
+                    const time = new Date(s.createdAt).toLocaleDateString();
+                    container.innerHTML += `
+                        <div class="bg-[#FAF6F0] dark:bg-white/[0.02] border border-slate-200/50 dark:border-white/5 p-4 rounded-2xl text-xs space-y-2 relative">
+                            <p class="italic text-slate-650 dark:text-slate-300">"${s.story}"</p>
+                            <div class="flex justify-between items-center text-[10px] text-slate-455 font-bold">
+                                <span>Match Group: ${s.bloodGroup}</span>
+                                <span>${time}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        document.getElementById('add-story-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                story: document.getElementById('story-text').value.trim(),
+                bloodGroup: document.getElementById('story-blood-group').value
+            };
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/blood-requests/stories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) throw new Error();
+                
+                showNotification('Story posted to Gratitude Wall successfully.', 'success');
+                document.getElementById('add-story-form').reset();
+                fetchStories();
+            } catch (err) {
+                showNotification('Failed to post story.', 'error');
+            }
+        });
+
+        // Initialize socket channel
+        const initSocket = () => {
+            try {
+                socket = io();
+                
+                socket.on('connect', () => {
+                    socketConnected = true;
+                    console.log('[Socket] Connected to server.');
+                    socket.emit('join', currentUser._id);
+                });
+
+                socket.on('notification', (data) => {
+                    showNotification(data.message, 'success');
+                    fetchNotifications();
+                    fetchActiveRequests();
+                });
+
+                socket.on('connect_error', () => {
+                    socketConnected = false;
+                });
+                
+            } catch (err) {
+                socketConnected = false;
+                console.log('[Socket] Load failed. Fallback polling enabled.');
+            }
+        };
+
+        // Fallback polling loop (graceful degradation)
+        setInterval(() => {
+            if (!socketConnected && token) {
+                console.log('[Fallback Polling] Fetching data...');
+                fetchNotifications();
+                fetchActiveRequests();
+            }
+        }, 10000);
+
+        // Page Load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const currentToken = localStorage.getItem('token');
+            if (!currentToken) {
+                alert('Please login to access the blood network.');
+                window.location.href = 'auth.html';
+                return;
+            }
+            token = currentToken;
+
+            // Load primary data
+            await fetchMe();
+            await fetchDonors();
+            await fetchActiveRequests();
+
+            // Setup search listeners
+            document.getElementById('search-input').addEventListener('input', filterAndRenderDonors);
+            document.getElementById('blood-filter-select').addEventListener('change', filterAndRenderDonors);
+
+            // Tab logic
+            const tabs = document.querySelectorAll('button[id$="-tab"]');
+            const sections = document.querySelectorAll('#tab-panels-container > section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('tab-active');
+                        t.classList.add('text-slate-400', 'border-transparent');
+                    });
+                    sections.forEach(s => s.classList.add('hidden'));
+
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('text-slate-400', 'border-transparent');
+
+                    if (tab.id === 'my-profile-tab') {
+                        document.getElementById('my-profile-tab-panel').classList.remove('hidden');
+                        fetchMe();
+                    } else if (tab.id === 'analytics-tab') {
+                        document.getElementById('analytics-panel').classList.remove('hidden');
+                        fetchAnalytics();
+                    } else if (tab.id === 'stories-tab') {
+                        document.getElementById('stories-panel').classList.remove('hidden');
+                        fetchStories();
+                    } else {
+                        const panelId = tab.id.replace('-tab', '-panel');
+                        document.getElementById(panelId).classList.remove('hidden');
+                    }
+
+                    if (tab.id === 'active-requests-tab') {
+                        fetchActiveRequests();
+                    }
+                });
+            });
+
+            // Load socket
+            initSocket();
+            fetchNotifications();
+
+            // Load More button setup
+            let limit = 9;
+            document.getElementById('load-more-donors-btn').addEventListener('click', () => {
+                limit += 6;
+                showNotification(`Displaying up to ${limit} volunteers.`, 'info');
+                filterAndRenderDonors();
+            });
+        });
     </script>
 </body>
 </html>

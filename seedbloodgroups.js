@@ -44,13 +44,20 @@ const populateBloodGroups = async () => {
 
         console.log(`Found ${users.length} users. Preparing bulk update...`);
 
-        // 3. Create a bulk update operation for each user
+        const hostels = ['BH-1', 'BH-2', 'BH-3', 'BH-4', 'BH-5', 'GH-1', 'GH-2', 'GH-3', 'IH-1', 'IH-2'];
         const bulkOps = users.map(user => {
+            const availability = Math.random() < 0.75 ? 'Available Today' : 'Busy';
+            const hostel = getRandomItem(hostels);
             return {
                 updateOne: {
                     filter: { _id: user._id },
                     update: { 
-                        $set: { bloodGroup: getRandomItem(bloodGroups) } 
+                        $set: { 
+                            bloodGroup: getRandomItem(bloodGroups),
+                            availabilityStatus: availability,
+                            hostel: hostel,
+                            isDonorVerified: true
+                        } 
                     }
                 }
             };
